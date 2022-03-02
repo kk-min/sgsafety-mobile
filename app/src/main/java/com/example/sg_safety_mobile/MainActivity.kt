@@ -1,18 +1,16 @@
 package com.example.sg_safety_mobile
 
 
+
 import android.os.Bundle
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import android.widget.Toolbar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
-
 
 
 class MainActivity : AppCompatActivity() {
@@ -38,6 +36,10 @@ class MainActivity : AppCompatActivity() {
 
         // Call syncState() on the action bar so it'll automatically change to the back button when the drawer layout is open
         actionBarToggle.syncState()
+        if(savedInstanceState==null)
+        {
+            replaceFragment(HomeFragment(),"SG Safety")
+        }
 
 
         // Call findViewById on the NavigationView
@@ -48,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.nav_home -> {
                     Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show()
-                    replaceFragment(HomeFragment(),menuItem.title.toString())
+                    replaceFragment(HomeFragment(),"SG Safety")
                     true
                 }
                 R.id.nav_aed -> {
@@ -85,6 +87,7 @@ class MainActivity : AppCompatActivity() {
 
     // override the onBackPressed() function to close the Drawer when the back button is clicked
     override fun onBackPressed() {
+
         if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             this.drawerLayout.closeDrawer(GravityCompat.START)
         } else {
