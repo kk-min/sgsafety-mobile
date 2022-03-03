@@ -1,4 +1,4 @@
-package com.example.sg_safety_mobile
+package com.example.sgsafetyloginpage
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.example.sg_safety_mobile", appContext.packageName)
+        assertEquals("com.example.sgsafetyloginpage", appContext.packageName)
     }
 }
