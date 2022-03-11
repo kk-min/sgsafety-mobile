@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "1035703286326",
+    "firebase_url": "https://sg-safety-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "sg-safety",
+    "storage_bucket": "sg-safety.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1035703286326:android:0d333cfd78e9d5f561f697",
+        "android_client_info": {
+          "package_name": "com.example.sg_safety_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1035703286326-8hmm0nfbvh5pi90tnjbbvvo2je2dgs2u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOibMtZtdA5OErYp5mqgzETWD_49degXs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1035703286326-8hmm0nfbvh5pi90tnjbbvvo2je2dgs2u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1035703286326:android:428a77e518ff09da61f697",
+        "android_client_info": {
+          "package_name": "com.example.sgsafetyloginpage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1035703286326-8hmm0nfbvh5pi90tnjbbvvo2je2dgs2u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOibMtZtdA5OErYp5mqgzETWD_49degXs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1035703286326-8hmm0nfbvh5pi90tnjbbvvo2je2dgs2u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

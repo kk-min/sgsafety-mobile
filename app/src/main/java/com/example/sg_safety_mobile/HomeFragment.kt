@@ -1,59 +1,75 @@
 package com.example.sg_safety_mobile
 
+
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AlertDialog
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
+class HomeFragment : Fragment(),View.OnClickListener {
+
+
+    //FOR PAGE VIEW
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        val v= inflater.inflate(R.layout.fragment_home, container, false)
+        var button: Button =v.findViewById(R.id.alert_button)
+
+
+        //PROMPT ALERT BOX TO MAKE SURE USER REALLY NEED HELP
+        button.setOnClickListener{
+            showAlertDialog()
+        }
+        return v
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+
+    //FOR PAGE VIEW
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
     }
+
+
+    //ALERT TO MAKE SURE USER DON'T ACCIDENTALLY PRESS THE SEND HELP BUTTON
+    private fun showAlertDialog() {
+        val alertDialog: AlertDialog.Builder = AlertDialog.Builder(activity!!)
+
+        alertDialog.setTitle("Are you sure?")
+        alertDialog.setMessage("By pressing Yes,help message will be sent to SCDF and Users nearby")
+        alertDialog.setPositiveButton(
+            "Yes"
+        ) { _, _ ->
+            //Go to Alert Page Activity which will display No. of helpers accepted to help
+            val intent = Intent(activity, AlertPage::class.java)
+            startActivity(intent)
+
+        }
+        //cancel the alert button
+        alertDialog.setNegativeButton(
+            "No"
+        ) { _, _ -> }
+        val alert: AlertDialog = alertDialog.create()
+        alert.setCanceledOnTouchOutside(false)
+        alert.show()
+    }
+
+
+    override fun onClick(v: View?) {
+        TODO("Not yet implemented")
+    }
+
+
 }

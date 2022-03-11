@@ -2,14 +2,18 @@ package com.example.sg_safety_mobile
 
 
 
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+
 import com.google.android.material.navigation.NavigationView
 
 
@@ -73,12 +77,44 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(ManageProfileFragment(),menuItem.title.toString())
                     true
                 }
+                R.id.nav_sign_out -> {
+                    val alertDialog: AlertDialog.Builder = AlertDialog.Builder(this)
+
+                    alertDialog.setTitle("Sign Out")
+                    alertDialog.setMessage("Are You sure")
+                    alertDialog.setPositiveButton(
+                        "Yes"
+                    ) { _, _ ->
+                        Toast.makeText(this, "Signed Out", Toast.LENGTH_SHORT).show()
+                        val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
+                        val editor: SharedPreferences.Editor=sharedPreference.edit()
+                        editor.clear()
+                        editor.commit()
+
+                        val intent = Intent(this, LoginActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent)
+
+
+                    }
+                    //cancel the alert button
+                    alertDialog.setNegativeButton(
+                        "No"
+                    ) { _, _ -> }
+                    val alert: AlertDialog = alertDialog.create()
+                    alert.setCanceledOnTouchOutside(false)
+                    alert.show()
+                    true
+                }
+
+
                 else -> {
                     false
                 }
             }
         }
     }
+
     // override the onSupportNavigateUp() function to launch the Drawer when the hamburger icon is clicked
     override fun onSupportNavigateUp(): Boolean {
         drawerLayout.openDrawer(navView)
@@ -94,6 +130,7 @@ class MainActivity : AppCompatActivity() {
             super.onBackPressed()
         }
     }
+
     //function to replace frame layout with fragments
     private fun replaceFragment(fragment : Fragment, title : String){
         val fragmentManager =supportFragmentManager;
