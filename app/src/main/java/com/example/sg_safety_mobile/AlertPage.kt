@@ -26,6 +26,7 @@ class AlertPage : AppCompatActivity() {
 
         //SEND SMS TO SCDF(Phone No.=111)
         sendMessage()
+        MyFirebaseMessagingService.sendMessage("TITLE","MESSAGE","HelpMessage")
         Toast.makeText(this, "SMS Sent to SCDF", Toast.LENGTH_SHORT).show()
         //SEND USER LOCATION TO HELP
         //
