@@ -12,6 +12,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SG_Safety_Mobile">
         <activity
+            android:name=".UpdateCPR"
+            android:exported="false" />
+        <activity
+            android:name=".ChangePassword"
+            android:exported="false" />
+        <activity
+            android:name=".ContactNumber"
+            android:exported="false" />
+        <activity
+            android:name=".EditEmail"
+            android:exported="false" />
+        <activity
+            android:name=".ChangeUsername"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
             android:exported="false" />
         <activity
@@ -24,7 +39,6 @@
             android:name=".AlertPage"
             android:exported="false" />
         <activity
-
             android:name=".CheckLoginStatus"
             android:exported="true">
             <intent-filter>
