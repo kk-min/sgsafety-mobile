@@ -98,6 +98,12 @@ class LoginActivity : AppCompatActivity() {
                             editor.putString("username",userName)
                             editor.putString("password",passWord)
                             editor.putBoolean("log in status",true)
+
+                            editor.putString("UserID",document.id)
+
+                            //val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
+                            //val docID=sharedPreference.getString("UserID","")
+
                             editor.commit()
 
                             //Go to the main page of this application
@@ -123,3 +129,4 @@ class LoginActivity : AppCompatActivity() {
     }
 
 }
+

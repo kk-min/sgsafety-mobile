@@ -5,6 +5,7 @@ package com.example.sg_safety_mobile
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -16,7 +17,7 @@ import androidx.fragment.app.Fragment
 
 import com.google.android.material.navigation.NavigationView
 
-
+//Activity class should only content UI and those func interact with user
 class MainActivity : AppCompatActivity() {
 
     // Initialise the DrawerLayout, NavigationView and ToggleBar
@@ -36,7 +37,9 @@ class MainActivity : AppCompatActivity() {
         drawerLayout.addDrawerListener(actionBarToggle)
 
         // Display the hamburger icon to launch the drawer
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        //supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        supportActionBar?.setDisplayShowHomeEnabled(true);
 
         // Call syncState() on the action bar so it'll automatically change to the back button when the drawer layout is open
         actionBarToggle.syncState()
@@ -109,6 +112,7 @@ class MainActivity : AppCompatActivity() {
 
 
                 else -> {
+
                     false
                 }
             }
@@ -123,9 +127,9 @@ class MainActivity : AppCompatActivity() {
 
     // override the onBackPressed() function to close the Drawer when the back button is clicked
     override fun onBackPressed() {
-
-        if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            this.drawerLayout.closeDrawer(GravityCompat.START)
+        //val drawerLayout:DrawerLayout=findViewById(R.id.drawerLayout)
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
         }
