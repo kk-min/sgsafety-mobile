@@ -2,15 +2,20 @@ package com.example.sg_safety_mobile
 
 
 
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -20,6 +25,10 @@ import com.google.android.material.navigation.NavigationView
 //Activity class should only content UI and those func interact with user
 class MainActivity : AppCompatActivity() {
 
+    //Initialise location service
+    var locationServiceIntent: Intent? = null
+    private var locationService: LocationService? = null
+
     // Initialise the DrawerLayout, NavigationView and ToggleBar
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var actionBarToggle: ActionBarDrawerToggle
@@ -28,6 +37,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        if(ActivityCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION,android.Manifest.permission.ACCESS_FINE_LOCATION),111)
+        }
+        Log.d("LocationService", "LocationService Starting...")
+        locationService = LocationService()
+        locationServiceIntent = Intent(this, locationService!!.javaClass)
+        if (!isMyServiceRunning(locationService!!.javaClass)) {
+            startService(locationServiceIntent)
+        }
 
         // Call findViewById on the DrawerLayout
         drawerLayout = findViewById(R.id.drawerLayout)
@@ -119,6 +139,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        //stopService(mServiceIntent);
+        val broadcastIntent = Intent()
+        broadcastIntent.action = "restartservice"
+        broadcastIntent.setClass(this, LocationServiceRestarter::class.java)
+        this.sendBroadcast(broadcastIntent)
+        super.onDestroy()
+    }
+
     // override the onSupportNavigateUp() function to launch the Drawer when the hamburger icon is clicked
     override fun onSupportNavigateUp(): Boolean {
         drawerLayout.openDrawer(navView)
@@ -147,5 +176,17 @@ class MainActivity : AppCompatActivity() {
 
         //set title when clicked
         setTitle(title)
+    }
+
+    private fun isMyServiceRunning(serviceClass: Class<*>): Boolean {
+        val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                Log.i("Service status", "Running")
+                return true
+            }
+        }
+        Log.i("Service status", "Not running")
+        return false
     }
 }

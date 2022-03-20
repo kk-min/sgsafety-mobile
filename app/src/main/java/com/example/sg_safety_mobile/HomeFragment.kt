@@ -3,6 +3,7 @@ package com.example.sg_safety_mobile
 
 import android.Manifest
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,13 +12,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AlertDialog
-
-
-
+import androidx.lifecycle.Observer
+import android.location.Location
+import android.net.ConnectivityManager
+import androidx.fragment.app.viewModels
 
 class HomeFragment : Fragment(),View.OnClickListener {
 
-
+    private lateinit var locationReceiver: LocationReceiver
     //FOR PAGE VIEW
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,6 +28,10 @@ class HomeFragment : Fragment(),View.OnClickListener {
         // Inflate the layout for this fragment
         val v= inflater.inflate(R.layout.fragment_home, container, false)
         var button: Button =v.findViewById(R.id.alert_button)
+        val filter = IntentFilter("UPDATE_LOCATION")
+        locationReceiver = LocationReceiver(v)
+        activity?.registerReceiver(locationReceiver, filter); // Register our receiver
+
 
 
         //PROMPT ALERT BOX TO MAKE SURE USER REALLY NEED HELP
@@ -69,6 +75,11 @@ class HomeFragment : Fragment(),View.OnClickListener {
 
     override fun onClick(v: View?) {
         TODO("Not yet implemented")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        activity?.unregisterReceiver(locationReceiver);
     }
 
 
