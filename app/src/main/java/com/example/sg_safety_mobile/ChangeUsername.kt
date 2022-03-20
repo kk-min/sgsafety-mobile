@@ -1,5 +1,6 @@
 package com.example.sg_safety_mobile
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -49,34 +50,6 @@ class ChangeUsername : AppCompatActivity() {
     fun uVisualisation(){
         newUname = findViewById(R.id.plain_text_input)
     }
-/*
-    fun validateUInput() : Boolean{
-
-        var present: Boolean = false
-        var name: String = newUname.text.toString()
-
-        //check if text field is empty
-        if(newUname.text.toString()==""){
-            newUname.error = "Please Enter New Username"
-            return false
-        }
-
-        //check in firebase that username has not been used before
-        val db = Firebase.firestore
-        db.collection("Users").whereEqualTo("username" , name)
-            .get()
-            //when retrieval is successful
-            .addOnCompleteListener {
-                //check if the username is in the document and and set the present to 1
-                newUname.error = "Username Already In Use"
-
-            }
-            //when retrieval of collection is failed
-            .addOnFailureListener {Toast.makeText(this, "Cannot access to Firebase!", Toast.LENGTH_LONG).show() }
-
-        return !present
-
-    }*/
 
     fun performUsernameReset(view: View) {
 
@@ -113,37 +86,29 @@ class ChangeUsername : AppCompatActivity() {
                 }
 
                 if (present==0){
-                    //figure out to find the document of the current user and then update it
-                    //FIX THIS!!!
-                    editor.remove("username")
-                    editor.putString("username",name)
-                    editor.commit()
+
+                    //update the current user information in the sharedpreference
+                    editor.apply{
+                        remove("username")
+                        editor.putString("username",name)
+                    }.apply()
+
+                    //obtain the specific User through the documentId
+                    var docid: String = sharedPreference.getString("UserID" , null).toString()
+
+                    //update username
+                    db.collection("Users").document(docid).update("username" , name)
+
                     Toast.makeText(this,"Username Reset Successfully", Toast.LENGTH_SHORT).show()
                 }
 
             }
             //when retrieval of collection is failed
             .addOnFailureListener {
-                // Here you can call you API
-                //store the user info and update login status to shared preference
+
                 Toast.makeText(this, "Cannot access to Firebase!", Toast.LENGTH_LONG).show() }
 
-        /*
-        var valid:Boolean  = false
-        valid = validateUInput()
 
-        if (valid) {
-            // Input is valid, here send data to your server
-            Toast.makeText(this,"Username Reset Unsuccessful", Toast.LENGTH_SHORT).show()
-            val uName = newUname.text.toString()
-            // Here you can call you API
-            //store the user info and update login status to shared preference
-            Toast.makeText(this,"Username Reset Successfully", Toast.LENGTH_SHORT).show()
-        }
-
-        else{
-            Toast.makeText(this,"Username Reset Unsuccessful", Toast.LENGTH_SHORT).show()
-        }*/
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

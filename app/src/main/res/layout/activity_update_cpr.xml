@@ -38,13 +38,12 @@
 
         <DatePicker
             android:id="@+id/date_Picker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="421dp"
+            android:layout_height="186dp"
             android:calendarViewShown="false"
             android:datePickerMode="spinner"
             app:layout_constraintTop_toBottomOf="@id/notice_CPR1"
-            tools:ignore="MissingConstraints"
-            />
+            tools:ignore="MissingConstraints" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -70,31 +69,31 @@
             android:id="@+id/upload_cpr"
             android:layout_width="match_parent"
             android:layout_height="41dp"
-            android:onClick="onClick"
             android:text="@string/uploadCPR"
             app:layout_constraintTop_toBottomOf="@id/adding_cpr" />
 
 
         <ImageView
             android:id="@+id/image_view"
-            android:layout_width="212dp"
-            android:layout_height="288dp"
+            android:layout_width="237dp"
+            android:layout_height="205dp"
             android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/upload_cpr"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="99dp" />
+            tools:ignore="MissingConstraints" />
 
         <Button
             android:id="@+id/submitting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:layout_marginTop="16dp"
-            android:gravity="center_horizontal"
+            android:layout_marginTop="20dp"
             android:text="@string/submitCPR"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/image_view"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="161dp" />
+            tools:ignore="MissingConstraints" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -51,7 +51,6 @@
             android:autofillHints="emailAddress"
             android:background="#00000000"
             android:gravity="left|center_horizontal"
-            android:hint="@string/currentEmail"
             android:inputType="textEmailAddress"
             android:padding="10dp"
             android:textColor="@color/black"

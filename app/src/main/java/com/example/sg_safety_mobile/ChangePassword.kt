@@ -1,6 +1,7 @@
 package com.example.sg_safety_mobile
 
 import android.R.attr.password
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -56,9 +57,8 @@ class ChangePassword : AppCompatActivity() {
     }
 
     // Checking if the input in form is valid
-    fun validateInput(): Boolean {
+    fun validateInput(dummy:String): Boolean {
 
-        var dummy = "Hello1234!"
         //if no current password entered
         if (etCurrentPassword.text.toString() == "") {
             etCurrentPassword.error = "Please Enter Current Password"
@@ -127,15 +127,27 @@ class ChangePassword : AppCompatActivity() {
     }
 
     fun performResetPassword(view: View) {
-        if (validateInput()) {
+
+        //either firestore
+
+        val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
+        val editor: SharedPreferences.Editor=sharedPreference.edit()
+
+
+        var dummy ="Hellow21323"
+
+        if (validateInput(dummy)) {
 
             // Input is valid, here send data to your server
 
             val password = etPassword.text.toString()
             val repeatPassword = etRepeatPassword.text.toString()
 
+
             Toast.makeText(this,"Password Reset Successfully",Toast.LENGTH_SHORT).show()
             // Here you can call you API
+
+
 
         }
     }

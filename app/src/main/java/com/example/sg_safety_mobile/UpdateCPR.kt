@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.SharedPreferences
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
@@ -13,31 +14,37 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.example.sg_safety_mobile.databinding.ActivityUpdateCprBinding
 //import com.example.sg_safety_mobile.databinding.ActivityUpdateCprBinding
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 //import com.google.firebase.storage.ktx.storage
 import java.util.*
+import kotlin.math.exp
 
 
 class UpdateCPR : AppCompatActivity() {
 
 
-    lateinit var pdfUri : Uri
+    lateinit var imageUri : Uri
     private lateinit var upload: TextView
+    lateinit var binding : ActivityUpdateCprBinding
+    lateinit var expiry : String
+    lateinit var imageView: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_update_cpr)
-        //var storage = Firebase.storage
-        //var storageRef = storage.reference
+        binding = ActivityUpdateCprBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+
 
         supportActionBar?.title = "Update CPR";
         supportActionBar?.setDisplayHomeAsUpEnabled(true);
         supportActionBar?.setDisplayShowHomeEnabled(true);
 
         val datePicker = findViewById<DatePicker>(R.id.date_Picker)
-        var upload = findViewById<Button>(R.id.upload_cpr)
 
 
         //date picket to select the date that that certificate expires in
@@ -45,56 +52,86 @@ class UpdateCPR : AppCompatActivity() {
         datePicker.init(today.get(Calendar.YEAR) , today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH)){
                 view, year, month, day ->
             val month = month +1
-
-            val msg = "You Selected: $day/$month/$year"
-            Toast.makeText(this , msg , Toast.LENGTH_SHORT).show()
-
+            expiry="$day/$month/$year"
         }
 
 
-
-
-
-
-        upload.setOnClickListener(View.OnClickListener {
+        binding.uploadCpr.setOnClickListener {
             startFileChooser()
-        })
+        }
+
+        binding.submitting.setOnClickListener {
+            uploadingFile()
+        }
 
     }
+
 
     private fun startFileChooser() {
-        val pdfIntent = Intent(Intent.ACTION_GET_CONTENT)
-        pdfIntent.type = "application/pdf"
-        pdfIntent.addCategory(Intent.CATEGORY_OPENABLE)
-        startActivityForResult(pdfIntent, 12)
+        val pdfIntent = Intent()
+        pdfIntent.type = "image/*"
+        pdfIntent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(pdfIntent, 100)
     }
 
-    @SuppressLint("Range")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            12 -> if (resultCode == RESULT_OK) {
 
-                pdfUri = data?.data!!
-                val uri: Uri = data?.data!!
-                val uriString: String = uri.toString()
-                var pdfName: String? = null
-                if (uriString.startsWith("content://")) {
-                    var myCursor: Cursor? = null
-                    try {
-                        // Setting the PDF to the TextView
-                        myCursor = applicationContext!!.contentResolver.query(uri, null, null, null, null)
-                        if (myCursor != null && myCursor.moveToFirst()) {
-                            pdfName = myCursor.getString(myCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
-                            upload.text = pdfName
-                        }
-                    } finally {
-                        myCursor?.close()
-                    }
-                }
-            }
+        if(requestCode == 100 && resultCode == RESULT_OK){
+            imageUri = data?.data!!
+            //display selected file
+            var iv : ImageView = findViewById(R.id.image_view)
+            iv.setImageURI(imageUri)
+
+
         }
     }
+
+    private fun uploadingFile(){
+        val progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("Uploading file")
+        progressDialog.setCancelable(false)
+        progressDialog.show()
+
+        if(imageUri==null){
+            Toast.makeText(this, "Please upload a document" , Toast.LENGTH_SHORT).show()
+        }
+
+        val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
+        val fileName = sharedPreference.getString("UserID" , null).toString()
+        val storeRef = FirebaseStorage.getInstance().getReference("files/$fileName")
+
+        //adding file into Storage, with file name as Document Id
+        storeRef.putFile(imageUri)
+            .addOnCompleteListener {
+
+
+                var link = storeRef.path.toString()
+                modifyDB(link)
+
+                Toast.makeText(this , "Successful upload" , Toast.LENGTH_LONG).show()
+                if(progressDialog.isShowing) progressDialog.dismiss()
+
+            }
+
+            .addOnFailureListener{
+                if (progressDialog.isShowing) progressDialog.dismiss()
+
+                Toast.makeText(this, "Unsuccessful upload" , Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    fun modifyDB(link:String) {
+        val db = Firebase.firestore
+        val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
+        val docid: String = sharedPreference.getString("UserID" , null).toString()
+
+        //update user's database with relevant file uri and cpr expiry
+        db.collection("Users").document(docid).update("file" , link)
+        db.collection("Users").document(docid).update("cprExpiry" , expiry)
+    }
+
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId === android.R.id.home) {
@@ -104,9 +141,5 @@ class UpdateCPR : AppCompatActivity() {
     }
 
 
-    fun onClick(view: View) {
-        //to access current date from the datePicker and the upload the pdf
-        //button to submit both date and pdf document into the firebase
-    }
 
 }
