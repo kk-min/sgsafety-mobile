@@ -100,7 +100,7 @@ class LocationService : Service() {
             // for ActivityCompat#requestPermissions for more details.
             return
         }
-        loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)!!
+        //loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)!!
 
         ll = object : LocationListener {
             override fun onLocationChanged(p0: Location) {

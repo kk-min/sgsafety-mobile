@@ -16,13 +16,13 @@ class LocationReceiver(val view: View): BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
 
         if(intent.action.equals("UPDATE_LOCATION")){
-            var locBundle: Bundle? = intent.getExtras()
-            var loc : Location =
-                (locBundle?.get(LocationManager.KEY_LOCATION_CHANGED) as Location)
+            var loc: Location? = intent.getParcelableExtra("LOCATION_DATA")
 
             //Set textview5:
             val textview: TextView = view.findViewById(R.id.textView5)
-            textview.setText("Longitude: ${loc.longitude}\nLatitude: ${loc.latitude}")
+            if (loc != null) {
+                textview.setText("Longitude: ${loc.longitude}\nLatitude: ${loc.latitude}")
+            }
         }
     }
 }
