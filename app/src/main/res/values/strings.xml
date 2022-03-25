@@ -19,27 +19,17 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
-    <!-- Change Username -->
-    <string name="resetUsername">"Change Username"</string>
-    <string name="UsernamePolicy1">"Requirements: "</string>
-    <string name="UsernamePolicy2">"1. You can only use Usernames that have not been used by other existing user"</string>
-    <string name="UsernamePolicy3">"2. Username must be at least 8 characters long"</string>
-    <string name="enterUsername">"New Username:"</string>
-    <string name="submitUser">"Submit"</string>
-    <string name="returnManageProfile">"Return to Manage Profile Page"</string>
-
-
     <!-- Change Email -->
     <string name="resetEmail">"Edit Email"</string>
     <string name="currentEmail">"hello@gmail.com"</string>
     <string name="edit">"edit"</string>
     <string name="updateEmail">"Update Email"</string>
 
-    <!-- Verify Contact -->
-    <string name="verifyContact">"Verify Contact Number"</string>
+    <!-- Change Contact -->
+    <string name="verifyContact">"Change Contact Number"</string>
     <string name="contactNotice">"A One-Time Password (OTP) will be sent via SMS"</string>
-    <string name="contactNumber">"Current Contact"</string>
-    <string name="sendCode">"Send Code"</string>
+    <string name="contactNumber">"New Contact Number"</string>
+    <string name="sendCode">"Send OTP"</string>
     <string name="enterCode">"Enter OTP Code"</string>
     <string name="verifyCode">"Verify Code"</string>
 

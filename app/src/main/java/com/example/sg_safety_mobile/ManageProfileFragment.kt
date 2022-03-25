@@ -36,7 +36,6 @@ class ManageProfileFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val v= inflater.inflate(R.layout.fragment_manage_profile, container, false)
-        var button1 =v.findViewById(R.id.btn_username) as Button
         var button2 =v.findViewById(R.id.btn_email) as Button
         var button3 =v.findViewById(R.id.btn_contact) as Button
         var button4 =v.findViewById(R.id.btn_password) as Button
@@ -44,10 +43,6 @@ class ManageProfileFragment : Fragment() {
 
         //NAVIGATE TO RELEVANT SUBPAGES
 
-        button1.setOnClickListener{
-            val intent = Intent( activity , ChangeUsername::class.java)
-            startActivity(intent)
-        }
 
         button2.setOnClickListener{
             val intent = Intent( activity , EditEmail::class.java)

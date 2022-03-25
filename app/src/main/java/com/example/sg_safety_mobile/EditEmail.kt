@@ -10,6 +10,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -23,7 +25,13 @@ class EditEmail : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_email)
         val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
-        val db = Firebase.firestore
+
+        val curr = sharedPreference.getString("login_email" , null).toString()
+        val em_hint = findViewById<EditText>(R.id.current_email)
+        em_hint.hint = curr
+
+
+      /*  val db = Firebase.firestore
         var docid: String = sharedPreference.getString("UserID" , null).toString()
         db.collection("Users").get()
             .addOnCompleteListener{
@@ -35,19 +43,19 @@ class EditEmail : AppCompatActivity() {
                         var em_hint = findViewById<EditText>(R.id.current_email)
 
                         //display current email as the hint
-                        em_hint.setHint(email)
+                        em_hint.hint = email
                         return@addOnCompleteListener
                     }
                 }
             }
             .addOnFailureListener {
-                Toast.makeText(this, "Cannot access to Firebase!", Toast.LENGTH_LONG).show() }
+                Toast.makeText(this, "Cannot access to Firebase!", Toast.LENGTH_LONG).show() }*/
 
 
 
-        supportActionBar?.title = "Edit Email";
-        supportActionBar?.setDisplayHomeAsUpEnabled(true);
-        supportActionBar?.setDisplayShowHomeEnabled(true);
+        supportActionBar?.title = "Edit Email"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         viewEInitializations()
     }
@@ -68,13 +76,13 @@ class EditEmail : AppCompatActivity() {
         return v
     }
 
-    fun viewEInitializations() {
+    private fun viewEInitializations() {
         currentPs = findViewById(R.id.cur_password)
         currentEmail = findViewById(R.id.current_email)
     }
 
     //retrieved password from the firebase will be a parameter of this function
-    private fun validateEInput(dummy:String): Boolean {
+    private fun validateEInput(currentpassword:String): Boolean {
 
         if (currentPs.text.toString() == "") {
             currentPs.error = "Please Enter Current Password"
@@ -82,7 +90,7 @@ class EditEmail : AppCompatActivity() {
         }
 
         //check if input password is same as current password
-        if (currentPs.text.toString() != dummy) {
+        if (currentPs.text.toString() != currentpassword) {
             currentPs.error = "Wrong Current Password"
             return false
         }
@@ -106,18 +114,12 @@ class EditEmail : AppCompatActivity() {
 
         val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
         val db = Firebase.firestore
-        var docid: String = sharedPreference.getString("UserID" , null).toString()
-        var password = sharedPreference.getString("password" , null).toString()
+        val password = sharedPreference.getString("password" , null).toString()
         var present =0
 
         //new email value
-        var new_email = currentEmail.text.toString()
+        val newEmail = currentEmail.text.toString()
 
-        //check if the new email is updated
-        if(new_email==""){
-            currentEmail.error="Please enter a new Email"
-            return
-        }
 
         //check if the current password matches the input password
         if(validateEInput(password)){
@@ -129,24 +131,20 @@ class EditEmail : AppCompatActivity() {
                 .addOnCompleteListener {
                     for(document in it.result!!)
                     {
-                        var emailInDoc:String =document.data.getValue("email").toString()
+                        val emailInDoc:String =document.data.getValue("email").toString()
 
-                        //if username is the same, do not allow update
-                        if(emailInDoc==new_email){
+                        //if email is the same, do not allow update
+                        if(emailInDoc==newEmail){
                             currentEmail.error = "Email Already In Use"
                             Toast.makeText(this,"Email Reset Unsuccessful", Toast.LENGTH_SHORT).show()
                             present =1
                             break
                         }
-
                     }
 
+                    //email has not been used, enable update
                     if (present==0){
-
-                        //update username
-                        db.collection("Users").document(docid).update("email" , new_email)
-
-                        Toast.makeText(this,"Email Reset Successfully", Toast.LENGTH_SHORT).show()
+                        modifyEmail(newEmail)
                     }
 
                 }
@@ -161,9 +159,51 @@ class EditEmail : AppCompatActivity() {
         }
     }
 
+    private fun modifyEmail(newemail : String){
+
+        //getting the current user
+        val user = Firebase.auth.currentUser!!
+        val db = Firebase.firestore
+        val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = sharedPreference.edit()
+        val docid: String = sharedPreference.getString("UserID" , null).toString()
+        val curremail: String = sharedPreference.getString("login_email" , null).toString()
+        val password: String = sharedPreference.getString("password" , null).toString()
+
+
+        val credential = EmailAuthProvider.getCredential(curremail, password)
+
+        //reauthentication needed if user has been logged in for a long time
+        user.reauthenticate(credential)
+            .addOnCompleteListener {
+
+                //attempt to update email in auth after successful reauthentication
+                user.updateEmail(newemail)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            //update email in the firebase
+                            db.collection("Users").document(docid).update("email" , newemail)
+                            editor.putString("login_email",newemail)
+                            editor.apply()
+                            Toast.makeText(this,"Email Reset Successfully", Toast.LENGTH_SHORT).show()
+
+                        }
+                        else{
+                            //fails to update in firestore
+                            Toast.makeText(this,"Firestore update Unsuccessful", Toast.LENGTH_SHORT).show()
+                        }
+
+                    }
+                    .addOnFailureListener { Toast.makeText(this, "Failed Update" , Toast.LENGTH_SHORT).show() }
+            }
+            .addOnFailureListener {Toast.makeText(this, "Failed Reauthentication" , Toast.LENGTH_SHORT).show()  }
+
+
+    }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId === android.R.id.home) {
+        if (item.itemId == android.R.id.home) {
             finish()
         }
         return super.onOptionsItemSelected(item)

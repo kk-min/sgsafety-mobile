@@ -38,7 +38,7 @@
             <!--Enter the verification code that has been generated -->
             <EditText
                 android:id="@+id/inputting_otp"
-                android:layout_width="310dp"
+                android:layout_width="290dp"
                 android:layout_height="40dp"
                 android:autofillHints="phone"
                 android:hint="@string/enterCode"
@@ -62,10 +62,10 @@
         android:id="@+id/verify_contact"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="200dp"
         android:layout_gravity="center_horizontal"
         android:text="@string/verifyCode"
-        android:onClick="onClick"
+        android:onClick="verifyCode"
         />
 
 </FrameLayout>

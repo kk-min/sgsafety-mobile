@@ -1,37 +1,35 @@
 package com.example.sg_safety_mobile
 
-import android.annotation.SuppressLint
-import android.app.Activity
+//import com.example.sg_safety_mobile.databinding.ActivityUpdateCprBinding
+//import com.google.firebase.storage.ktx.storage
 import android.app.ProgressDialog
 import android.content.Intent
 import android.content.SharedPreferences
-import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
-import android.provider.OpenableColumns
 import android.view.MenuItem
-import android.view.View
-import android.widget.*
+import android.widget.DatePicker
+import android.widget.DatePicker.OnDateChangedListener
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
 import com.example.sg_safety_mobile.databinding.ActivityUpdateCprBinding
-//import com.example.sg_safety_mobile.databinding.ActivityUpdateCprBinding
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-//import com.google.firebase.storage.ktx.storage
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
-import kotlin.math.exp
 
 
 class UpdateCPR : AppCompatActivity() {
 
 
     lateinit var imageUri : Uri
-    private lateinit var upload: TextView
     lateinit var binding : ActivityUpdateCprBinding
     lateinit var expiry : String
-    lateinit var imageView: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,31 +37,62 @@ class UpdateCPR : AppCompatActivity() {
         setContentView(binding.root)
 
 
+        supportActionBar?.title = "Update CPR"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
-        supportActionBar?.title = "Update CPR";
-        supportActionBar?.setDisplayHomeAsUpEnabled(true);
-        supportActionBar?.setDisplayShowHomeEnabled(true);
+        //initialise Uri and expiry date
+        imageUri = Uri.EMPTY
+        expiry=""
 
         val datePicker = findViewById<DatePicker>(R.id.date_Picker)
-
+        val today = Calendar.getInstance()
 
         //date picket to select the date that that certificate expires in
-        val today = Calendar.getInstance()
         datePicker.init(today.get(Calendar.YEAR) , today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH)){
                 view, year, month, day ->
-            val month = month +1
+            val month: Int = month +1
             expiry="$day/$month/$year"
         }
 
 
+        //selecting "Upload CPR Certificate" button
         binding.uploadCpr.setOnClickListener {
             startFileChooser()
         }
 
+        //Selecting "Submit" button
         binding.submitting.setOnClickListener {
+            if(inPast(datePicker)){
+                Toast.makeText(this , "Please Select Valid Expiry Date" , Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
             uploadingFile()
         }
 
+    }
+
+    //check if expiry date selected by user is in the past/current date
+    private fun inPast(date: DatePicker) : Boolean{
+
+        //initialise today's date
+        val currentDate = Calendar.getInstance()
+        currentDate.set(currentDate.get(Calendar.YEAR) , currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DAY_OF_MONTH))
+
+        //initialise datePicker value
+        val selectedDate = Calendar.getInstance()
+        selectedDate.set(date.year , date.month , date.dayOfMonth)
+
+        //check if same date
+        if(selectedDate.equals(currentDate)){
+            return true
+        }
+        //check if selected date is in the past
+        if(selectedDate.before(currentDate)){
+            return true
+        }
+
+        return false
     }
 
 
@@ -88,14 +117,26 @@ class UpdateCPR : AppCompatActivity() {
     }
 
     private fun uploadingFile(){
+
+        //no image has been selected for submission
+        if(imageUri.toString() == ""){
+            Toast.makeText(this, "Please Upload A Document" , Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        //datepicker has not been modified by the user
+        if(expiry==""){
+            Toast.makeText(this , "Please Select An Expiry Date" , Toast.LENGTH_LONG).show()
+            return
+        }
+
+
+        //display progress bar when uploading to database
         val progressDialog = ProgressDialog(this)
         progressDialog.setMessage("Uploading file")
         progressDialog.setCancelable(false)
         progressDialog.show()
 
-        if(imageUri==null){
-            Toast.makeText(this, "Please upload a document" , Toast.LENGTH_SHORT).show()
-        }
 
         val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
         val fileName = sharedPreference.getString("UserID" , null).toString()
@@ -105,10 +146,7 @@ class UpdateCPR : AppCompatActivity() {
         storeRef.putFile(imageUri)
             .addOnCompleteListener {
 
-
-                var link = storeRef.path.toString()
-                modifyDB(link)
-
+                modifyDB(storeRef.path.toString())
                 Toast.makeText(this , "Successful upload" , Toast.LENGTH_LONG).show()
                 if(progressDialog.isShowing) progressDialog.dismiss()
 
@@ -121,7 +159,8 @@ class UpdateCPR : AppCompatActivity() {
             }
     }
 
-    fun modifyDB(link:String) {
+    //update relevant information in the database
+    private fun modifyDB(link:String) {
         val db = Firebase.firestore
         val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
         val docid: String = sharedPreference.getString("UserID" , null).toString()
@@ -134,7 +173,7 @@ class UpdateCPR : AppCompatActivity() {
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId === android.R.id.home) {
+        if (item.itemId == android.R.id.home) {
             finish()
         }
         return super.onOptionsItemSelected(item)
