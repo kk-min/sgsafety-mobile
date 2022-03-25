@@ -22,17 +22,19 @@ class CheckLoginStatus : AppCompatActivity() {
                         {
                             Toast.makeText(this, "Welcome Back "+sharedPreference.getString("username",""), Toast.LENGTH_LONG).show()
                             val intent = Intent(this, MainActivity::class.java)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent)
                         }
                         else
                         {
                             val intent = Intent(this, LoginActivity::class.java)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent)
                         }
                      },
-            500
+            700
         )
 
     }

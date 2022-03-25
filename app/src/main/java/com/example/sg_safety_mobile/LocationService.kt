@@ -1,5 +1,7 @@
 package com.example.sg_safety_mobile
 
+import org.osmdroid.util.GeoPoint
+
 import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
@@ -20,7 +22,6 @@ import androidx.annotation.Nullable
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -100,12 +101,12 @@ class LocationService : Service() {
             // for ActivityCompat#requestPermissions for more details.
             return
         }
-        //loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)!!
 
         ll = object : LocationListener {
             override fun onLocationChanged(p0: Location) {
-                Log.d("LocationService", "Location Changed!!!")
-                val geopoint = GeoPoint(p0.latitude, p0.longitude)
+                Log.d("LocationService", "Location Changed!")
+                //val geopoint = GeoPoint(p0.latitude, p0.longitude)
+                val geopoint = com.google.firebase.firestore.GeoPoint(p0.latitude, p0.longitude)
                 val db = Firebase.firestore
                 val TAG = "firebase"
                 val longlat = db.collection("Users").document("EA001nbepebIvfDsO9o3")
@@ -123,6 +124,7 @@ class LocationService : Service() {
                             e
                         )
                     }
+                Log.d("Location change", "${p0.latitude},${p0.longitude}")
                 Log.d("Location change", "${p0.latitude},${p0.longitude}")
 
                 sendDataToActivity(p0)
