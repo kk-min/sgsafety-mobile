@@ -12,7 +12,6 @@ import java.util.*
 class SMSManager (){
     private val helpNo = 111
     private val helpMessage = "Ambulance"
-    //NEED TO CONVERT LONGITUDE LATITUDE TO POSTAL CODE,NEED TO BRING IN USER LOCATION
 
     //SEND SMS TO THE DESIGNATED PHONE NUMBER
     fun sendSMS(location:String) {

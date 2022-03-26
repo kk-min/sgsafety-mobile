@@ -53,19 +53,19 @@ class CPR_Map : AppCompatActivity() {
         val mapController = map.controller
         val startPoint = GeoPoint(1.3524, 103.9449);
         mapController.animateTo(startPoint);
-        mapController.setZoom(17)
+        mapController.setZoom(20)
 
         //mapController.setCenter(startPoint);
 
-        map.maxZoomLevel= 20.0
+        map.maxZoomLevel= 24.0
         map.minZoomLevel=14.0
         addMarker(map, startPoint, "Start Point")
-        val marker = Marker(map)
+        //val marker = Marker(map)
         //marker.position = startPoint
         //marker.icon = getDrawable(R.drawable.ic_launcher_foreground)
         //marker.title = "Test Marker"
         //marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
-        map.overlays.add(marker)
+        //map.overlays.add(marker)
         map.invalidate()
         val endPoint = GeoPoint(1.3532, 103.9481)
         addingWaypoints(map, startPoint,endPoint)
@@ -76,7 +76,7 @@ class CPR_Map : AppCompatActivity() {
             ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION,android.Manifest.permission.ACCESS_FINE_LOCATION),111)
         }
 
-        Log.d("LocationService", "LocationService Starting...")
+        Log.d("CZ2006:LocationService", "LocationService Starting...")
         locationService = LocationService()
         locationServiceIntent = Intent(this, locationService!!.javaClass)
         if (!isMyServiceRunning(locationService!!.javaClass)) {
@@ -144,6 +144,7 @@ class CPR_Map : AppCompatActivity() {
     private fun addMarker(map: MapView?, point: GeoPoint, title: String) {
         val startMarker = Marker(map)
         //Lat ‎23.746466 Lng 90.376015
+        startMarker.icon=map?.context?.resources?.getDrawable(R.drawable.userloc)
         startMarker.position = point
         startMarker.title = title
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
@@ -194,12 +195,12 @@ class CPR_Map : AppCompatActivity() {
         val roadOverlay = RoadManager.buildRoadOverlay(road)
         map?.overlays?.add(roadOverlay);
 
-        //val nodeIcon = map?.context?.resources?.getDrawable(R.mipmap.ic_navigation)
+        val nodeIcon = map?.context?.resources?.getDrawable(R.mipmap.walk)
         for (i in 0 until road.mNodes.size) {
             val node = road.mNodes[i]
             val nodeMarker = Marker(map)
             nodeMarker.position = node.mLocation
-            //nodeMarker.setIcon(nodeIcon)
+            nodeMarker.icon=nodeIcon
             nodeMarker.title = "Step $i"
             map?.overlays?.add(nodeMarker)
             nodeMarker.snippet = node.mInstructions;
@@ -210,11 +211,11 @@ class CPR_Map : AppCompatActivity() {
         val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         for (service in manager.getRunningServices(Int.MAX_VALUE)) {
             if (serviceClass.name == service.service.className) {
-                Log.i("Service status", "Running")
+                Log.i("CZ2006:Service status", "Running")
                 return true
             }
         }
-        Log.i("Service status", "Not running")
+        Log.i("CZ2006:Service status", "Not running")
         return false
     }
 
@@ -227,12 +228,12 @@ class CPR_Map : AppCompatActivity() {
             val roadOverlay = RoadManager.buildRoadOverlay(road)
             map?.overlays?.add(roadOverlay);
 
-            //val nodeIcon = map?.context?.resources?.getDrawable(R.mipmap.ic_navigation)
+            val nodeIcon = map?.context?.resources?.getDrawable(R.mipmap.walk)
             for (i in 0 until road.mNodes.size) {
                 val node = road.mNodes[i]
                 val nodeMarker = Marker(map)
                 nodeMarker.position = node.mLocation
-                //nodeMarker.setIcon(nodeIcon)
+                nodeMarker.setIcon(nodeIcon)
                 nodeMarker.title = "Step $i"
                 map?.overlays?.add(nodeMarker)
                 nodeMarker.snippet = node.mInstructions;

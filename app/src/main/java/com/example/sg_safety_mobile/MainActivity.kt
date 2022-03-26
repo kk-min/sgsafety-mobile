@@ -38,10 +38,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        MyFirebaseMessagingService.subscribeTopic(this,"HelpMessage")
+
+
+
         // Call findViewById on the DrawerLayout
-
-
         drawerLayout = findViewById(R.id.drawerLayout)
 
         // Pass the ActionBarToggle action into the drawerListener
@@ -59,14 +59,7 @@ class MainActivity : AppCompatActivity() {
         {
             replaceFragment(HomeFragment(),"SG Safety")
         }
-        Log.d("LocationService", "LocationService Starting...")
-        locationService = LocationService()
-        locationServiceIntent = Intent(this, locationService!!.javaClass)
-        if (!isMyServiceRunning(locationService!!.javaClass)) {
-            startService(locationServiceIntent)
-        }
-
-
+        startLocationService()
 
 
         // Call findViewById on the NavigationView
@@ -101,58 +94,74 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_sign_out -> {
-                    val alertDialog: AlertDialog.Builder = AlertDialog.Builder(this)
-
-                    alertDialog.setTitle("Sign Out")
-                    alertDialog.setMessage("Are You sure")
-                    alertDialog.setPositiveButton(
-                        "Yes"
-                    ) { _, _ ->
-                        Toast.makeText(this, "Signed Out", Toast.LENGTH_SHORT).show()
-                        val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
-                        val editor: SharedPreferences.Editor=sharedPreference.edit()
-                        editor.clear()
-                        editor.commit()
-                        MyFirebaseMessagingService.unsubscribeTopic(this,"HelpMessage")
-
-                        val intent = Intent(this, LoginActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent)
-
-
-                    }
-                    //cancel the alert button
-                    alertDialog.setNegativeButton(
-                        "No"
-                    ) { _, _ -> }
-                    val alert: AlertDialog = alertDialog.create()
-                    alert.setCanceledOnTouchOutside(false)
-                    alert.show()
+                    promptSignOutAlert()
                     true
                 }
 
-
                 else -> {
-
                     false
                 }
             }
         }
     }
+    private fun promptSignOutAlert(){
+        val alertDialog: AlertDialog.Builder = AlertDialog.Builder(this)
+
+        alertDialog.setTitle("Sign Out")
+        alertDialog.setMessage("Are You Sure?")
+        alertDialog.setPositiveButton(
+            "Yes"
+        ) { _, _ ->
+            Toast.makeText(this, "Signed Out", Toast.LENGTH_SHORT).show()
+            val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
+            val editor: SharedPreferences.Editor=sharedPreference.edit()
+            editor.clear()
+            editor.commit()
+            MyFirebaseMessagingService.unsubscribeTopic(this,"HelpMessage")
+
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent)
+        }
+        //cancel the alert button
+        alertDialog.setNegativeButton(
+            "No"
+        ) { _, _ -> }
+        val alert: AlertDialog = alertDialog.create()
+        alert.setCanceledOnTouchOutside(false)
+        alert.show()
+
+    }
+    fun startLocationService(){
+        Log.d("CZ2006:MainActivity", "LocationService Starting...")
+        locationService = LocationService()
+        locationServiceIntent = Intent(this, locationService!!.javaClass)
+        if (!isMyServiceRunning(locationService!!.javaClass)) {
+            startService(locationServiceIntent)
+        }
+    }
+
+
     private fun isMyServiceRunning(serviceClass: Class<*>): Boolean {
         val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         for (service in manager.getRunningServices(Int.MAX_VALUE)) {
             if (serviceClass.name == service.service.className) {
-                Log.i("Service status", "Running")
+                Log.i("CZ2006:Service status", "Running")
                 return true
             }
         }
-        Log.i("Service status", "Not running")
+        Log.i("CZ2006:Service status", "Not running")
         return false
     }
+
     // override the onSupportNavigateUp() function to launch the Drawer when the hamburger icon is clicked
     override fun onSupportNavigateUp(): Boolean {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+            actionBarToggle.syncState()
+            return true
+        }
         drawerLayout.openDrawer(navView)
         return true
     }
@@ -179,5 +188,14 @@ class MainActivity : AppCompatActivity() {
 
         //set title when clicked
         setTitle(title)
+    }
+    override fun onDestroy() {
+        //stopService(mServiceIntent);
+        Log.e("CZ2006:Destroy In MainActivity", "Restarting....." )
+        val broadcastIntent = Intent()
+        broadcastIntent.action = "restartservice"
+        broadcastIntent.setClass(this, LocationServiceRestarter::class.java)
+        this.sendBroadcast(broadcastIntent)
+        super.onDestroy()
     }
 }

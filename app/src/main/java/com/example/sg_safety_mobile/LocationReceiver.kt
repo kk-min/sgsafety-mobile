@@ -20,12 +20,9 @@ class LocationReceiver(val view: View): BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
 
 
-        if(intent.action.equals("UPDATE_LOCATION")){
+        if(intent.action.equals("UPDATE_LOCATION+ADDRESS")){
             var loc: Location? = intent.getParcelableExtra("LOCATION_DATA")
-
             //Update marker
-
-
             if (loc != null) {
                 updateMarker(loc)
                 val text=view?.findViewById<TextView>(R.id.location)
@@ -38,13 +35,12 @@ class LocationReceiver(val view: View): BroadcastReceiver() {
             if (loc != null) {
                 updateMarker(loc)
             }
-
         }
     }
     fun updateMarker(loc: Location?){
         //Delete marker if applicable, then insert new currentLocation marker
         if (currentMarker != null){
-            Log.d("LocationService", "prev Location deleted")
+            Log.d("CZ2006:LocationService", "prev Location deleted")
             mapView?.overlays?.remove(currentMarker)
         }
         var point: GeoPoint? = loc?.let { GeoPoint(it.latitude, loc.longitude) }
@@ -56,7 +52,7 @@ class LocationReceiver(val view: View): BroadcastReceiver() {
         mapController.animateTo(point);
         mapView?.overlays?.add(currentMarker)
         mapView.invalidate()
-        Log.d("LocationService", "New location set")
+        Log.d("CZ2006:LocationService", "New location set")
 
     }
 

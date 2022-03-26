@@ -1,10 +1,8 @@
 package com.example.sg_safety_mobile
 
 
-import android.Manifest
 import android.app.Activity
 import android.app.ActivityManager
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -19,12 +17,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.fragment.app.Fragment
+import android.widget.CompoundButton
+import android.widget.Switch
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.getSystemService
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import androidx.fragment.app.Fragment
 import org.osmdroid.bonuspack.routing.OSRMRoadManager
 import org.osmdroid.bonuspack.routing.Road
 import org.osmdroid.bonuspack.routing.RoadManager
@@ -43,9 +41,12 @@ class HomeFragment : Fragment(),View.OnClickListener {
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private lateinit var map : MapView;
     lateinit var locationReceiver: LocationReceiver;
-
+    var locationService: LocationService? = null
+    var locationServiceIntent: Intent? = null
     lateinit var lm: LocationManager
     lateinit var loc: Location
+
+
     //FOR PAGE VIEW
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,30 +58,8 @@ class HomeFragment : Fragment(),View.OnClickListener {
 
         Configuration.getInstance().load(v.context , PreferenceManager.getDefaultSharedPreferences(v.context))
 
-
-
         map = v.findViewById<MapView>(R.id.map)
         map.setTileSource(TileSourceFactory.MAPNIK)
-        /*val db = Firebase.firestore
-        val longlat = db.collection("Users").document("EA001nbepebIvfDsO9o3")
-        longlat.get()
-            .addOnSuccessListener {document->
-                val startPoint=document.getGeoPoint("Location")
-                if(startPoint!=null)
-                {
-                    val long=startPoint.longitude
-                    val lat=startPoint.latitude
-                    val geopoint=GeoPoint(lat,long)
-                    addMarker(map,geopoint,"Current Location")
-                    Log.e( "Location ", "Marker added")
-
-                }
-
-            }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "get failed with ", exception)
-
-            }*/
         val mapController = map.controller
         mapController.setZoom(20)
         //mapController.setCenter(startPoint);
@@ -93,10 +72,10 @@ class HomeFragment : Fragment(),View.OnClickListener {
         {
             ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION,android.Manifest.permission.ACCESS_FINE_LOCATION),111)
         }
-        locationReceiver = LocationReceiver(v)
-        val filter = IntentFilter("UPDATE_LOCATION")
-        v.context.registerReceiver(locationReceiver, filter); // Register our receiverontext));
 
+        locationReceiver = LocationReceiver(v)
+        val filter = IntentFilter("UPDATE_LOCATION+ADDRESS")
+        v.context.registerReceiver(locationReceiver, filter); // Register our receiverontext));
 
 
         //PROMPT ALERT BOX TO MAKE SURE USER REALLY NEED HELP
@@ -195,6 +174,7 @@ class HomeFragment : Fragment(),View.OnClickListener {
     private fun addMarker(map: MapView?, point: GeoPoint, title: String) {
         val startMarker = Marker(map)
         //Lat ‎23.746466 Lng 90.376015
+        startMarker.icon=map?.context?.resources?.getDrawable(R.drawable.userloc)
         startMarker.position = point
         startMarker.title = title
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
@@ -203,81 +183,81 @@ class HomeFragment : Fragment(),View.OnClickListener {
     }
 
 
-    private fun addingWaypoints(map: MapView?, startPoint: GeoPoint,endPoint:GeoPoint) {
-        val roadManager = OSRMRoadManager(view?.context,"MYUSERAGENT")
-        roadManager.setMean(OSRMRoadManager.MEAN_BY_FOOT)
-        val waypoints = ArrayList<GeoPoint>()
-        waypoints.add(startPoint)
-        //waypoints.add(GeoPoint(23.816237, 90.366725))
-
-        waypoints.add(endPoint)
-
-        MyRoadAsyncTask(roadManager, waypoints).execute()
-
-        Observable.fromCallable {
-            retrievingRoad(roadManager, waypoints)
-        }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-
-            }, {
-
-            }, {
-                map?.invalidate()
-            })
-
-        addMarker(map, endPoint, "End Point")
-    }
-
-    private fun retrievingRoad(roadManager: OSRMRoadManager, waypoints: ArrayList<GeoPoint>) {
-        // Retrieving road
-
-        val road = roadManager.getRoad(waypoints)
-        val roadOverlay = RoadManager.buildRoadOverlay(road)
-        map?.overlays?.add(roadOverlay);
-
-        val nodeIcon = map?.context?.resources?.getDrawable(R.mipmap.ic_launcher)
-        for (i in 0 until road.mNodes.size) {
-            val node = road.mNodes[i]
-            val nodeMarker = Marker(map)
-            nodeMarker.position = node.mLocation
-            nodeMarker.setIcon(nodeIcon)
-            nodeMarker.title = "Step $i"
-            map?.overlays?.add(nodeMarker)
-            nodeMarker.snippet = node.mInstructions;
-            nodeMarker.subDescription = Road.getLengthDurationText(map?.context, node.mLength, node.mDuration);
-        }
-    }
+//    private fun addingWaypoints(map: MapView?, startPoint: GeoPoint,endPoint:GeoPoint) {
+//        val roadManager = OSRMRoadManager(view?.context,"MYUSERAGENT")
+//        roadManager.setMean(OSRMRoadManager.MEAN_BY_FOOT)
+//        val waypoints = ArrayList<GeoPoint>()
+//        waypoints.add(startPoint)
+//        //waypoints.add(GeoPoint(23.816237, 90.366725))
+//
+//        waypoints.add(endPoint)
+//
+//        MyRoadAsyncTask(roadManager, waypoints).execute()
+//
+//        Observable.fromCallable {
+//            retrievingRoad(roadManager, waypoints)
+//        }
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe({
+//
+//            }, {
+//
+//            }, {
+//                map?.invalidate()
+//            })
+//
+//        addMarker(map, endPoint, "End Point")
+//    }
+//
+//    private fun retrievingRoad(roadManager: OSRMRoadManager, waypoints: ArrayList<GeoPoint>) {
+//        // Retrieving road
+//
+//        val road = roadManager.getRoad(waypoints)
+//        val roadOverlay = RoadManager.buildRoadOverlay(road)
+//        map?.overlays?.add(roadOverlay);
+//
+//        val nodeIcon = map?.context?.resources?.getDrawable(R.mipmap.ic_launcher)
+//        for (i in 0 until road.mNodes.size) {
+//            val node = road.mNodes[i]
+//            val nodeMarker = Marker(map)
+//            nodeMarker.position = node.mLocation
+//            nodeMarker.setIcon(nodeIcon)
+//            nodeMarker.title = "Step $i"
+//            map?.overlays?.add(nodeMarker)
+//            nodeMarker.snippet = node.mInstructions;
+//            nodeMarker.subDescription = Road.getLengthDurationText(map?.context, node.mLength, node.mDuration);
+//        }
+//    }
     
 
 
-    private inner class MyRoadAsyncTask(val roadManager: OSRMRoadManager,
-                                        val waypoints: ArrayList<GeoPoint>) : AsyncTask<Void, Void, String>() {
-
-        override fun doInBackground(vararg params: Void?): String? {
-            val road = roadManager.getRoad(waypoints)
-            val roadOverlay = RoadManager.buildRoadOverlay(road)
-            map?.overlays?.add(roadOverlay);
-
-            val nodeIcon = map?.context?.resources?.getDrawable(R.mipmap.ic_launcher)
-            for (i in 0 until road.mNodes.size) {
-                val node = road.mNodes[i]
-                val nodeMarker = Marker(map)
-                nodeMarker.position = node.mLocation
-                nodeMarker.setIcon(nodeIcon)
-                nodeMarker.title = "Step $i"
-                map?.overlays?.add(nodeMarker)
-                nodeMarker.snippet = node.mInstructions;
-                nodeMarker.subDescription = Road.getLengthDurationText(map?.context, node.mLength, node.mDuration);
-            }
-
-            return null
-        }
-
-        override fun onPostExecute(result: String?) {
-            map?.invalidate()
-        }
-    }
+//    private inner class MyRoadAsyncTask(val roadManager: OSRMRoadManager,
+//                                        val waypoints: ArrayList<GeoPoint>) : AsyncTask<Void, Void, String>() {
+//
+//        override fun doInBackground(vararg params: Void?): String? {
+//            val road = roadManager.getRoad(waypoints)
+//            val roadOverlay = RoadManager.buildRoadOverlay(road)
+//            map?.overlays?.add(roadOverlay);
+//
+//            val nodeIcon = map?.context?.resources?.getDrawable(R.mipmap.ic_launcher)
+//            for (i in 0 until road.mNodes.size) {
+//                val node = road.mNodes[i]
+//                val nodeMarker = Marker(map)
+//                nodeMarker.position = node.mLocation
+//                nodeMarker.setIcon(nodeIcon)
+//                nodeMarker.title = "Step $i"
+//                map?.overlays?.add(nodeMarker)
+//                nodeMarker.snippet = node.mInstructions;
+//                nodeMarker.subDescription = Road.getLengthDurationText(map?.context, node.mLength, node.mDuration);
+//            }
+//
+//            return null
+//        }
+//
+//        override fun onPostExecute(result: String?) {
+//            map?.invalidate()
+//        }
+//    }
 
 }
