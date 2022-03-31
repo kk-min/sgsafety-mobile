@@ -28,8 +28,11 @@ class LoginActivity : AppCompatActivity() {
 
         //Initialize button and textbox
         val loginButton: Button = findViewById(R.id.login_button)
+        //input email
         val username = findViewById<EditText>(R.id.username)
+        //input password
         val password = findViewById<EditText>(R.id.password)
+
 
 
         val remember_password = findViewById<RadioButton>(R.id.remember_password)
@@ -64,6 +67,10 @@ class LoginActivity : AppCompatActivity() {
 
 
     private fun validateAcc(userName: String, passWord: String, editor: SharedPreferences.Editor) {
+        if(userName=="" || passWord == ""){
+            Toast.makeText(this, "Enter email/password" , Toast.LENGTH_SHORT).show()
+            return
+        }
 
         Firebase.auth.signInWithEmailAndPassword(userName, passWord)
             .addOnCompleteListener(this) { task ->
@@ -100,7 +107,7 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(intent)
                 } else {
                     // If sign in fails, display a message to the user.
-                    Toast.makeText(this, "Email/Password Is Wrong", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Invalid Email/Password", Toast.LENGTH_SHORT).show()
                 }
             }
     }

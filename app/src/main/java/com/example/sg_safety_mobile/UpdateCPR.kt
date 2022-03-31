@@ -2,25 +2,25 @@ package com.example.sg_safety_mobile
 
 //import com.example.sg_safety_mobile.databinding.ActivityUpdateCprBinding
 //import com.google.firebase.storage.ktx.storage
+
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
 import android.content.SharedPreferences
+import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.view.MenuItem
 import android.widget.DatePicker
-import android.widget.DatePicker.OnDateChangedListener
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
 import com.example.sg_safety_mobile.databinding.ActivityUpdateCprBinding
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.*
 
 
@@ -56,10 +56,16 @@ class UpdateCPR : AppCompatActivity() {
         }
 
 
-        //selecting "Upload CPR Certificate" button
+        //selecting "Upload Image version of CPR Certificate" button
         binding.uploadCpr.setOnClickListener {
-            startFileChooser()
+            startImageFileChooser()
         }
+
+        binding.uploadPdfCpr.setOnClickListener {
+            startPdfFileChooser()
+        }
+
+
 
         //Selecting "Submit" button
         binding.submitting.setOnClickListener {
@@ -71,6 +77,7 @@ class UpdateCPR : AppCompatActivity() {
         }
 
     }
+
 
     //check if expiry date selected by user is in the past/current date
     private fun inPast(date: DatePicker) : Boolean{
@@ -96,25 +103,63 @@ class UpdateCPR : AppCompatActivity() {
     }
 
 
-    private fun startFileChooser() {
+    private fun startImageFileChooser() {
         val pdfIntent = Intent()
         pdfIntent.type = "image/*"
         pdfIntent.action = Intent.ACTION_GET_CONTENT
         startActivityForResult(pdfIntent, 100)
     }
 
+    private fun startPdfFileChooser() {
+        val pdfIntent = Intent()
+        pdfIntent.type = "application/pdf"
+        pdfIntent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(pdfIntent , 200)
+    }
+
+
+    @SuppressLint("Range")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+        //upload an image
         if(requestCode == 100 && resultCode == RESULT_OK){
             imageUri = data?.data!!
             //display selected file
-            var iv : ImageView = findViewById(R.id.image_view)
+            val pdfTextView : TextView = findViewById(R.id.pdfText)
+            pdfTextView.text = null
+
+            val iv : ImageView = findViewById(R.id.image_view)
             iv.setImageURI(imageUri)
 
+        }
+
+        //upload a pdf
+        if(requestCode == 200 && resultCode == RESULT_OK){
+            imageUri=data?.data!!
+
+            var cursor: Cursor? = null
+            try {
+                cursor = this.contentResolver.query(imageUri, null , null, null ,null)
+                if (cursor != null && cursor.moveToFirst()) {
+
+                    //remove previously selected image
+                    val iv : ImageView = findViewById(R.id.image_view)
+                    iv.setImageURI(null)
+
+                    //display pdf name
+                    var displayName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                    val pdfTextView : TextView = findViewById(R.id.pdfText)
+                    pdfTextView.text = displayName
+
+                }
+            } finally {
+                cursor?.close()
+            }
 
         }
     }
+
 
     private fun uploadingFile(){
 

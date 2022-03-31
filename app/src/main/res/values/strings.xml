@@ -49,7 +49,8 @@
     <string name="expiryCPR">"Expiry Date:"</string>
     <string name="noticeCPR1">"You will be liable for the accuracy of submitted information"</string>
     <string name="noticeCPR2">"Submit a valid CPR Certificate:"</string>
-    <string name="uploadCPR">"Upload CPR Certificate"</string>
+    <string name="uploadCPR">"Upload Image Version"</string>
+    <string name="uploadPdfCPR">"Upload Pdf Version"</string>
     <string name="submitCPR">"Submit"</string>
     <string name="title_activity_change_password">ChangePassword</string>
 
