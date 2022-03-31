@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.sg_safety_mobile">
 
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
 
     <application
@@ -13,7 +20,17 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/sgsafety_icon_large"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SG_Safety_Mobile">
+        android:theme="@style/Theme.SG_Safety_Mobile"
+        tools:replace="android:allowBackup">
+        <activity
+            android:name=".CPR_Map"
+            android:exported="false" />
+        <activity
+            android:name=".HelperChoice"
+            android:exported="false" />
+        <activity
+            android:name=".ChoicePage"
+            android:exported="false" />
         <activity
             android:name=".UpdateCPR"
             android:exported="false" />
@@ -27,14 +44,7 @@
             android:name=".EditEmail"
             android:exported="false" />
 
-        <activity
-
-            android:name=".HelperChoice"
-            android:exported="false" />
-        <activity
-            android:name=".ChoicePage"
-            android:exported="false" />
-        <activity
+        
 
             android:name=".LoginActivity"
             android:exported="false" />
@@ -68,6 +78,13 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <service
+            android:name=".LocationService"
+            android:foregroundServiceType="location"></service>
+
+        <receiver android:name=".LocationReceiver" />
+
     </application>
 
 </manifest>
