@@ -105,7 +105,7 @@ class LoginActivity : AppCompatActivity() {
                             //val docID=sharedPreference.getString("UserID","")
 
                             editor.commit()
-                            MyFirebaseMessagingService.subscribeTopic(this,"HelpMessage")
+
 
                             //Go to the main page of this application
                             Toast.makeText(this, "Login Successful", Toast.LENGTH_LONG).show()

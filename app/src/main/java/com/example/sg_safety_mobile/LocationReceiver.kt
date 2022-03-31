@@ -16,10 +16,14 @@ import java.util.*
 
 class LocationReceiver(val view: View): BroadcastReceiver() {
     var currentMarker: Marker? = null;
-    val mapView=view.findViewById<MapView>(R.id.map)
+    lateinit var mapView:MapView
     override fun onReceive(context: Context, intent: Intent) {
-
-
+        mapView=view.findViewById<MapView>(R.id.map)
+        if(mapView==null)
+        {
+            Log.e("CZ2006:LocationReceiver:","Map is null")
+            return
+        }
         if(intent.action.equals("UPDATE_LOCATION+ADDRESS")){
             var loc: Location? = intent.getParcelableExtra("LOCATION_DATA")
             //Update marker
@@ -44,15 +48,22 @@ class LocationReceiver(val view: View): BroadcastReceiver() {
             mapView?.overlays?.remove(currentMarker)
         }
         var point: GeoPoint? = loc?.let { GeoPoint(it.latitude, loc.longitude) }
-        currentMarker = Marker(mapView)
-        currentMarker?.position = point
-        currentMarker?.title = "Current Location"
-        currentMarker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-        val mapController = mapView.controller
-        mapController.animateTo(point);
-        mapView?.overlays?.add(currentMarker)
-        mapView.invalidate()
-        Log.d("CZ2006:LocationService", "New location set")
+
+        try{
+            currentMarker = Marker(mapView)
+            currentMarker?.position = point
+            currentMarker?.title = "Current Location"
+            currentMarker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            val mapController = mapView.controller
+            mapController.animateTo(point);
+            mapView?.overlays?.add(currentMarker)
+            mapView.invalidate()
+            Log.d("CZ2006:LocationService", "New location set and marker added")
+        }
+        catch(e:Exception) {
+            e.printStackTrace()
+            Log.e("CZ2006:LocationService", "Error adding marker")
+        }
 
     }
 
