@@ -11,6 +11,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -82,6 +86,12 @@ class ChangePassword : AppCompatActivity() {
             return false
         }
 
+        if(etCurrentPassword.text.toString()==etPassword.text.toString())
+        {
+            etPassword.error="Please Do Not Reuse An Old Password"
+            return false
+        }
+
 
         when {
             //check if contain at least 8 characters
@@ -129,26 +139,25 @@ class ChangePassword : AppCompatActivity() {
     fun performResetPassword(view: View) {
 
         //either firestore
+        val user = Firebase.auth.currentUser
+        val db = Firebase.firestore
+        val sharedPreference: SharedPreferences = getSharedPreferences("Login", MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = sharedPreference.edit()
+        var docid: String = sharedPreference.getString("UserID", null).toString()
+        var dummy = sharedPreference.getString("password", null).toString()
+        val curremail: String = sharedPreference.getString("login_email", null).toString()
 
-        val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
-        val editor: SharedPreferences.Editor=sharedPreference.edit()
+        val credential = EmailAuthProvider.getCredential(curremail, dummy)
 
-
-        var dummy ="Hellow21323"
-
-        if (validateInput(dummy)) {
-
-            // Input is valid, here send data to your server
-
-            val password = etPassword.text.toString()
-            val repeatPassword = etRepeatPassword.text.toString()
-
-
-            Toast.makeText(this,"Password Reset Successfully",Toast.LENGTH_SHORT).show()
-            // Here you can call you API
-
-
-
+        user?.reauthenticate(credential)?.addOnCompleteListener {
+            if (validateInput(dummy)) {
+                val newpassword = etPassword.text.toString()
+                user?.updatePassword(newpassword)
+                db.collection("Users").document(docid).update("password", newpassword)
+                editor.putString("password", newpassword)
+                editor.commit()
+                Toast.makeText(this, "Password Reset Successfully", Toast.LENGTH_SHORT).show()
+            }
         }
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
