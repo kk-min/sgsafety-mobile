@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        MyFirebaseMessagingService.subscribeTopic(this@MainActivity,"HelpMessage")
         // Call findViewById on the DrawerLayout
         drawerLayout = findViewById(R.id.drawerLayout)
 
@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity() {
                         val editor: SharedPreferences.Editor=sharedPreference.edit()
                         editor.clear()
                         editor.commit()
-
+                        MyFirebaseMessagingService.unsubscribeTopic(this,"HelpMessage")
                         val intent = Intent(this, LoginActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent)
