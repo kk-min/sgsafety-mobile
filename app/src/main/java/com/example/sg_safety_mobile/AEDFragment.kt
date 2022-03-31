@@ -1,32 +1,57 @@
 package com.example.sg_safety_mobile
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
+import com.beust.klaxon.JsonObject
+import com.beust.klaxon.Parser
+import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.json.JSONArray
+import org.json.JSONObject
+import java.net.URL
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [AEDFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+
 class AEDFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }//
+
+
+        val intent = Intent(Intent.ACTION_VIEW)
+        // intent.data = Uri.parse("https://data.gov.sg/api/action/datastore_search?resource_id=cdab7435-7bf0-4fa4-a8bd-6cfd231ca73a")
+        // Log.i("","${intent.data}")
+        lifecycleScope.launchWhenCreated {
+            withContext(Dispatchers.IO) {
+                // network call
+//                val api = URL("https://data.gov.sg/api/action/datastore_search?resource_id=cdab7435-7bf0-4fa4-a8bd-6cfd231ca73a").readText()
+                val result = URL("https://data.gov.sg/api/action/datastore_search?resource_id=cdab7435-7bf0-4fa4-a8bd-6cfd231ca73a").readText()
+                val parser: Parser = Parser()
+                val stringBuilder: StringBuilder = StringBuilder(result)
+                val json: JsonObject = parser.parse(stringBuilder) as JsonObject
+                // println("Time : ${json.string("time")}, Since epoch : ${json.long("milliseconds_since_epoch")}, Date : ${json.string("date")}, ")
+                val apiResponse = URL("https://data.gov.sg/api/action/datastore_search?resource_id=cdab7435-7bf0-4fa4-a8bd-6cfd231ca73a").readText()
+
+                Log.i("This is the retrieve aed","${json.toJsonString()}")
+                val aedtext: TextView =requireView().findViewById(R.id.aedText)
+                aedtext.text=json.toJsonString()
+
+            }
+        }
+
+
     }
 
     override fun onCreateView(
@@ -37,23 +62,5 @@ class AEDFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_aed, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment AEDFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            AEDFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
+
 }

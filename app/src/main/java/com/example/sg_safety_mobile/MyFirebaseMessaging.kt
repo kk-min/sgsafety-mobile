@@ -145,7 +145,7 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
         val current_user_id= sharedPreference.getString("UserID","")
 
         //NOTIFICATION DISPLAY CHECK( (I)NOT CURRENT USER (II)DISTANCE<=400M)
-        /*if(victim_id==current_user_id)
+        if(victim_id==current_user_id)
         {
             Log.e("CZ2006:Messaging: Current user is the one who sent out message", "Notification not display")
             return
@@ -163,7 +163,7 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
                 return
             }
 
-        }*/
+        }
         val intent = Intent(this,ChoicePage::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 
