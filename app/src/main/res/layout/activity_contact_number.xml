@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ContactNumber">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/contactNotice"
+        android:textColor="@color/black"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp">
+
+        <!-- Users to type in their current Mobile number -->
+        <EditText
+            android:id="@+id/mobileNum"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="@string/contactNumber"
+            android:autofillHints="phone"
+            android:inputType="phone"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:orientation="horizontal">
+
+            <!--Enter the verification code that has been generated -->
+            <EditText
+                android:id="@+id/inputting_otp"
+                android:layout_width="290dp"
+                android:layout_height="40dp"
+                android:autofillHints="phone"
+                android:hint="@string/enterCode"
+                android:inputType="phone" />
+
+            <!--Button to send OTP code , need to generate -->
+            <Button
+                android:id="@+id/btn_sendOTP"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:onClick="sendCode"
+                android:text="@string/sendCode" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <!--Submit to verify the code, successful notice if correct, else resend? -->
+    <Button
+        android:id="@+id/verify_contact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/verifyCode"
+        android:onClick="verifyCode"
+        />
+
+</FrameLayout>

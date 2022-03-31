@@ -1,10 +1,11 @@
 package com.example.sg_safety_mobile
-
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import androidx.fragment.app.Fragment
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,8 +35,38 @@ class ManageProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_manage_profile, container, false)
+        val v= inflater.inflate(R.layout.fragment_manage_profile, container, false)
+        var button2 =v.findViewById(R.id.btn_email) as Button
+        var button3 =v.findViewById(R.id.btn_contact) as Button
+        var button4 =v.findViewById(R.id.btn_password) as Button
+        var button5 =v.findViewById(R.id.btn_cpr) as Button
+
+        //NAVIGATE TO RELEVANT SUBPAGES
+
+
+        button2.setOnClickListener{
+            val intent = Intent( activity , EditEmail::class.java)
+            startActivity(intent)
+        }
+
+        button3.setOnClickListener{
+            val intent = Intent( activity , ContactNumber::class.java)
+            startActivity(intent)
+        }
+
+        button4.setOnClickListener{
+            val intent = Intent( activity , ChangePassword::class.java)
+            startActivity(intent)
+        }
+
+        button5.setOnClickListener{
+            val intent = Intent( activity , UpdateCPR::class.java)
+            startActivity(intent)
+        }
+
+        return v
     }
+
 
     companion object {
         /**
@@ -55,5 +86,7 @@ class ManageProfileFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+
+
     }
 }
