@@ -20,7 +20,7 @@ class CheckLoginStatus : AppCompatActivity() {
             Runnable {
                         if(sharedPreference.getBoolean("log in status",false))
                         {
-                            Toast.makeText(this, "Welcome Back "+sharedPreference.getString("username",""), Toast.LENGTH_LONG).show()
+                            Toast.makeText(this, "Welcome Back "+sharedPreference.getString("login_email",""), Toast.LENGTH_LONG).show()
                             val intent = Intent(this, MainActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                             //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

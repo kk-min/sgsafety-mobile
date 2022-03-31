@@ -17,4 +17,41 @@
     <string name="menu_about">About</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <!-- Change Email -->
+    <string name="resetEmail">"Edit Email"</string>
+    <string name="currentEmail">"hello@gmail.com"</string>
+    <string name="edit">"edit"</string>
+    <string name="updateEmail">"Update Email"</string>
+
+    <!-- Change Contact -->
+    <string name="verifyContact">"Change Contact Number"</string>
+    <string name="contactNotice">"A One-Time Password (OTP) will be sent via SMS"</string>
+    <string name="contactNumber">"New Contact Number"</string>
+    <string name="sendCode">"Send OTP"</string>
+    <string name="enterCode">"Enter OTP Code"</string>
+    <string name="verifyCode">"Verify Code"</string>
+
+    <!-- Change Password -->
+    <string name="currentP">"Current Password"</string>
+    <string name="requirementPassword">"Requirement:"</string>
+    <string name="requirementPassword1">"1. Contain at least 8 characters"</string>
+    <string name="requirementPassword2">"2. Consists of Uppercase and Lowercase alphabets"</string>
+    <string name="requirementPassword3">"3. Contains at least 1 digit"</string>
+    <string name="requirementPassword4">"3. Contains at least 1 special character (eg. ! , @ , *)"</string>
+    <string name="newPassword">"New Password"</string>
+    <string name="confirmPassword">"Confirm Password"</string>
+    <string name="resetPassword">"Reset"</string>
+
+    <!-- Upload CPR certificate -->
+    <string name="updateCPR">"Update CPR Certificate"</string>
+    <string name="expiryCPR">"Expiry Date:"</string>
+    <string name="noticeCPR1">"You will be liable for the accuracy of submitted information"</string>
+    <string name="noticeCPR2">"Submit a valid CPR Certificate:"</string>
+    <string name="uploadCPR">"Upload Image Version"</string>
+    <string name="uploadPdfCPR">"Upload Pdf Version"</string>
+    <string name="submitCPR">"Submit"</string>
+    <string name="title_activity_change_password">ChangePassword</string>
+
 </resources>

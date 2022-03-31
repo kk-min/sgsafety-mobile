@@ -4,9 +4,11 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -20,21 +22,17 @@ class LoginActivity : AppCompatActivity() {
         supportActionBar?.hide();
 
         //Shared Preference is used to keep user login
-        val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
-        val editor:SharedPreferences.Editor=sharedPreference.edit()
-        //get the login status from the shared preference ,default value is false if did not get ant value from it
-        /*if(sharedPreference.getBoolean("log in status",false))
-        {
-            Toast.makeText(this, "Welcome Back "+sharedPreference.getString("username",""), Toast.LENGTH_LONG).show()
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }*/
+        val sharedPreference: SharedPreferences = getSharedPreferences("Login", MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = sharedPreference.edit()
 
 
         //Initialize button and textbox
         val loginButton: Button = findViewById(R.id.login_button)
+        //input email
         val username = findViewById<EditText>(R.id.username)
+        //input password
         val password = findViewById<EditText>(R.id.password)
+
 
 
         val remember_password = findViewById<RadioButton>(R.id.remember_password)
@@ -48,24 +46,76 @@ class LoginActivity : AppCompatActivity() {
             }
         })
 
-        val forgetpassword=findViewById<TextView>(R.id.forgot_password)
-        forgetpassword.setOnClickListener{
+        val forgetpassword = findViewById<TextView>(R.id.forgot_password)
+        forgetpassword.setOnClickListener {
             val intent = Intent(this, ForgetPasswordActivity::class.java)
             startActivity(intent)
         }
 
-        val registerAcc=findViewById<TextView>(R.id.register)
+        val registerAcc = findViewById<TextView>(R.id.register)
         registerAcc.setOnClickListener {
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://sg-safety.web.app/register"))
+            val browserIntent =
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://sg-safety.web.app/register"))
             startActivity(browserIntent)
         }
         //validate account info input after login button is pressed
-        loginButton.setOnClickListener{
-            validateAccount(username.getText().toString(),password.getText().toString(),editor)
+        loginButton.setOnClickListener {
+            validateAcc(username.text.toString(), password.text.toString(), editor)
         }
 
     }
 
+
+    private fun validateAcc(userName: String, passWord: String, editor: SharedPreferences.Editor) {
+        if(userName=="" || passWord == ""){
+            Toast.makeText(this, "Enter email/password" , Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        Firebase.auth.signInWithEmailAndPassword(userName, passWord)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+
+                    // Sign in success, update UI with the signed-in user's information
+                    val user = Firebase.auth.currentUser
+                    editor.putString("login_email",userName)
+                    editor.putString("password",passWord)
+                    editor.putBoolean("log in status",true)
+                    editor.commit()
+
+                    val db = Firebase.firestore
+
+                    //retrieving and storing document id to sharedpreference
+                    db.collection("Users")
+                        .get()
+                        .addOnCompleteListener {
+                            //check all the documents in the collection
+                            for(document in it.result!!)
+                            {
+                                val emailInDoc:String=document.data.getValue("email").toString()
+                                if(emailInDoc==userName)
+                                {
+                                    editor.putString("UserID" , document.id)
+                                    editor.commit()
+                                    break
+                                }
+                            }
+                        }
+                        .addOnFailureListener {  }
+
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Toast.makeText(this, "Invalid Email/Password", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
+}
+
+
+    /*
     //validate account by taking out username and password from FireStore Database and compare with current input
     private fun validateAccount(userName:String, passWord:String,editor: SharedPreferences.Editor)
     {
@@ -74,8 +124,11 @@ class LoginActivity : AppCompatActivity() {
         //checkPwd is for validation of password if user is found
         var checkPwd:Int=0
 
-        //Get all the document from the "Users" collection from the FireStore Database
+
         val db = Firebase.firestore
+
+        //Get all the document from the "Users" collection from the FireStore Database
+        //val db = Firebase.firestore
         db.collection("Users")
             .get()
             //when retrieval is success
@@ -100,6 +153,20 @@ class LoginActivity : AppCompatActivity() {
                             editor.putBoolean("log in status",true)
 
                             editor.putString("UserID",document.id)
+
+                            Firebase.auth.signInWithEmailAndPassword(userName, passWord)
+                                .addOnCompleteListener(this) { task ->
+                                    if (task.isSuccessful) {
+                                        // Sign in success, update UI with the signed-in user's information
+                                        val user = Firebase.auth.currentUser
+                                        //updateUI(user)
+                                    } else {
+                                        // If sign in fails, display a message to the user.
+                                        Toast.makeText(baseContext, "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show()
+                                        //updateUI(null)
+                                    }
+                                }
 
                             //val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
                             //val docID=sharedPreference.getString("UserID","")
@@ -129,5 +196,5 @@ class LoginActivity : AppCompatActivity() {
             .addOnFailureListener {Toast.makeText(this, "Cannot access to Firebase!", Toast.LENGTH_LONG).show() }
     }
 
-}
+}*/
 

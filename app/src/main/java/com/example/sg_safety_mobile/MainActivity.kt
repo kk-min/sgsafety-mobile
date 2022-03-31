@@ -40,7 +40,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
+
         MyFirebaseMessagingService.subscribeTopic(this,"HelpMessage")
+
         // Call findViewById on the DrawerLayout
         drawerLayout = findViewById(R.id.drawerLayout)
 
@@ -94,7 +96,10 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_sign_out -> {
+
                     promptSignOutAlert()
+
+                    
                     true
                 }
 

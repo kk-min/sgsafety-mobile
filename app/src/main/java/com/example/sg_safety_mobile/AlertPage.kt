@@ -31,6 +31,7 @@ class AlertPage : AppCompatActivity() {
         setContentView(R.layout.activity_alert_page)
 
         //SEND SMS TO SCDF(Phone No.=111)
+
         loc=getUserLocation()
         address=reverseGeocode(loc.latitude,loc.longitude)
         sendMessage(address)
@@ -38,6 +39,8 @@ class AlertPage : AppCompatActivity() {
         val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
         val userId=sharedPreference.getString("UserID","").toString()
         MyFirebaseMessagingService.sendMessage("SG Safety Need You!","There is a user nearby that require help, please click on notification to continue","HelpMessage",userId)
+
+
 
         Toast.makeText(this, "SMS Sent to SCDF", Toast.LENGTH_SHORT).show()
         Log.d("CZ2006:AlertPage", "SMS and Notification sent to other user")
