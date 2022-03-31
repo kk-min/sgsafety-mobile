@@ -173,6 +173,7 @@ class LoginActivity : AppCompatActivity() {
 
                             editor.commit()
 
+
                             //Go to the main page of this application
                             Toast.makeText(this, "Login Successful", Toast.LENGTH_LONG).show()
                             val intent = Intent(this, MainActivity::class.java)
