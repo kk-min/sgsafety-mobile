@@ -45,22 +45,22 @@ class ManageProfileFragment : Fragment() {
 
 
         button2.setOnClickListener{
-            val intent = Intent( activity , EditEmail::class.java)
+            val intent = Intent( activity , EditEmailActivity::class.java)
             startActivity(intent)
         }
 
         button3.setOnClickListener{
-            val intent = Intent( activity , ContactNumber::class.java)
+            val intent = Intent( activity , ContactNumberActivity::class.java)
             startActivity(intent)
         }
 
         button4.setOnClickListener{
-            val intent = Intent( activity , ChangePassword::class.java)
+            val intent = Intent( activity , ChangePasswordActivity::class.java)
             startActivity(intent)
         }
 
         button5.setOnClickListener{
-            val intent = Intent( activity , UpdateCPR::class.java)
+            val intent = Intent( activity , UpdateCPRActivity::class.java)
             startActivity(intent)
         }
 

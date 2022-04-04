@@ -1,4 +1,4 @@
-package com.example.sg_safety_mobile
+package com.example.sg_safety_mobile.Presentation.Activity
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.sg_safety_mobile.LoginActivity
+import com.example.sg_safety_mobile.R
 
-class CheckLoginStatus : AppCompatActivity() {
+class CheckLoginStatusActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_check_login_status)

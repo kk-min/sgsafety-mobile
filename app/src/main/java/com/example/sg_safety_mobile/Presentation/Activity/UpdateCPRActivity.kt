@@ -24,7 +24,7 @@ import com.google.firebase.storage.FirebaseStorage
 import java.util.*
 
 
-class UpdateCPR : AppCompatActivity() {
+class UpdateCPRActivity : AppCompatActivity() {
 
 
     lateinit var imageUri : Uri

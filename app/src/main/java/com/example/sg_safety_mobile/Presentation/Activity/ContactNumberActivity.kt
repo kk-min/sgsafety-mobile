@@ -1,4 +1,4 @@
-package com.example.sg_safety_mobile
+package com.example.sg_safety_mobile.Presentation.Activity
 
 import android.Manifest
 import android.content.SharedPreferences
@@ -15,13 +15,14 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.*
+import com.example.sg_safety_mobile.R
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.lang.String.format
 import java.util.*
 
 
-class ContactNumber : AppCompatActivity() {
+class ContactNumberActivity : AppCompatActivity() {
 
     private lateinit var contactNum: EditText
     private lateinit var inputOTP: EditText
@@ -128,7 +129,7 @@ class ContactNumber : AppCompatActivity() {
                                 }
 
                                 override fun onFinish() {
-                                    Toast.makeText(this@ContactNumber , "OTP Expired" , Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this@ContactNumberActivity , "OTP Expired" , Toast.LENGTH_SHORT).show()
                                     givenOTP=""
                                 }
                             }.start()

@@ -1,6 +1,5 @@
-package com.example.sg_safety_mobile
+package com.example.sg_safety_mobile.Presentation.Activity
 
-import android.R.attr.password
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,15 +10,14 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.sg_safety_mobile.R
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 
-class ChangePassword : AppCompatActivity() {
+class ChangePasswordActivity : AppCompatActivity() {
 
     lateinit var etPassword:EditText
     lateinit var etRepeatPassword: EditText

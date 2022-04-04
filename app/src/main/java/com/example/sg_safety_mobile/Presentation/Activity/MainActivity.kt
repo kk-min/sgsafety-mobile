@@ -2,24 +2,16 @@ package com.example.sg_safety_mobile
 
 
 
-import android.app.ActivityManager
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.content.SharedPreferences
-import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import com.example.sg_safety_mobile.Logic.*
 
 import com.google.android.material.navigation.NavigationView
 
@@ -30,10 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var actionBarToggle: ActionBarDrawerToggle
     private lateinit var navView: NavigationView
-
-    var locationServiceIntent: Intent? = null
-    private var locationService: LocationService? = null
-    lateinit var locationReceiver: LocationReceiver;
+    private val mainManager :MainActivityManager = MainActivityManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         {
             replaceFragment(HomeFragment(),"SG Safety")
         }
-        startLocationService()
+        mainManager.startLocationService()
 
 
         // Call findViewById on the NavigationView
@@ -96,10 +85,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_sign_out -> {
-
-                    promptSignOutAlert()
-
-                    
+                    mainManager.promptSignOutAlert()
                     true
                 }
 
@@ -108,56 +94,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-    private fun promptSignOutAlert(){
-        val alertDialog: AlertDialog.Builder = AlertDialog.Builder(this)
-
-        alertDialog.setTitle("Sign Out")
-        alertDialog.setMessage("Are You Sure?")
-        alertDialog.setPositiveButton(
-            "Yes"
-        ) { _, _ ->
-            Toast.makeText(this, "Signed Out", Toast.LENGTH_SHORT).show()
-            val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
-            val editor: SharedPreferences.Editor=sharedPreference.edit()
-            editor.clear()
-            editor.commit()
-            MyFirebaseMessagingService.unsubscribeTopic(this,"HelpMessage")
-
-            val intent = Intent(this, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent)
-        }
-        //cancel the alert button
-        alertDialog.setNegativeButton(
-            "No"
-        ) { _, _ -> }
-        val alert: AlertDialog = alertDialog.create()
-        alert.setCanceledOnTouchOutside(false)
-        alert.show()
-
-    }
-    fun startLocationService(){
-        Log.d("CZ2006:MainActivity", "LocationService Starting...")
-        locationService = LocationService()
-        locationServiceIntent = Intent(this, locationService!!.javaClass)
-        if (!isMyServiceRunning(locationService!!.javaClass)) {
-            startService(locationServiceIntent)
-        }
-    }
-
-
-    private fun isMyServiceRunning(serviceClass: Class<*>): Boolean {
-        val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
-            if (serviceClass.name == service.service.className) {
-                Log.i("CZ2006:Service status", "Running")
-                return true
-            }
-        }
-        Log.i("CZ2006:Service status", "Not running")
-        return false
     }
 
     // override the onSupportNavigateUp() function to launch the Drawer when the hamburger icon is clicked
@@ -194,6 +130,7 @@ class MainActivity : AppCompatActivity() {
         //set title when clicked
         setTitle(title)
     }
+
     override fun onDestroy() {
         //stopService(mServiceIntent);
         Log.e("CZ2006:Destroy In MainActivity", "Restarting....." )

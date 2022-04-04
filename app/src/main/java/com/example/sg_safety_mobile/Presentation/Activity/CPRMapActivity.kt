@@ -1,4 +1,4 @@
-package com.example.sg_safety_mobile
+package com.example.sg_safety_mobile.Presentation.Activity
 
 import android.app.ActivityManager
 import android.content.Context
@@ -11,6 +11,9 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
 import androidx.core.app.ActivityCompat
+import com.example.sg_safety_mobile.Logic.LocationReceiver
+import com.example.sg_safety_mobile.Logic.LocationService
+import com.example.sg_safety_mobile.R
 import org.osmdroid.bonuspack.routing.OSRMRoadManager
 import org.osmdroid.bonuspack.routing.Road
 import org.osmdroid.bonuspack.routing.RoadManager
@@ -23,7 +26,7 @@ import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
-class CPR_Map : AppCompatActivity() {
+class CPRMapActivity : AppCompatActivity() {
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private lateinit var map : MapView;
     var locationServiceIntent: Intent? = null

@@ -15,10 +15,11 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import java.io.IOException
+import com.example.sg_safety_mobile.Logic.MyFirebaseMessagingService
+import com.example.sg_safety_mobile.Logic.SMSManager
 import java.util.*
 
-class AlertPage : AppCompatActivity() {
+class AlertPageActivity : AppCompatActivity() {
     lateinit var lm: LocationManager
     lateinit var loc: Location
     private val smsSender= SMSManager()

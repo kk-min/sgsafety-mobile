@@ -2,38 +2,27 @@ package com.example.sg_safety_mobile
 
 
 import android.app.Activity
-import android.app.ActivityManager
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
-import android.os.AsyncTask
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.CompoundButton
-import android.widget.Switch
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
-import org.osmdroid.bonuspack.routing.OSRMRoadManager
-import org.osmdroid.bonuspack.routing.Road
-import org.osmdroid.bonuspack.routing.RoadManager
+import com.example.sg_safety_mobile.Logic.LocationReceiver
+import com.example.sg_safety_mobile.Logic.LocationService
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 
 
 class HomeFragment : Fragment(),View.OnClickListener {
@@ -103,7 +92,7 @@ class HomeFragment : Fragment(),View.OnClickListener {
             "Yes"
         ) { _, _ ->
             //Go to Alert Page Activity which will display No. of helpers accepted to help
-            val intent = Intent(activity, AlertPage::class.java)
+            val intent = Intent(activity, AlertPageActivity::class.java)
             startActivity(intent)
 
         }
