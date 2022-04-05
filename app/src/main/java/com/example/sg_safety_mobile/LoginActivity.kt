@@ -55,7 +55,7 @@ class LoginActivity : AppCompatActivity() {
         val registerAcc = findViewById<TextView>(R.id.register)
         registerAcc.setOnClickListener {
             val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse("https://sg-safety.web.app/register"))
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://sg-safety.web.app/Register"))
             startActivity(browserIntent)
         }
         //validate account info input after login button is pressed
