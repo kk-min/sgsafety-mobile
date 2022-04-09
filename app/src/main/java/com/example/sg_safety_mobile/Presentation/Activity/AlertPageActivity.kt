@@ -1,4 +1,4 @@
-package com.example.sg_safety_mobile
+package com.example.sg_safety_mobile.Presentation.Activity
 
 import android.Manifest
 import android.content.Context
@@ -16,13 +16,16 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.sg_safety_mobile.Logic.MyFirebaseMessagingService
+import com.example.sg_safety_mobile.Logic.ReverseGeocoder
 import com.example.sg_safety_mobile.Logic.SMSManager
+import com.example.sg_safety_mobile.R
 import java.util.*
 
 class AlertPageActivity : AppCompatActivity() {
     lateinit var lm: LocationManager
     lateinit var loc: Location
     private val smsSender= SMSManager()
+    val geoCoder = ReverseGeocoder(this)
     private val permissionRequest = 101
     lateinit var address:String
     //private val userLocation =longlatToAddress(103.6920069,1.3525963)
@@ -34,7 +37,7 @@ class AlertPageActivity : AppCompatActivity() {
         //SEND SMS TO SCDF(Phone No.=111)
 
         loc=getUserLocation()
-        address=reverseGeocode(loc.latitude,loc.longitude)
+        address=geoCoder.reverseGeocode(loc.latitude,loc.longitude)
         sendMessage(address)
 
         val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
@@ -92,15 +95,6 @@ class AlertPageActivity : AppCompatActivity() {
         val location= lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)!!
         return location
     }
-
-    private fun reverseGeocode(latitude:Double,longitude:Double):String{
-        var gc= Geocoder(this, Locale.getDefault())
-        var addresses= gc.getFromLocation(latitude,longitude,1)
-        var address: Address = addresses[0]
-        var addressStr:String="${address.getAddressLine(0)} ${address.locality}"
-        return addressStr
-    }
-
     /*private fun reverseGeocode(latitude:Double,longitude:Double,context:AppCompatActivity):String{
         var gc= Geocoder(context, Locale.getDefault())
         var addresses= gc.getFromLocation(latitude,longitude,1)

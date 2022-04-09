@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.sg_safety_mobile.LoginActivity
 import com.example.sg_safety_mobile.R
 
 class CheckLoginStatusActivity : AppCompatActivity() {

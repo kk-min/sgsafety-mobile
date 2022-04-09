@@ -15,6 +15,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.*
+import com.example.sg_safety_mobile.Logic.FirebaseManager
 import com.example.sg_safety_mobile.R
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -26,7 +27,8 @@ class ContactNumberActivity : AppCompatActivity() {
 
     private lateinit var contactNum: EditText
     private lateinit var inputOTP: EditText
-    private lateinit var givenOTP: kotlin.String
+    private lateinit var givenOTP: String
+    private val firebaseManager = FirebaseManager(this);
 
     private val permissionCode = 1
 
@@ -38,6 +40,17 @@ class ContactNumberActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         viewCInitializations()
+
+        val returnC = findViewById<Button>(R.id.btn_sendOTP)
+        val verifyContact = findViewById<Button>(R.id.verify_contact)
+
+        returnC.setOnClickListener(View.OnClickListener {
+            firebaseManager.sendCode(returnC, contactNum, checkForSmsPermission())
+        })
+
+        verifyContact.setOnClickListener(View.OnClickListener {
+            firebaseManager.verifyCode(verifyContact, contactNum, inputOTP)
+        })
     }
 
     fun onCreateView(
@@ -49,135 +62,12 @@ class ContactNumberActivity : AppCompatActivity() {
         val returnC = v.findViewById<Button>(R.id.btn_sendOTP)
         val verifyContact = v.findViewById<Button>(R.id.verify_contact)
 
-
-        returnC.setOnClickListener(View.OnClickListener {
-            sendCode(returnC)
-
-        })
-
-        verifyContact.setOnClickListener(View.OnClickListener {
-                verifyCode(verifyContact)
-        })
-
         return v
     }
 
     private fun viewCInitializations() {
         contactNum = findViewById(R.id.mobileNum)
         inputOTP = findViewById(R.id.inputting_otp)
-    }
-
-
-    //generate and send OTP code via SMS
-    fun sendCode(view:View) {
-
-        val db = Firebase.firestore
-        var invalid=0
-
-        //check if contact is Empty
-        if(contactNum.text.toString() ==""){
-            contactNum.error = "Please Enter Contact Number"
-            return
-        }
-
-        //check for format of the input number
-        /*if(!contactNum.text.toString().matches("^(9|8)\\d{3}[- .]?\\d{4}$".toRegex())){
-            contactNum.error = "Wrong Contact Number Format"
-            return
-        }*/
-
-
-        //check if contact number has been used
-        db.collection("Users")
-            .get()
-            //when retrieval is successful
-            .addOnCompleteListener {
-                for(document in it.result!!) {
-
-                    //if registered users do not have a registered contact number
-                    if(!document.data.containsKey("contact")){
-                        continue
-                    }
-
-                    val contactInDoc: kotlin.String = document.data.getValue("contact").toString()
-
-                    //if contact is the same, do not allow update
-                    if (contactInDoc == contactNum.text.toString()) {
-                        contactNum.error = "Phone Number Already In Use"
-                        Toast.makeText(this, "Contact Number Reset Unsuccessful", Toast.LENGTH_SHORT).show()
-                        invalid = 1
-                        break
-                    }
-                }
-
-                if(invalid==0) {
-                    val random = Random()
-                    val generatedPassword = format("%06d", random.nextInt(1000000))
-                    givenOTP = generatedPassword.toString()
-                    val num = contactNum.text.toString()
-                    try{
-                        if(checkForSmsPermission()){
-                            val smsManager: SmsManager = SmsManager.getDefault()
-                            val msg= "Your SMS OTP is: $givenOTP . Use it within 2 minutes to access the SG Safety app"
-                            smsManager.sendTextMessage(num , null, msg, null, null)
-
-                            //timer for 2 minutes. Each OTP is valid for 2 minutes only
-                            val time = object : CountDownTimer(120000, 1000) {
-
-                                override fun onTick(millisUntilFinished: Long) {
-                                    var dur = millisUntilFinished/1000
-                                }
-
-                                override fun onFinish() {
-                                    Toast.makeText(this@ContactNumberActivity , "OTP Expired" , Toast.LENGTH_SHORT).show()
-                                    givenOTP=""
-                                }
-                            }.start()
-
-                            //Toast.makeText(this, "Message Sent", Toast.LENGTH_SHORT).show()
-                        }
-                    } catch (e : Exception) {
-                        Toast.makeText(this, "Requesting for permission", Toast.LENGTH_SHORT).show()
-                    }
-                   }
-            }
-            //when retrieval of collection is failed
-            .addOnFailureListener {
-                Toast.makeText(this, "Cannot access to Firebase!", Toast.LENGTH_LONG).show() }
-
-
-    }
-
-
-
-    fun verifyCode(view: View) {
-        val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
-        val db = Firebase.firestore
-        var docid: kotlin.String = sharedPreference.getString("UserID" , null).toString()
-
-        if(contactNum.text.toString()==""){
-            contactNum.error="Please Enter A New Contact Number"
-            return
-        }
-
-        if(inputOTP.text.toString()==""){
-            inputOTP.error="Please Enter OTP"
-            return
-        }
-
-        if(givenOTP==""){
-            inputOTP.error="OTP Expired. Generate another OTP"
-            return
-        }
-
-        if(inputOTP.text.toString()!=givenOTP){
-            inputOTP.error="Wrong OTP"
-            return
-        }
-        else{
-            db.collection("Users").document(docid).update("contact" , contactNum.text.toString())
-            Toast.makeText(this,"Contact Number Reset Successfully", Toast.LENGTH_SHORT).show()
-        }
     }
 
     //checking if user has enabled the checking of password
@@ -210,7 +100,6 @@ class ContactNumberActivity : AppCompatActivity() {
         }
 
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {

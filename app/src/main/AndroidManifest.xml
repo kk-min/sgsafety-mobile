@@ -23,42 +23,42 @@
         android:theme="@style/Theme.SG_Safety_Mobile"
         tools:replace="android:allowBackup">
         <activity
-            android:name=".CPR_Map"
+            android:name=".Presentation.Activity.CPRMapActivity"
             android:exported="false" />
         <activity
-            android:name=".HelperChoice"
+            android:name=".Presentation.Activity.HelperChoiceActivity"
             android:exported="false" />
         <activity
-            android:name=".ChoicePage"
+            android:name=".Presentation.Activity.ChoicePageActivity"
             android:exported="false" />
         <activity
-            android:name=".UpdateCPR"
+            android:name=".Presentation.Activity.UpdateCPRActivity"
             android:exported="false" />
         <activity
-            android:name=".ChangePassword"
+            android:name=".Presentation.Activity.ChangePasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".ContactNumber"
+            android:name=".Presentation.Activity.ContactNumberActivity"
             android:exported="false" />
         <activity
-            android:name=".EditEmail"
+            android:name=".Presentation.Activity.EditEmailActivity"
             android:exported="false" />
 
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".Presentation.Activity.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".ForgetPasswordActivity"
+            android:name=".Presentation.Activity.ForgetPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Presentation.Activity.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".AlertPage"
+            android:name=".Presentation.Activity.AlertPageActivity"
             android:exported="false" />
         <activity
-            android:name=".CheckLoginStatus"
+            android:name=".Presentation.Activity.CheckLoginStatusActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -72,7 +72,7 @@
             android:resource="@array/preloaded_fonts" />
 
         <service
-            android:name=".MyFirebaseMessagingService"
+            android:name=".Logic.MyFirebaseMessagingService"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -80,10 +80,19 @@
         </service>
 
         <service
-            android:name=".LocationService"
+            android:name=".Logic.LocationService"
             android:foregroundServiceType="location"></service>
 
-        <receiver android:name=".LocationReceiver" />
+        <receiver android:name=".Logic.LocationReceiver" />
+
+        <receiver
+            android:name=".Logic.LocationServiceRestarter"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="restartservice" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

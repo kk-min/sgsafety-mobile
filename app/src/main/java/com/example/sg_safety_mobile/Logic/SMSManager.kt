@@ -1,4 +1,4 @@
-package com.example.sg_safety_mobile
+package com.example.sg_safety_mobile.Logic
 
 import android.location.Address
 import android.location.Geocoder

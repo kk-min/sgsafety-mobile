@@ -1,12 +1,10 @@
-package com.example.sg_safety_mobile
+package com.example.sg_safety_mobile.Presentation.Fragment
 
 
 import android.app.Activity
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationManager
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.LayoutInflater
@@ -16,8 +14,9 @@ import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import com.example.sg_safety_mobile.Presentation.Activity.AlertPageActivity
 import com.example.sg_safety_mobile.Logic.LocationReceiver
-import com.example.sg_safety_mobile.Logic.LocationService
+import com.example.sg_safety_mobile.R
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -30,10 +29,6 @@ class HomeFragment : Fragment(),View.OnClickListener {
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private lateinit var map : MapView;
     lateinit var locationReceiver: LocationReceiver;
-    var locationService: LocationService? = null
-    var locationServiceIntent: Intent? = null
-    lateinit var lm: LocationManager
-    lateinit var loc: Location
 
 
     //FOR PAGE VIEW
@@ -84,7 +79,7 @@ class HomeFragment : Fragment(),View.OnClickListener {
 
     //ALERT TO MAKE SURE USER DON'T ACCIDENTALLY PRESS THE SEND HELP BUTTON
     private fun showAlertDialog() {
-        val alertDialog: AlertDialog.Builder = AlertDialog.Builder(activity!!)
+        val alertDialog: AlertDialog.Builder = AlertDialog.Builder(requireActivity())
 
         alertDialog.setTitle("Are you sure?")
         alertDialog.setMessage("By pressing Yes,help message will be sent to SCDF and Users nearby")

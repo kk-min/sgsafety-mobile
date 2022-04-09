@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditEmail">
+    tools:context=".Presentation.Activity.EditEmailActivity">
 
 
     <com.google.android.material.textfield.TextInputLayout
@@ -69,7 +69,6 @@
         android:background="#B90E0A"
         android:text="@string/updateEmail"
         android:textColor="@color/black"
-        android:onClick="performEmailReset"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

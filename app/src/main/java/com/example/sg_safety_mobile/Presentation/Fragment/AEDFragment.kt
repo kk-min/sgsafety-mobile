@@ -1,4 +1,4 @@
-package com.example.sg_safety_mobile
+package com.example.sg_safety_mobile.Presentation.Fragment
 
 import android.content.Intent
 import android.net.Uri
@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
+import com.example.sg_safety_mobile.R
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

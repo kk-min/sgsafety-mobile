@@ -1,4 +1,4 @@
-package com.example.sg_safety_mobile
+package com.example.sg_safety_mobile.Presentation.Activity
 
 
 
@@ -11,7 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import com.example.sg_safety_mobile.*
 import com.example.sg_safety_mobile.Logic.*
+import com.example.sg_safety_mobile.Presentation.Fragment.*
 
 import com.google.android.material.navigation.NavigationView
 

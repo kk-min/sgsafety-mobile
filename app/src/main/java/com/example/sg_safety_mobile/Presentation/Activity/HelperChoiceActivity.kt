@@ -1,4 +1,4 @@
-package com.example.sg_safety_mobile
+package com.example.sg_safety_mobile.Presentation.Activity
 
 
 import android.content.Intent
@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.widget.Button
 
 import androidx.appcompat.app.AppCompatActivity
-
+import com.example.sg_safety_mobile.R
 
 
 class HelperChoiceActivity : AppCompatActivity() {

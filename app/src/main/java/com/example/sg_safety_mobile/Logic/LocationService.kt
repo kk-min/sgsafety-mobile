@@ -1,6 +1,4 @@
-package com.example.sg_safety_mobile
-
-import org.osmdroid.util.GeoPoint
+package com.example.sg_safety_mobile.Logic
 
 import android.Manifest
 import android.app.Notification
@@ -19,7 +17,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -30,6 +27,7 @@ import com.google.firebase.ktx.Firebase
 
 class LocationService : Service() {
     var counter = 0
+    val firebaseManager: FirebaseManager = FirebaseManager(this)
 
     override fun onCreate() {
         super.onCreate()
@@ -110,7 +108,7 @@ class LocationService : Service() {
 
                 Log.d("CZ2006:LocationService", "Location Changed! Doing Location Update.....")
                 val geopoint = com.google.firebase.firestore.GeoPoint(p0.latitude, p0.longitude)
-                updateUserLocationToDatabase(geopoint)
+                firebaseManager.updateUserLocationToDatabase(geopoint)
                 sendDataToActivity(p0)
                 sendDataToActivity2(p0)
 
@@ -132,23 +130,7 @@ class LocationService : Service() {
             ll as LocationListener
         )
     }
-    fun updateUserLocationToDatabase(geoPoint: com.google.firebase.firestore.GeoPoint){
 
-        val db = Firebase.firestore
-        val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
-        val current_user_id=sharedPreference.getString("UserID","").toString()
-        val longlat = db.collection("Users").document(current_user_id)
-
-
-        longlat.update("Location", geoPoint)
-            .addOnSuccessListener {
-                Log.d("CZ2006:LocationService", "Location successfully updated to firebase !")
-            }
-            .addOnFailureListener { e ->
-                Log.w("CZ2006:LocationService", "Error updating location to firebase", e)
-            }
-        Log.d("CZ2006:LocationService", "Location changed: ${geoPoint.latitude},${geoPoint.longitude}")
-    }
     fun stopLocationUpdates(){
         if(lm!=null&&ll!=null)
         {

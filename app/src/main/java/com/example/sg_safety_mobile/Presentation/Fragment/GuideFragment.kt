@@ -1,4 +1,4 @@
-package com.example.sg_safety_mobile
+package com.example.sg_safety_mobile.Presentation.Fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
+import com.example.sg_safety_mobile.Detail
+import com.example.sg_safety_mobile.Logic.Adaptors.RecyclerAdapter
+import com.example.sg_safety_mobile.R
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_guide.*
 

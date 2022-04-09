@@ -1,4 +1,4 @@
-package com.example.sg_safety_mobile
+package com.example.sg_safety_mobile.Logic
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -7,14 +7,14 @@ import android.content.Context
 import android.content.Intent
 
 import android.content.SharedPreferences
-import android.location.Location
 
 import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import com.example.sg_safety_mobile.Presentation.Activity.ChoicePageActivity
+import com.example.sg_safety_mobile.R
 
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -24,11 +24,8 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.GlobalScope
 
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-
-import kotlinx.coroutines.launch
 
 import org.json.JSONObject
 import java.io.*
@@ -164,7 +161,7 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
             }
 
         }
-        val intent = Intent(this,ChoicePage::class.java)
+        val intent = Intent(this, ChoicePageActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 
         val pendingIntent = PendingIntent.getActivity(applicationContext,0, intent, PendingIntent.FLAG_UPDATE_CURRENT)

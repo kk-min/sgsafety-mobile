@@ -1,19 +1,18 @@
-package com.example.sg_safety_mobile
+package com.example.sg_safety_mobile.Logic.Adaptors
 
-import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import android.widget.Toast
+import com.example.sg_safety_mobile.Detail
+import com.example.sg_safety_mobile.Presentation.Fragment.GuideFragment
+import com.example.sg_safety_mobile.R
 import kotlinx.android.synthetic.main.cardview.view.*
 
 class RecyclerAdapter(val arrayList:ArrayList<Detail>, val context: GuideFragment): RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun binditems(detail:Detail){
+        fun binditems(detail: Detail){
             itemView.text1.text=detail.title
             itemView.text3.text=detail.des
         }

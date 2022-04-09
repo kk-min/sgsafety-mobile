@@ -1,4 +1,4 @@
-package com.example.sg_safety_mobile
+package com.example.sg_safety_mobile.Presentation.Activity
 
 //import com.example.sg_safety_mobile.databinding.ActivityUpdateCprBinding
 //import com.google.firebase.storage.ktx.storage
@@ -17,6 +17,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.sg_safety_mobile.Logic.FileManager
+import com.example.sg_safety_mobile.Logic.FirebaseManager
+import com.example.sg_safety_mobile.R
 import com.example.sg_safety_mobile.databinding.ActivityUpdateCprBinding
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -30,6 +33,8 @@ class UpdateCPRActivity : AppCompatActivity() {
     lateinit var imageUri : Uri
     lateinit var binding : ActivityUpdateCprBinding
     lateinit var expiry : String
+    private val firebaseManager = FirebaseManager(this)
+    private val fileManager = FileManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,11 +63,11 @@ class UpdateCPRActivity : AppCompatActivity() {
 
         //selecting "Upload Image version of CPR Certificate" button
         binding.uploadCpr.setOnClickListener {
-            startImageFileChooser()
+            fileManager.getImageFile()
         }
 
         binding.uploadPdfCpr.setOnClickListener {
-            startPdfFileChooser()
+            fileManager.getPDFFile()
         }
 
 
@@ -100,21 +105,6 @@ class UpdateCPRActivity : AppCompatActivity() {
         }
 
         return false
-    }
-
-
-    private fun startImageFileChooser() {
-        val pdfIntent = Intent()
-        pdfIntent.type = "image/*"
-        pdfIntent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(pdfIntent, 100)
-    }
-
-    private fun startPdfFileChooser() {
-        val pdfIntent = Intent()
-        pdfIntent.type = "application/pdf"
-        pdfIntent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(pdfIntent , 200)
     }
 
 
@@ -191,7 +181,7 @@ class UpdateCPRActivity : AppCompatActivity() {
         storeRef.putFile(imageUri)
             .addOnCompleteListener {
 
-                modifyDB(storeRef.path.toString())
+                firebaseManager.uploadFileToDB(storeRef.path.toString(), expiry)
                 Toast.makeText(this , "Successful upload" , Toast.LENGTH_LONG).show()
                 if(progressDialog.isShowing) progressDialog.dismiss()
 
@@ -203,19 +193,6 @@ class UpdateCPRActivity : AppCompatActivity() {
                 Toast.makeText(this, "Unsuccessful upload" , Toast.LENGTH_SHORT).show()
             }
     }
-
-    //update relevant information in the database
-    private fun modifyDB(link:String) {
-        val db = Firebase.firestore
-        val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
-        val docid: String = sharedPreference.getString("UserID" , null).toString()
-
-        //update user's database with relevant file uri and cpr expiry
-        db.collection("Users").document(docid).update("file" , link)
-        db.collection("Users").document(docid).update("cprExpiry" , expiry)
-    }
-
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {

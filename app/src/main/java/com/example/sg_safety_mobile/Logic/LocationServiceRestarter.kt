@@ -1,4 +1,4 @@
-package com.example.sg_safety_mobile
+package com.example.sg_safety_mobile.Logic
 
 import android.content.BroadcastReceiver
 import android.content.Context
