@@ -7,16 +7,19 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+
 import com.example.sg_safety_mobile.Presentation.Activity.LoginActivity
 
 
 class MainActivityManager(val context: Context) {
-    private lateinit var locationService: LocationService
+    val locationService: LocationService=LocationService()
     var locationServiceIntent: Intent? = null
     lateinit var locationReceiver: LocationReceiver
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun promptSignOutAlert(){
         val alertDialog: AlertDialog.Builder = AlertDialog.Builder(context)
 
@@ -31,7 +34,9 @@ class MainActivityManager(val context: Context) {
             )
             val editor: SharedPreferences.Editor=sharedPreference.edit()
             editor.clear()
+            editor.putBoolean("log in status",false)
             editor.commit()
+            stopLocationService()
             MyFirebaseMessagingService.unsubscribeTopic(context,"HelpMessage")
 
             val intent = Intent(context, LoginActivity::class.java)
@@ -51,13 +56,30 @@ class MainActivityManager(val context: Context) {
 
     fun startLocationService(){
         Log.d("CZ2006:MainActivity", "LocationService Starting...")
-        locationService = LocationService()
+        //locationService =
         locationServiceIntent = Intent(context, locationService!!.javaClass)
         if (!isMyServiceRunning(locationService!!.javaClass)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(locationServiceIntent)
             } else {
                 context.startService(locationServiceIntent)
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun stopLocationService(){
+        val intent = Intent(context, LocationService::class.java)
+        intent.action = "StopService"
+
+        Log.d("CZ2006:MainActivity", "LocationService Starting...")
+        //locationService =
+        if (isMyServiceRunning(locationService!!.javaClass)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(intent)
+
+            } else {
+                context.startForegroundService(intent)
             }
         }
     }

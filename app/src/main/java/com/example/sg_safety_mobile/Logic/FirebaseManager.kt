@@ -25,6 +25,9 @@ import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
+import org.osmdroid.util.GeoPoint
 import org.w3c.dom.Text
 import java.util.*
 
@@ -309,6 +312,7 @@ class FirebaseManager(val context: Context){
                         .addOnFailureListener {  }
 
                     val intent = Intent(context, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(context, intent, null)
                 } else {
                     // If sign in fails, display a message to the user.
@@ -364,5 +368,26 @@ class FirebaseManager(val context: Context){
         //update user's database with relevant file uri and cpr expiry
         db.collection("Users").document(docid).update("file" , link)
         db.collection("Users").document(docid).update("cprExpiry" , expiry)
+    }
+    fun getuserLocationViaID(id:String): GeoPoint {
+        val db = Firebase.firestore
+        lateinit var geoPoint: GeoPoint
+        runBlocking {
+
+            db.collection("Users").document(id).get()
+                .addOnSuccessListener { document ->
+
+                    val result = document.getGeoPoint("Location")
+                    geoPoint = result?.let { GeoPoint(result.latitude, it.longitude) }!!
+                }
+                .addOnFailureListener { e ->
+                    Log.e("CZ2006:VicTIM location not found", "Error getting document", e)
+
+                }
+                .await()
+
+
+        }
+        return geoPoint
     }
 }

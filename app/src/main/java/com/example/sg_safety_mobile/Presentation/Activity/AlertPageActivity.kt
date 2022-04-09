@@ -19,6 +19,7 @@ import com.example.sg_safety_mobile.Logic.MyFirebaseMessagingService
 import com.example.sg_safety_mobile.Logic.ReverseGeocoder
 import com.example.sg_safety_mobile.Logic.SMSManager
 import com.example.sg_safety_mobile.R
+import org.osmdroid.util.GeoPoint
 import java.util.*
 
 class AlertPageActivity : AppCompatActivity() {
@@ -42,7 +43,9 @@ class AlertPageActivity : AppCompatActivity() {
 
         val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
         val userId=sharedPreference.getString("UserID","").toString()
-        MyFirebaseMessagingService.sendMessage("SG Safety Need You!","There is a user nearby that require help, please click on notification to continue","HelpMessage",userId)
+        val location=getUserLocation()
+        val userGeopoint= GeoPoint(location.latitude,location.longitude)
+        MyFirebaseMessagingService.sendMessage("SG Safety Need You!","There is a user nearby that require help, please click on notification to continue","HelpMessage",userId,userGeopoint)
 
 
 

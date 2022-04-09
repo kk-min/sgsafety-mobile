@@ -22,7 +22,6 @@
     <string name="about">About</string>
 
 
-
     <!-- Change Email -->
     <string name="resetEmail">"Edit Email"</string>
     <string name="currentEmail">"hello@gmail.com"</string>

@@ -6,32 +6,33 @@
     android:layout_height="match_parent"
     tools:context=".Presentation.Activity.HelperChoiceActivity">
 
-
     <TextView
-        android:layout_width="389dp"
-        android:layout_height="54dp"
-        android:text="Please make a choice"
-        android:textSize="38dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Make a Choice"
+        android:textColor="@color/black"
+        android:textSize="20dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.818"
+        app:layout_constraintHorizontal_bias="0.093"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.069" />
+        app:layout_constraintVertical_bias="0.048" />
 
     <TextView
-        android:layout_width="394dp"
-        android:layout_height="50dp"
-        android:text="Note:User without CPR certificate are not allowed to choose CPR Option"
+        android:id="@+id/textView2"
+        android:layout_width="344dp"
+        android:layout_height="83dp"
+        android:text="Note:\nUser without CPR certificate are not allowed to choose CPR Option"
         android:textColor="#EA0707"
         android:textSize="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.522"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.148" />
+        app:layout_constraintVertical_bias="0.129" />
 
     <Button
         android:id="@+id/cpr"
@@ -40,13 +41,15 @@
         android:background="@drawable/rounded_corner_red"
         android:drawableLeft="@drawable/cpr"
         android:text="Perform CPR"
+        android:textSize="25dp"
         android:textColor="@color/white"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.546"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.447" />
+        app:layout_constraintVertical_bias="0.303" />
 
     <Button
         android:id="@+id/aed"
@@ -55,14 +58,15 @@
         android:background="@drawable/rounded_corner_green"
         android:drawableLeft="@drawable/aed"
         android:text="Retrieve AED"
+        android:textSize="25dp"
         android:textColor="@color/white"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintHorizontal_bias="0.555"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.8" />
+        app:layout_constraintVertical_bias="0.695" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

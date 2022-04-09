@@ -2,12 +2,17 @@ package com.example.sg_safety_mobile.Presentation.Activity
 
 
 
+import android.app.Service
 import android.content.Intent
+import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ServiceCompat.stopForeground
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -16,6 +21,7 @@ import com.example.sg_safety_mobile.Logic.*
 import com.example.sg_safety_mobile.Presentation.Fragment.*
 
 import com.google.android.material.navigation.NavigationView
+import kotlinx.android.synthetic.main.fragment_home.*
 
 //Activity class should only content UI and those func interact with user
 class MainActivity : AppCompatActivity() {
@@ -26,6 +32,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navView: NavigationView
     private val mainManager :MainActivityManager = MainActivityManager(this)
 
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -135,6 +143,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         //stopService(mServiceIntent);
+        val sharedPreference: SharedPreferences = getSharedPreferences("Login", Service.MODE_PRIVATE)
+        if(sharedPreference.getBoolean("log in status",true)==false) {
+            super.onDestroy()
+            return
+        }
         Log.e("CZ2006:Destroy In MainActivity", "Restarting....." )
         val broadcastIntent = Intent()
         broadcastIntent.action = "restartservice"

@@ -14,7 +14,8 @@ class ChoicePageActivity : AppCompatActivity() {
         val nobutton:Button=findViewById(R.id.no)
         yesbutton.setOnClickListener{
             val intent = Intent(this, HelperChoiceActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent)
         }
         nobutton.setOnClickListener{
