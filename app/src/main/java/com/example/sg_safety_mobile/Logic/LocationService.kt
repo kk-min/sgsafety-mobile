@@ -31,10 +31,10 @@ class LocationService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) startMyOwnForeground() else startForeground(
-            1,
-            Notification()
-        )
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O)
+            startMyOwnForeground()
+//        else
+//            startForeground(1, Notification())
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -63,13 +63,27 @@ class LocationService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        startLocationUpdates()
+
+        if (intent != null) {
+            if (intent.getAction().equals("StopService")) {
+                stopForeground(true);
+                stopLocationUpdates()
+                stopSelf();
+            }
+            else
+                startLocationUpdates()
+        }
         //startTimer()
         return START_STICKY
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        val sharedPreference: SharedPreferences = getSharedPreferences("Login", Service.MODE_PRIVATE)
+        if(sharedPreference.getBoolean("log in status",true)==false) {
+            super.onDestroy()
+            return
+        }
         //stoptimertask()
         stopLocationUpdates()
         val broadcastIntent = Intent()
@@ -136,6 +150,7 @@ class LocationService : Service() {
         {
             lm!!.removeUpdates(ll!!)
         }
+
     }
     @Nullable
     override fun onBind(intent: Intent?): IBinder? {

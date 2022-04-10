@@ -37,6 +37,7 @@ import org.osmdroid.util.GeoPoint
 
 
 class MyFirebaseMessagingService:FirebaseMessagingService() {
+    val firebaseManager=FirebaseManager(this)
     companion object {
         var token : String? = null
 
@@ -66,7 +67,7 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
             }
         }
 
-        fun sendMessage(title: String, content: String,topic: String,id:String) {
+        fun sendMessage(title: String, content: String,topic: String,id:String,location:GeoPoint) {
             GlobalScope.launch {
                 val endpoint = "https://fcm.googleapis.com/fcm/send"
                 try {
@@ -88,10 +89,11 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
                     val data = JSONObject()
                     data.put("title", title)
                     data.put("content", content)
-
                     data.put("victim_id",id)
-
                     body.put("data",data)
+
+                    data.put("victimLongitude",location.longitude)
+                    data.put("victimLatitude",location.latitude)
 
                     body.put("to","/topics/$topic")
 
@@ -141,15 +143,28 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
         val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
         val current_user_id= sharedPreference.getString("UserID","")
 
+        val helpPreference:SharedPreferences=getSharedPreferences("VictimDetails", MODE_PRIVATE)
+
+        var victimLatitude:Double= 0.0
+        var victimLongitude:Double= 0.0
+        lateinit var victimLocation:GeoPoint
+
+
+
         //NOTIFICATION DISPLAY CHECK( (I)NOT CURRENT USER (II)DISTANCE<=400M)
-        if(victim_id==current_user_id)
+        if(victim_id!=current_user_id)
         {
             Log.e("CZ2006:Messaging: Current user is the one who sent out message", "Notification not display")
             return
         }
         else
         {
-            val victimLocation:GeoPoint=getuserLocationViaID(victim_id)
+            victimLatitude= p0.data.get("victimLatitude")?.toDouble()!!
+            victimLongitude= p0.data.get("victimLongitude")?.toDouble()!!
+            if(victimLatitude!=null&& victimLongitude!=null)
+            {
+                victimLocation= GeoPoint(victimLatitude,victimLongitude)
+            }
             val userLocation:GeoPoint=getuserLocationViaID(current_user_id.toString())
 
             Log.e("CZ2006:Victim Location","${victimLocation}")
@@ -161,6 +176,15 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
             }
 
         }
+
+        val editor: SharedPreferences.Editor = helpPreference.edit()
+        editor.putString("UserID",current_user_id)
+        Log.e("CZ2006:User Locationvictim","${victimLatitude.toFloat()}")
+        editor.putFloat("Victim_Longitude",victimLongitude.toFloat())
+        editor.putFloat("Victim_Latitude",victimLatitude.toFloat())
+        editor.commit()
+
+
         val intent = Intent(this, ChoicePageActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 
