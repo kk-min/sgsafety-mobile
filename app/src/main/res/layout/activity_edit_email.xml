@@ -7,75 +7,108 @@
     tools:context=".Presentation.Activity.EditEmailActivity">
 
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/current_ps"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textColorHint="#808080"
-        app:layout_constraintVertical_bias="0.355"
-        app:layout_constraintWidth_percent="0.7"
-        tools:ignore="MissingConstraints">
-
-
-        <EditText
-            android:id="@+id/cur_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autofillHints="password"
-            android:background="#00000000"
-            android:gravity="left|center_horizontal"
-            android:hint="@string/currentP"
-            android:inputType="textPassword"
-            android:padding="10dp"
-            android:textColor="#000000"
-            android:textColorHint="#808080"
-            android:textSize="15sp" />
-    </com.google.android.material.textfield.TextInputLayout>
-
     <!--Input region for email-->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/layout_repeat_password"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:textColorHint="#808080"
-        app:layout_constraintTop_toBottomOf="@id/current_ps"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp">
 
-        <EditText
-            android:id="@+id/current_email"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:autofillHints="emailAddress"
-            android:background="#00000000"
-            android:gravity="left|center_horizontal"
-            android:inputType="textEmailAddress"
-            android:padding="10dp"
-            android:textColor="@color/black"
-            android:textColorHint="#808080"
-            android:textSize="15sp" />
-
-    </com.google.android.material.textfield.TextInputLayout>
 
     <!--Button to submit email-->
-    <Button
-        android:id="@+id/btn_updateEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:background="#B90E0A"
-        android:text="@string/updateEmail"
-        android:textColor="@color/black"
+
+    <EditText
+        android:id="@+id/cur_password"
+        android:layout_width="386dp"
+        android:layout_height="58dp"
+        android:autofillHints="password"
+        android:background="#00000000"
+        android:gravity="left|center_horizontal"
+        android:hint="@string/currentP"
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:textColor="#000000"
+        android:textColorHint="#808080"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.64"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_repeat_password"
-        app:layout_constraintVertical_bias="0.0"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.254" />
+
+    <EditText
+        android:id="@+id/current_email"
+        android:layout_width="390dp"
+        android:layout_height="55dp"
+        android:autofillHints="emailAddress"
+        android:background="#00000000"
+        android:gravity="left|center_horizontal"
+        android:inputType="textEmailAddress"
+        android:padding="10dp"
+        android:textColor="@color/black"
+        android:textColorHint="#808080"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.761"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.477" />
+
+    <Button
+        android:id="@+id/btn_updateEmail"
+        android:layout_width="267dp"
+        android:layout_height="62dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/rounded_login"
+        android:text="@string/updateEmail"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.626" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Note: You are required to enter password to edit your email"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.362"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.044" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please Enter Your Password :"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.089"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.2" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please Enter The Updated Email :"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.109"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.407" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

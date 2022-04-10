@@ -5,20 +5,37 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
+import android.net.Uri
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
 import android.widget.Button
+import android.widget.TextView
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.lifecycleScope
+import com.beust.klaxon.JsonArray
+import com.beust.klaxon.JsonObject
+import com.beust.klaxon.Parser
+import com.example.sg_safety_mobile.Logic.OSMapActivityManager
 import com.example.sg_safety_mobile.Logic.LocationReceiver
 import com.example.sg_safety_mobile.Logic.LocationService
 import com.example.sg_safety_mobile.Logic.ReverseGeocoder
 import com.example.sg_safety_mobile.R
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import org.osmdroid.bonuspack.routing.OSRMRoadManager
 import org.osmdroid.bonuspack.routing.Road
 import org.osmdroid.bonuspack.routing.RoadManager
@@ -30,102 +47,244 @@ import org.osmdroid.views.overlay.Marker
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import java.io.IOException
+import java.net.URL
 
 class AEDMapActivity : AppCompatActivity() {
 
+    private val gc= ReverseGeocoder(this)
+    private lateinit var locationReceiver: LocationReceiver;
+    private lateinit var lm: LocationManager
+    private lateinit var buildingName_textview:TextView
+    private lateinit var aedDescription_textview:TextView
+    private lateinit var aedFloor_textview:TextView
+    private lateinit var opHrs_textview:TextView
+    private lateinit var googleMapLink:TextView
+    private lateinit var locateMe:Button
+    private lateinit var aedretrieve: Button
+    private lateinit var mapManager:OSMapActivityManager
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private lateinit var map : MapView;
-    var locationServiceIntent: Intent? = null
-    private var locationService: LocationService? = null
-    lateinit var locationReceiver: LocationReceiver;
-    lateinit var lm: LocationManager
-    lateinit var loc: Location
 
-    val gc= ReverseGeocoder(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //handle permissions first, before map is created. not depicted here
-
-        //load/initialize the osmdroid configuration, this can be done
-        // This won't work unless you have imported this: org.osmdroid.config.Configuration.*
-        Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
-        //setting this before the layout is inflated is a good idea
-        //it 'should' ensure that the map has a writable location for the map cache, even without permissions
-        //if no tiles are displayed, you can try overriding the cache path using Configuration.getInstance().setCachePath
-        //see also StorageUtils
-        //note, the load method also sets the HTTP User Agent to your application's package name, if you abuse osm's
-        //tile servers will get you banned based on this string.
-
-        //inflate and create the map
-        setContentView(R.layout.activity_aedmap)
-
         supportActionBar?.hide();
-        map = findViewById<MapView>(R.id.map)
-        map.setTileSource(TileSourceFactory.MAPNIK);
 
-        val mapController = map.controller
+
         if(ActivityCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED
             &&ActivityCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED)
         {
             ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION,android.Manifest.permission.ACCESS_FINE_LOCATION),111)
         }
+        Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
 
-        lm=getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        loc= lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)!!
 
-        val startPoint=GeoPoint(loc.latitude,loc.longitude)
-        val user_postal=gc.reverseGeocodePostalCode(loc.latitude,loc.longitude)
-        val user_district=user_postal.toInt()/10000
-        Log.d("postal district","${user_district}")
+        //inflate and create the map
+        setContentView(R.layout.activity_aedmap)
+        viewEInitializations()
+        //initialize map
+        map.setTileSource(TileSourceFactory.MAPNIK);
+        mapManager=OSMapActivityManager(this,map)
+        val mapController = map.controller
+
+
+
+        var loc=mapManager.getCurrentLocation()
+        //get user postal district
+        val user_district= loc?.let { getUserPostalDistrict(it) }
+
+        //move to user location point
+        val startPoint= GeoPoint(loc!!.latitude, loc!!.longitude)
         mapController.animateTo(startPoint);
-        mapController.setZoom(20)
-        val point=GeoPoint(1.3524,103.9449)
-        addMarker(map,point,"point")
-        //mapController.setCenter(startPoint);
-
+        mapController.setZoom(14)
+        if (startPoint != null) {
+            mapManager.addMarker(map,startPoint,"Your Location")
+        }
+        //set min max zoom level
         map.maxZoomLevel= 24.0
-        map.minZoomLevel=14.0
-        //addMarker(map, startPoint, "Your Location")
-        //val marker = Marker(map)
-        //marker.position = startPoint
-        //marker.icon = getDrawable(R.drawable.ic_launcher_foreground)
-        //marker.title = "Test Marker"
-        //marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
-        //map.overlays.add(marker)
+        map.minZoomLevel=12.0
         map.invalidate()
 
-        if(ActivityCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION,android.Manifest.permission.ACCESS_FINE_LOCATION),111)
+
+
+        mapManager.startLocationService()
+        registerLocationReceiver()
+
+        //BUTTON-----------------------------------------------------------------------------
+        //use to move camera of map to cur location
+
+        locateMe.setOnClickListener {
+            lm=getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            loc= lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)!!
+
+            val curPoint=GeoPoint(loc!!.latitude, loc!!.longitude)
+            mapController.animateTo(curPoint);
+
         }
 
-        Log.d("CZ2006:LocationService", "LocationService Starting...")
-        locationService = LocationService()
-        locationServiceIntent = Intent(this, locationService!!.javaClass)
-        if (!isMyServiceRunning(locationService!!.javaClass)) {
-            startService(locationServiceIntent)
+
+        //use to store clicked aed longlat
+        val locationPreferences:SharedPreferences=getSharedPreferences("AED", MODE_PRIVATE)
+        val editor=locationPreferences.edit()
+
+        //prompt to google map for navigation
+
+        googleMapLink.setOnClickListener {
+            val aed_lon=locationPreferences.getString("aed_lon","")
+            val aed_lat=locationPreferences.getString("aed_lat","")
+            val browserIntent =
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://maps.google.com/?q=${aed_lat},${aed_lon}"))
+            startActivity(browserIntent)
         }
 
-        locationService = LocationService()
-        locationServiceIntent = Intent(this, locationService!!.javaClass)
-        if (!isMyServiceRunning(locationService!!.javaClass)) {
-            startService(locationServiceIntent)
+        //end current aed retrieval and move to user map
+
+        aedretrieve.setOnClickListener {
+            editor.clear()
+            editor.commit()
+            val intent = Intent(this, CPRMapActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
         }
 
+
+
+        //retrieve aed from data gov sg
+        lifecycleScope.launchWhenCreated {
+            withContext(Dispatchers.IO) {
+
+                //see the CKAN API thing to know how does the URL works
+                val dataAPI = URL("https://data.gov.sg/api/action/datastore_search?resource_id=cdab7435-7bf0-4fa4-a8bd-6cfd231ca73a&limit=999").readText()
+                val parser: Parser = Parser()
+                val stringBuilder: StringBuilder = StringBuilder(dataAPI)
+                val json: JsonObject = parser.parse(stringBuilder) as JsonObject
+                val result: JsonObject =json.get("result") as JsonObject
+
+                //record array for all AED location
+                val array=result.get("records") as JsonArray<*>
+
+
+                if (user_district != null) {
+                    setNearbyAEDLocation(user_district.toString(),array)
+                    setNearbyAEDLocation((user_district-1).toString(),array)
+                    setNearbyAEDLocation((user_district+1).toString(),array)
+                }
+
+            }
+        }
+    }
+    private fun viewEInitializations() {
+        map = findViewById(R.id.map)
+        locateMe=findViewById(R.id.locate)
+        googleMapLink=findViewById(R.id.googlemaplink)
+        aedretrieve=findViewById(R.id.aed_retrieve)
+        //get textview
+        aedDescription_textview=findViewById(R.id.aed_location)
+        aedFloor_textview=findViewById(R.id.aed_floor)
+        buildingName_textview=findViewById(R.id.building_name)
+        opHrs_textview=findViewById(R.id.ophrs)
+
+    }
+    private fun registerLocationReceiver(){
         locationReceiver = LocationReceiver(map)
         val filter = IntentFilter("UPDATE_LOCATION")
         registerReceiver(locationReceiver, filter); // Register our receiver
+    }
 
-        val aedretrieve: Button =findViewById(R.id.aed_retrieve)
-        aedretrieve.setOnClickListener {
-            val intent = Intent(this, CPRMapActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent)
+    private fun getUserPostalDistrict(loc:Location):Int {
+        val user_postal= gc.reverseGeocodePostalCode(loc.latitude,loc.longitude)
+        val user_district= user_postal.toInt()/10000
+        Log.d("postal district","${user_district}")
+        return user_district
+    }
+
+    private fun setNearbyAEDLocation(postal_district:String,array:JsonArray<*>){
+
+        val db = Firebase.firestore
+
+        //start and end index of aed record array
+        var start:Long=0
+        var end:Long=0
+
+
+        val postalCode=array.get("postal_code")
+        val roadname=array.get("road_name")
+        val ophrs=array.get("operating_hours")
+        val aed_description=array.get("aed_location_description")
+        val aed_floor=array.get("aed_location_floor_level")
+        val building_name=array.get("building_name")
+
+
+        runBlocking {
+            db.collection("AED_Postal_Code").document(postal_district.toString()).get()
+                .addOnSuccessListener { document ->
+
+                    start = document.get("start_index") as Long
+                    end = document.get("end_index") as Long
+                    Log.d("array", "${start},${end}")
+                }
+                .addOnFailureListener { e ->
+                    Log.e("CZ2006:VicTIM aed not found", "Error getting document", e)
+
+                }.await()
         }
+        //if(document not found then return)
+        if(end.toInt()==0)
+            return
+        //otherwise start adding aed marker
+        for(i in start.toInt()..end.toInt())
+        {
+            val address="${roadname[i]}, ${postalCode[i]} Singapore"
+            Log.d("CZ2006:VicTIM geocode aed", "${address}")
+            val location=gc.getLocationFromAddress(address)
+            Log.d("CZ2006:VicTIM geocoded aed", "${location}")
+            val point= location?.let { GeoPoint(it.latitude,location.longitude) }
+            if (point != null)
+            {
+                addOnClickAEDMarker(map,point,"AED ${i}",building_name[i].toString(),aed_description[i].toString()
+                    ,aed_floor[i].toString(),ophrs[i].toString())
+            }
+        }
+
+    }
+
+    private fun addOnClickAEDMarker(map: MapView?, point: GeoPoint, title: String,buildingName:String,aedDescription:String,aedFloor:String,opHrs:String) {
+
+        //setup marker
+        val startMarker = Marker(map)
+        startMarker.position = point
+        startMarker.title = title
+        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+
+        //set marker clicking
+        startMarker.setOnMarkerClickListener { marker, mapView ->
+
+            val mapController= map?.controller
+            mapController?.animateTo(point)
+
+
+
+            //update textview
+            aedDescription_textview.text=aedDescription
+            aedFloor_textview.text=aedFloor
+            buildingName_textview.text=buildingName
+            opHrs_textview.text=opHrs
+
+            //add aed longlat to preference
+            val locationPreference:SharedPreferences=getSharedPreferences("AED", MODE_PRIVATE)
+            val editor=locationPreference.edit()
+
+            editor.putString("aed_lat",startMarker.position.latitude.toString())
+            editor.putString("aed_lon",startMarker.position.longitude.toString())
+            editor.commit()
+
+            true
+        }
+
+        map?.overlays?.add(startMarker)
+        map?.invalidate()
+
     }
     override fun onResume() {
         super.onResume();
@@ -162,129 +321,4 @@ class AEDMapActivity : AppCompatActivity() {
     }
 
 
-
-    private fun addMarker(map: MapView?, point: GeoPoint, title: String) {
-        val startMarker = Marker(map)
-        //Lat ‎23.746466 Lng 90.376015
-        //startMarker.icon=map?.context?.resources?.getDrawable(R.drawable.userloc)
-        startMarker.position = point
-        startMarker.title = title
-        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return
-        }
-
-        startMarker.setOnMarkerClickListener { marker, mapView ->
-
-            val curlocation= lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)!!
-            val currentPoint=GeoPoint(curlocation.latitude,curlocation.longitude)
-            addingWaypoints(mapView,currentPoint,point)
-
-            true
-        }
-        map?.overlays?.add(startMarker)
-        map?.invalidate()
-    }
-
-
-    private fun addingWaypoints(map: MapView?, startPoint: GeoPoint, endPoint: GeoPoint) {
-        val roadManager = OSRMRoadManager(this,"MYUSERAGENT")
-        roadManager.setMean(OSRMRoadManager.MEAN_BY_FOOT)
-        val waypoints = ArrayList<GeoPoint>()
-        waypoints.add(startPoint)
-        //waypoints.add(GeoPoint(23.816237, 90.366725))
-
-        waypoints.add(endPoint)
-
-        MyRoadAsyncTask(roadManager, waypoints).execute()
-
-        Observable.fromCallable {
-            retrievingRoad(roadManager, waypoints)
-        }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-
-            }, {
-
-            }, {
-                map?.invalidate()
-            })
-
-        addMarker(map, endPoint, "End Point")
-    }
-
-    private fun retrievingRoad(roadManager: OSRMRoadManager, waypoints: ArrayList<GeoPoint>) {
-        // Retrieving road
-
-        val road = roadManager.getRoad(waypoints)
-        val roadOverlay = RoadManager.buildRoadOverlay(road)
-        map?.overlays?.add(roadOverlay);
-
-        val nodeIcon = map?.context?.resources?.getDrawable(R.mipmap.walk)
-        for (i in 0 until road.mNodes.size) {
-            val node = road.mNodes[i]
-            val nodeMarker = Marker(map)
-            nodeMarker.position = node.mLocation
-            nodeMarker.icon=nodeIcon
-            nodeMarker.title = "Step $i"
-            map?.overlays?.add(nodeMarker)
-            nodeMarker.snippet = node.mInstructions;
-            nodeMarker.subDescription = Road.getLengthDurationText(map?.context, node.mLength, node.mDuration);
-        }
-    }
-    private fun isMyServiceRunning(serviceClass: Class<*>): Boolean {
-        val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
-            if (serviceClass.name == service.service.className) {
-                Log.i("CZ2006:Service status", "Running")
-                return true
-            }
-        }
-        Log.i("CZ2006:Service status", "Not running")
-        return false
-    }
-
-
-    private inner class MyRoadAsyncTask(val roadManager: OSRMRoadManager,
-                                        val waypoints: ArrayList<GeoPoint>) : AsyncTask<Void, Void, String>() {
-
-        override fun doInBackground(vararg params: Void?): String? {
-            val road = roadManager.getRoad(waypoints)
-            val roadOverlay = RoadManager.buildRoadOverlay(road)
-            map?.overlays?.add(roadOverlay);
-
-            val nodeIcon = map?.context?.resources?.getDrawable(R.mipmap.walk)
-            for (i in 0 until road.mNodes.size) {
-                val node = road.mNodes[i]
-                val nodeMarker = Marker(map)
-                nodeMarker.position = node.mLocation
-                nodeMarker.setIcon(nodeIcon)
-                nodeMarker.title = "Step $i"
-                map?.overlays?.add(nodeMarker)
-                nodeMarker.snippet = node.mInstructions;
-                nodeMarker.subDescription = Road.getLengthDurationText(map?.context, node.mLength, node.mDuration);
-            }
-
-            return null
-        }
-
-        override fun onPostExecute(result: String?) {
-            map?.invalidate()
-        }
-    }
 }

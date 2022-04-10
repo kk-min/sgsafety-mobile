@@ -28,8 +28,9 @@ class ContactNumberActivity : AppCompatActivity() {
     private lateinit var contactNum: EditText
     private lateinit var inputOTP: EditText
     private lateinit var givenOTP: String
+    private lateinit var returnC:Button
+    private lateinit var verifyContact:Button
     private val firebaseManager = FirebaseManager(this);
-
     private val permissionCode = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,35 +40,25 @@ class ContactNumberActivity : AppCompatActivity() {
         supportActionBar?.title = "Change Contact"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        viewCInitializations()
+        viewEInitializations()
 
         val returnC = findViewById<Button>(R.id.btn_sendOTP)
         val verifyContact = findViewById<Button>(R.id.verify_contact)
 
-        returnC.setOnClickListener(View.OnClickListener {
+        returnC.setOnClickListener{
             firebaseManager.sendCode(returnC, contactNum, checkForSmsPermission())
-        })
+        }
 
-        verifyContact.setOnClickListener(View.OnClickListener {
+        verifyContact.setOnClickListener{
             firebaseManager.verifyCode(verifyContact, contactNum, inputOTP)
-        })
+        }
     }
 
-    fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val v = inflater.inflate(R.layout.activity_edit_email, container, false)
-        val returnC = v.findViewById<Button>(R.id.btn_sendOTP)
-        val verifyContact = v.findViewById<Button>(R.id.verify_contact)
-
-        return v
-    }
-
-    private fun viewCInitializations() {
+    private fun viewEInitializations() {
         contactNum = findViewById(R.id.mobileNum)
         inputOTP = findViewById(R.id.inputting_otp)
+        returnC = findViewById(R.id.btn_sendOTP)
+        verifyContact = findViewById(R.id.verify_contact)
     }
 
     //checking if user has enabled the checking of password

@@ -38,11 +38,11 @@
 
     <!-- Change Password -->
     <string name="currentP">"Current Password"</string>
-    <string name="requirementPassword">"Requirement:"</string>
+    <string name="requirementPassword">"Password Requirement:"</string>
     <string name="requirementPassword1">"1. Contain at least 8 characters"</string>
     <string name="requirementPassword2">"2. Consists of Uppercase and Lowercase alphabets"</string>
     <string name="requirementPassword3">"3. Contains at least 1 digit"</string>
-    <string name="requirementPassword4">"3. Contains at least 1 special character (eg. ! , @ , *)"</string>
+    <string name="requirementPassword4">"4. Contains at least 1 special character (eg. ! , @ , *)"</string>
     <string name="newPassword">"New Password"</string>
     <string name="confirmPassword">"Confirm Password"</string>
     <string name="resetPassword">"Reset"</string>

@@ -9,9 +9,12 @@ import android.widget.Toast
 
 
 class LocationServiceRestarter : BroadcastReceiver() {
+
     override fun onReceive(context: Context, intent: Intent?) {
-        Log.i("Broadcast Listened", "Service tried to stop")
-        Toast.makeText(context, "Service restarted", Toast.LENGTH_SHORT).show()
+
+        Log.i("CZ2006:LocationServiceRestarter:Broadcast Listened", "Service tried to stop")
+        Log.i("CZ2006:LocationServiceRestarter:Broadcast Listened", "Service restarted")
+        //Toast.makeText(context, "Service restarted", Toast.LENGTH_SHORT).show()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(Intent(context, LocationService::class.java))
         } else {

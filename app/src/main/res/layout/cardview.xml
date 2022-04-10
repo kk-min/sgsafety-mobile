@@ -34,8 +34,8 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="0dp"
                 android:text="1"
-                android:textSize="27sp"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimary"
+                android:textSize="27sp" />
 
         </LinearLayout>
 

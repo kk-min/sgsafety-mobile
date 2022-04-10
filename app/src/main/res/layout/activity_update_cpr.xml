@@ -23,25 +23,35 @@
             android:id="@+id/enter_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="@string/expiryCPR"
-            tools:ignore="MissingConstraints"
-            />
+            android:textStyle="bold"
+            android:textSize="17dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
 
         <TextView
             android:id="@+id/notice_CPR1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="@string/noticeCPR1"
+            android:textSize="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/enter_date"
-            tools:ignore="MissingConstraints"
-            />
+            tools:ignore="MissingConstraints" />
 
         <DatePicker
             android:id="@+id/date_Picker"
             android:layout_width="421dp"
             android:layout_height="186dp"
+            android:layout_marginTop="12dp"
             android:calendarViewShown="false"
             android:datePickerMode="spinner"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/notice_CPR1"
             tools:ignore="MissingConstraints" />
 
@@ -50,78 +60,101 @@
 
     <!-- uploading cpr certificate -->
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="72dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:textSize="50sp"
-        app:layout_constraintTop_toBottomOf="@id/constraint1"
-        tools:layout_editor_absoluteX="0dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/constraint1">
 
-        <TextView
-            android:id="@+id/adding_cpr"
-            android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:text="@string/noticeCPR2"
-            tools:ignore="MissingConstraints" />
-
-        <Button
-            android:id="@+id/upload_cpr"
-            android:layout_width="208dp"
-            android:layout_height="45dp"
-            android:text="@string/uploadCPR"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/upload_pdf_cpr"
-            app:layout_constraintTop_toBottomOf="@id/adding_cpr" />
-
-
-        <Button
-            android:id="@+id/upload_pdf_cpr"
-            android:layout_width="208dp"
-            android:layout_height="45dp"
-            android:layout_marginEnd="204dp"
-            android:text="@string/uploadPdfCPR"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/adding_cpr" />
-
-        <ImageView
-            android:id="@+id/image_view"
-            android:layout_width="359dp"
-            android:layout_height="244dp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/upload_cpr"
-            tools:ignore="MissingConstraints" />
-
-
-        <TextView
-            android:id="@+id/pdfText"
-            android:layout_width="413dp"
-            android:layout_height="37dp"
-            android:layout_marginTop="20dp"
-            android:textColor="#0047AB"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/upload_cpr"
-            tools:ignore="MissingConstraints" />
-
-        <Button
-            android:id="@+id/submitting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_marginTop="20dp"
-            android:text="@string/submitCPR"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/image_view"
-            tools:ignore="MissingConstraints" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/adding_cpr"
+        android:layout_width="394dp"
+        android:layout_height="32dp"
+        android:text="@string/noticeCPR2"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.47"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.397"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/submitting"
+        android:layout_width="204dp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/rounded_login"
+        android:text="@string/submitCPR"
+        android:textColor="@color/white"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.976"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="359dp"
+        android:layout_height="244dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.837"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/pdfText"
+        android:layout_width="413dp"
+        android:layout_height="37dp"
+        android:textColor="#0047AB"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.534"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/upload_pdf_cpr"
+        android:layout_width="198dp"
+        android:layout_height="50dp"
+        android:text="@string/uploadPdfCPR"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.037"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.465" />
+
+    <Button
+        android:id="@+id/upload_cpr"
+        android:layout_width="189dp"
+        android:layout_height="51dp"
+        android:text="@string/uploadCPR"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/constraintLayout"
+        app:layout_constraintHorizontal_bias="0.959"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.466" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,7 +3,7 @@ package com.example.sg_safety_mobile.Logic
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import androidx.core.app.ActivityCompat.startActivityForResult
+
 
 class FileManager(val context: Context) {
     fun getImageFile() {

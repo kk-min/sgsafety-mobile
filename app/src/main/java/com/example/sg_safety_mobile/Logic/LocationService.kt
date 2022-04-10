@@ -26,8 +26,11 @@ import com.google.firebase.ktx.Firebase
 
 
 class LocationService : Service() {
-    var counter = 0
-    val firebaseManager: FirebaseManager = FirebaseManager(this)
+
+    private val firebaseManager: FirebaseManager = FirebaseManager(this)
+    private var lm: LocationManager?=null
+    private var loc: Location?=null
+    private var ll: LocationListener?=null
 
     override fun onCreate() {
         super.onCreate()
@@ -39,8 +42,10 @@ class LocationService : Service() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun startMyOwnForeground() {
+
         val NOTIFICATION_CHANNEL_ID = "example.permanence"
         val channelName = "Location Service"
+
         val chan = NotificationChannel(
             NOTIFICATION_CHANNEL_ID,
             channelName,
@@ -48,17 +53,21 @@ class LocationService : Service() {
         )
         chan.lightColor = Color.BLUE
         chan.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
+
         val manager =
             (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?)!!
         manager.createNotificationChannel(chan)
+
         val notificationBuilder: NotificationCompat.Builder =
             NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+
         val notification: Notification = notificationBuilder.setOngoing(true)
             .setContentTitle("App is running in background")
             .setPriority(NotificationManager.IMPORTANCE_MIN)
             .setCategory(Notification.CATEGORY_SERVICE)
             .build()
         startForeground(2, notification)
+
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -91,9 +100,7 @@ class LocationService : Service() {
         broadcastIntent.setClass(this, LocationServiceRestarter::class.java)
         this.sendBroadcast(broadcastIntent)
     }
-    private var lm: LocationManager?=null
-    private var loc: Location?=null
-    private var ll: LocationListener?=null
+
     fun startLocationUpdates() {
 
         lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -124,7 +131,7 @@ class LocationService : Service() {
                 val geopoint = com.google.firebase.firestore.GeoPoint(p0.latitude, p0.longitude)
                 firebaseManager.updateUserLocationToDatabase(geopoint)
                 sendDataToActivity(p0)
-                sendDataToActivity2(p0)
+                sendDataToHomeFragment(p0)
 
             }
 
@@ -156,7 +163,7 @@ class LocationService : Service() {
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
-    private fun sendDataToActivity2(p0: Location ){
+    private fun sendDataToHomeFragment(p0: Location ){
         val sendLocation = Intent()
         sendLocation.action = "UPDATE_LOCATION+ADDRESS"
         sendLocation.putExtra("LOCATION_DATA", p0)

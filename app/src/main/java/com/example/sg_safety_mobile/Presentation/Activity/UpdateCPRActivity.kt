@@ -21,18 +21,18 @@ import com.example.sg_safety_mobile.Logic.FileManager
 import com.example.sg_safety_mobile.Logic.FirebaseManager
 import com.example.sg_safety_mobile.R
 import com.example.sg_safety_mobile.databinding.ActivityUpdateCprBinding
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import java.util.*
 
 
 class UpdateCPRActivity : AppCompatActivity() {
 
-
-    lateinit var imageUri : Uri
-    lateinit var binding : ActivityUpdateCprBinding
-    lateinit var expiry : String
+    private lateinit var datePicker:DatePicker
+    private lateinit var pdfTextView:TextView
+    private lateinit var iv:ImageView
+    private lateinit var imageUri : Uri
+    private lateinit var binding : ActivityUpdateCprBinding
+    private lateinit var expiry : String
     private val firebaseManager = FirebaseManager(this)
     private val fileManager = FileManager(this)
 
@@ -40,7 +40,7 @@ class UpdateCPRActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityUpdateCprBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        viewEInitializations()
 
         supportActionBar?.title = "Update CPR"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -50,7 +50,7 @@ class UpdateCPRActivity : AppCompatActivity() {
         imageUri = Uri.EMPTY
         expiry=""
 
-        val datePicker = findViewById<DatePicker>(R.id.date_Picker)
+
         val today = Calendar.getInstance()
 
         //date picket to select the date that that certificate expires in
@@ -82,7 +82,12 @@ class UpdateCPRActivity : AppCompatActivity() {
         }
 
     }
+    private fun viewEInitializations() {
+       datePicker = findViewById(R.id.date_Picker)
+        pdfTextView = findViewById(R.id.pdfText)
+        iv = findViewById(R.id.image_view)
 
+    }
 
     //check if expiry date selected by user is in the past/current date
     private fun inPast(date: DatePicker) : Boolean{
@@ -116,10 +121,10 @@ class UpdateCPRActivity : AppCompatActivity() {
         if(requestCode == 100 && resultCode == RESULT_OK){
             imageUri = data?.data!!
             //display selected file
-            val pdfTextView : TextView = findViewById(R.id.pdfText)
+
             pdfTextView.text = null
 
-            val iv : ImageView = findViewById(R.id.image_view)
+
             iv.setImageURI(imageUri)
 
         }
@@ -134,12 +139,12 @@ class UpdateCPRActivity : AppCompatActivity() {
                 if (cursor != null && cursor.moveToFirst()) {
 
                     //remove previously selected image
-                    val iv : ImageView = findViewById(R.id.image_view)
+
                     iv.setImageURI(null)
 
                     //display pdf name
                     var displayName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
-                    val pdfTextView : TextView = findViewById(R.id.pdfText)
+
                     pdfTextView.text = displayName
 
                 }

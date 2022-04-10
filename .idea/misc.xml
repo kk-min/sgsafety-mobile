@@ -45,15 +45,31 @@
         <entry key="..\:/Users/zijia/OneDrive/Desktop/SG_Safety_Mobile/app/src/main/res/menu/drawer_view.xml" value="0.22" />
         <entry key="..\:/Users/zijia/OneDrive/Desktop/SG_Safety_Mobile/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.308" />
         <entry key="..\:/Users/zijia/OneDrive/Desktop/SG_Safety_Mobile/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.135" />
+        <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/drawable/rounded_corner_green.xml" value="0.162" />
+        <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/drawable/rounded_white.xml" value="0.162" />
         <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/activity_aedmap.xml" value="0.3046875" />
+        <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/activity_alert_page.xml" value="0.3046875" />
+        <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/activity_change_password.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/activity_choice_page.xml" value="0.3046875" />
+        <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/activity_contact_number.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/activity_cpr_map.xml" value="0.3046875" />
         <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/activity_edit_email.xml" value="0.3046875" />
+        <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/activity_forget_password.xml" value="0.146875" />
         <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/activity_helper_choice.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/activity_login.xml" value="0.3046875" />
         <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/activity_main.xml" value="0.19814814814814816" />
         <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/activity_thank_you_page.xml" value="0.3046875" />
+        <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/activity_update_cpr.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/cardview.xml" value="0.3046875" />
+        <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/fragment_about.xml" value="0.1" />
+        <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/fragment_about_us.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/fragment_aed.xml" value="0.3046875" />
+        <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/fragment_cardview.xml" value="0.3046875" />
+        <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/fragment_guide.xml" value="0.3046875" />
+        <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/fragment_manage_profile.xml" value="0.22" />
+        <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/nav_header.xml" value="0.146875" />
+        <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/layout/toolbar.xml" value="0.146875" />
+        <entry key="..\:/Users/zijia/OneDrive/Desktop/git/SGSAFETY_Mobile/app/src/main/res/menu/drawer_list.xml" value="0.146875" />
         <entry key="..\:/Users/zijia/OneDrive/Desktop/sgsafety2/app/src/main/res/layout/activity_choice_page.xml" value="0.22" />
         <entry key="..\:/Users/zijia/OneDrive/Desktop/sgsafety2/app/src/main/res/layout/activity_helper_choice.xml" value="0.25" />
       </map>

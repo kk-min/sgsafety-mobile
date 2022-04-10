@@ -1,12 +1,10 @@
 package com.example.sg_safety_mobile.Logic
 
-import android.location.Address
-import android.location.Geocoder
+
 import android.location.Location
 import android.telephony.SmsManager
 import android.text.TextUtils
-import android.widget.TextView
-import java.util.*
+
 
 
 class SMSManager (){
@@ -14,11 +12,11 @@ class SMSManager (){
     private val helpMessage = "Ambulance"
 
     //SEND SMS TO THE DESIGNATED PHONE NUMBER
-    fun sendSMS(location:String) {
+    fun sendSMS(location:String,loc:Location) {
         if (TextUtils.isDigitsOnly(helpNo.toString())) {
                 val smsManager: SmsManager = SmsManager.getDefault()
                 smsManager.sendTextMessage(helpNo.toString(), null,
-                    "$helpMessage I need help! I am currently at Latitude: 1.353174 Longitude: 103.9480955 Address:$location ", null, null)
+                    "$helpMessage I need help! I am currently at Latitude: ${loc.latitude} Longitude: ${loc.longitude} Address:$location ", null, null)
 
         }
     }

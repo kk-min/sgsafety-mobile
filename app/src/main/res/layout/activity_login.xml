@@ -47,8 +47,8 @@
         android:layout_below="@+id/password"
         android:layout_alignEnd="@+id/password"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="23dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginEnd="225dp"
         android:clickable="true"
         android:text="Forget Password?"
         android:textColor="#8F8686"
@@ -63,8 +63,8 @@
         android:layout_alignEnd="@+id/login_button"
         android:layout_alignBottom="@+id/login_button"
         android:layout_marginLeft="20dp"
-        android:layout_marginEnd="201dp"
-        android:layout_marginBottom="-57dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="84dp"
         android:clickable="true"
         android:text="Register Account"
         android:textColor="#F30E0E"
@@ -85,20 +85,6 @@
         android:textColor="#FFFFFF"
         android:textSize="20dp"
         android:textStyle="bold" />
-
-    <RadioButton
-
-        android:id="@+id/remember_password"
-        android:layout_width="165dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/password"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
-        android:checked="false"
-        android:minHeight="48dp"
-        android:text="Remember Password"
-        android:textSize="12dp" />
 
     <ImageView
         android:id="@+id/imageView"

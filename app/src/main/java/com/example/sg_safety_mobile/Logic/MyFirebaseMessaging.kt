@@ -1,5 +1,6 @@
 package com.example.sg_safety_mobile.Logic
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -7,11 +8,15 @@ import android.content.Context
 import android.content.Intent
 
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
 
 import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.example.sg_safety_mobile.Presentation.Activity.ChoicePageActivity
 import com.example.sg_safety_mobile.R
@@ -37,7 +42,8 @@ import org.osmdroid.util.GeoPoint
 
 
 class MyFirebaseMessagingService:FirebaseMessagingService() {
-    val firebaseManager=FirebaseManager(this)
+
+    lateinit var lm: LocationManager
     companion object {
         var token : String? = null
 
@@ -58,7 +64,6 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
 
         fun unsubscribeTopic(context: Context, topic: String) {
             FirebaseMessaging.getInstance().unsubscribeFromTopic(topic).addOnSuccessListener {
-
                 //Toast.makeText(context, "Unsubscribed $topic", Toast.LENGTH_LONG).show()
                 Log.d("CZ2006:MyFirebaseMessaging:", "Unsubscribed to $topic")
             }.addOnFailureListener {
@@ -152,34 +157,35 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
 
 
         //NOTIFICATION DISPLAY CHECK( (I)NOT CURRENT USER (II)DISTANCE<=400M)
-        if(victim_id!=current_user_id)
-        {
-            Log.e("CZ2006:Messaging: Current user is the one who sent out message", "Notification not display")
-            return
-        }
-        else
-        {
-            victimLatitude= p0.data.get("victimLatitude")?.toDouble()!!
-            victimLongitude= p0.data.get("victimLongitude")?.toDouble()!!
-            if(victimLatitude!=null&& victimLongitude!=null)
-            {
-                victimLocation= GeoPoint(victimLatitude,victimLongitude)
-            }
-            val userLocation:GeoPoint=getuserLocationViaID(current_user_id.toString())
-
-            Log.e("CZ2006:Victim Location","${victimLocation}")
-            Log.e("CZ2006:User Location","${userLocation}")
-            Log.e("CZ2006:Distance between 2 user in km","${countDistanceBetweenTwoPoints(victimLocation,userLocation)}")
-            if(countDistanceBetweenTwoPoints(victimLocation,userLocation)>=0.4)
-            {
-                return
-            }
-
-        }
+//        if(victim_id==current_user_id)
+//        {
+//            Log.e("CZ2006:Messaging: Current user is the one who sent out message", "Notification not display")
+//            return
+//        }
+//        else
+//        {
+//            victimLatitude= p0.data.get("victimLatitude")?.toDouble()!!
+//            victimLongitude= p0.data.get("victimLongitude")?.toDouble()!!
+//            if(victimLatitude!=null&& victimLongitude!=null)
+//            {
+//                victimLocation= GeoPoint(victimLatitude,victimLongitude)
+//            }
+//            val userLoc:Location=getCurrentLocation()
+//            val userLocation=GeoPoint(userLoc.latitude.toDouble(),userLoc.longitude)
+//
+//            Log.e("CZ2006:Victim Location","${victimLocation}")
+//            Log.e("CZ2006:User Location","${userLocation}")
+//            Log.e("CZ2006:Distance between 2 user in km","${countDistanceBetweenTwoPoints(victimLocation,userLocation)}")
+//            if(countDistanceBetweenTwoPoints(victimLocation,userLocation)>=0.4)
+//            {
+//                return
+//            }
+//
+//        }
 
         val editor: SharedPreferences.Editor = helpPreference.edit()
         editor.putString("UserID",current_user_id)
-        Log.e("CZ2006:User Locationvictim","${victimLatitude.toFloat()}")
+        Log.e("CZ2006:MyFirebaseMessaging:victim location check","${victimLatitude.toFloat()},${victimLongitude.toFloat()}")
         editor.putFloat("Victim_Longitude",victimLongitude.toFloat())
         editor.putFloat("Victim_Latitude",victimLatitude.toFloat())
         editor.commit()
@@ -215,6 +221,7 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
         notificationManager.notify(1,notification.build())
 
     }
+
     fun countDistanceBetweenTwoPoints(p0:GeoPoint,p1:GeoPoint):Double{
         val lat1=p0.latitude
         val lon1=p0.longitude
@@ -236,28 +243,50 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
     private fun rad2deg(rad: Double): Double {
         return rad * 180.0 / Math.PI
     }
-
-    fun getuserLocationViaID(id:String): GeoPoint {
-        val db = Firebase.firestore
-        lateinit var geoPoint: GeoPoint
-        runBlocking {
-
-            db.collection("Users").document(id).get()
-                .addOnSuccessListener { document ->
-
-                    val result = document.getGeoPoint("Location")
-                    geoPoint = result?.let { GeoPoint(result.latitude, it.longitude) }!!
-                }
-                .addOnFailureListener { e ->
-                    Log.e("CZ2006:VicTIM location not found", "Error getting document", e)
-
-                }
-                .await()
-
-
+    private fun getCurrentLocation(): Location {
+        lateinit var loc: Location
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return loc
         }
-        return geoPoint
+        lm=getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        loc= lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)!!
+        return loc
     }
+//    fun getuserLocationViaID(id:String): GeoPoint {
+//        val db = Firebase.firestore
+//        lateinit var geoPoint: GeoPoint
+//        runBlocking {
+//
+//            db.collection("Users").document(id).get()
+//                .addOnSuccessListener { document ->
+//
+//                    val result = document.getGeoPoint("Location")
+//                    geoPoint = result?.let { GeoPoint(result.latitude, it.longitude) }!!
+//                }
+//                .addOnFailureListener { e ->
+//                    Log.e("CZ2006:VicTIM location not found", "Error getting document", e)
+//
+//                }
+//                .await()
+//
+//
+//        }
+//        return geoPoint
+//    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun checkNotificationChannel(CHANNEL_ID:String) {

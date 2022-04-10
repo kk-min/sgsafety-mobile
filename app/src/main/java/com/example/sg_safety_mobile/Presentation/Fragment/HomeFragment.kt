@@ -2,20 +2,24 @@ package com.example.sg_safety_mobile.Presentation.Fragment
 
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import com.example.sg_safety_mobile.Presentation.Activity.AlertPageActivity
 import com.example.sg_safety_mobile.Logic.LocationReceiver
+import com.example.sg_safety_mobile.Logic.OSMapActivityManager
+import com.example.sg_safety_mobile.Presentation.Activity.AlertPageActivity
 import com.example.sg_safety_mobile.R
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -28,7 +32,9 @@ class HomeFragment : Fragment(),View.OnClickListener {
 
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private lateinit var map : MapView;
-    lateinit var locationReceiver: LocationReceiver;
+    private lateinit var locationReceiver: LocationReceiver;
+    private lateinit var mapManager:OSMapActivityManager
+    private lateinit var button: Button
 
 
     //FOR PAGE VIEW
@@ -38,29 +44,32 @@ class HomeFragment : Fragment(),View.OnClickListener {
     ): View? {
         // Inflate the layout for this fragment
         val v= inflater.inflate(R.layout.fragment_home, container, false)
-        var button: Button =v.findViewById(R.id.alert_button)
-
-        Configuration.getInstance().load(v.context , PreferenceManager.getDefaultSharedPreferences(v.context))
-
-        map = v.findViewById<MapView>(R.id.map)
-        map.setTileSource(TileSourceFactory.MAPNIK)
-        val mapController = map.controller
-        mapController.setZoom(20)
-        //mapController.setCenter(startPoint);
-        map.maxZoomLevel= 20.0
-        map.minZoomLevel=14.0
-
-
+        viewEInitializations(v)
         if(ActivityCompat.checkSelfPermission(v.context,android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
             &&  ActivityCompat.checkSelfPermission(v.context,android.Manifest.permission.ACCESS_FINE_LOCATION)  != PackageManager.PERMISSION_GRANTED)
         {
             ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION,android.Manifest.permission.ACCESS_FINE_LOCATION),111)
         }
 
-        locationReceiver = LocationReceiver(v)
-        val filter = IntentFilter("UPDATE_LOCATION+ADDRESS")
-        v.context.registerReceiver(locationReceiver, filter); // Register our receiverontext));
 
+
+        Configuration.getInstance().load(v.context , PreferenceManager.getDefaultSharedPreferences(v.context))
+
+
+
+        map.setTileSource(TileSourceFactory.MAPNIK)
+        val mapController = map.controller
+        mapController.setZoom(20)
+        map.maxZoomLevel= 20.0
+        map.minZoomLevel=14.0
+        mapManager= OSMapActivityManager(v.context,map)
+
+
+        val cur_location=mapManager.getCurrentLocation()
+        val cur_geopoint=GeoPoint(cur_location.latitude,cur_location.longitude)
+        mapManager.addMarker(map,cur_geopoint,"Your Location")
+
+        registerLocationReceiver(v)
 
         //PROMPT ALERT BOX TO MAKE SURE USER REALLY NEED HELP
         button.setOnClickListener{
@@ -68,14 +77,19 @@ class HomeFragment : Fragment(),View.OnClickListener {
         }
         return v
     }
-
-
-    //FOR PAGE VIEW
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    private fun viewEInitializations(v:View) {
+        button=v.findViewById(R.id.alert_button)
+        map = v.findViewById<MapView>(R.id.map)
     }
 
+
+
+    private fun registerLocationReceiver(v:View)
+    {
+        locationReceiver = LocationReceiver(v)
+        val filter = IntentFilter("UPDATE_LOCATION+ADDRESS")
+        v.context.registerReceiver(locationReceiver, filter); // Register our receiverontext));
+    }
 
     //ALERT TO MAKE SURE USER DON'T ACCIDENTALLY PRESS THE SEND HELP BUTTON
     private fun showAlertDialog() {
@@ -96,8 +110,19 @@ class HomeFragment : Fragment(),View.OnClickListener {
             "No"
         ) { _, _ -> }
         val alert: AlertDialog = alertDialog.create()
+
         alert.setCanceledOnTouchOutside(false)
         alert.show()
+
+        //layout for alert box
+        val layoutParams=LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        layoutParams.weight=10F
+        layoutParams.gravity= Gravity.CENTER
+        //layoutParams.width=10
+        alert.getButton(Dialog.BUTTON_POSITIVE).setLayoutParams(layoutParams)
+        alert.getButton(Dialog.BUTTON_POSITIVE).textSize=20F
+        alert.getButton(Dialog.BUTTON_NEGATIVE).setLayoutParams(layoutParams)
+        alert.getButton(Dialog.BUTTON_NEGATIVE).textSize=20F
     }
 
 
@@ -138,110 +163,5 @@ class HomeFragment : Fragment(),View.OnClickListener {
         }
     }
 
-
-    /*private fun requestPermissionsIfNecessary(String[] permissions) {
-        ArrayList<String> permissionsToRequest = new ArrayList<>();
-        for (String permission : permissions) {
-        if (ContextCompat.checkSelfPermission(this, permission)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            permissionsToRequest.add(permission);
-        }
-    }
-        if (permissionsToRequest.size() > 0) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    permissionsToRequest.toArray(new String[0]),
-                    REQUEST_PERMISSIONS_REQUEST_CODE);
-        }
-    }*/
-    private fun addMarker(map: MapView?, point: GeoPoint, title: String) {
-        val startMarker = Marker(map)
-        //Lat ‎23.746466 Lng 90.376015
-        startMarker.icon=map?.context?.resources?.getDrawable(R.drawable.userloc)
-        startMarker.position = point
-        startMarker.title = title
-        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-        map?.overlays?.add(startMarker)
-        map?.invalidate()
-    }
-
-
-//    private fun addingWaypoints(map: MapView?, startPoint: GeoPoint,endPoint:GeoPoint) {
-//        val roadManager = OSRMRoadManager(view?.context,"MYUSERAGENT")
-//        roadManager.setMean(OSRMRoadManager.MEAN_BY_FOOT)
-//        val waypoints = ArrayList<GeoPoint>()
-//        waypoints.add(startPoint)
-//        //waypoints.add(GeoPoint(23.816237, 90.366725))
-//
-//        waypoints.add(endPoint)
-//
-//        MyRoadAsyncTask(roadManager, waypoints).execute()
-//
-//        Observable.fromCallable {
-//            retrievingRoad(roadManager, waypoints)
-//        }
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe({
-//
-//            }, {
-//
-//            }, {
-//                map?.invalidate()
-//            })
-//
-//        addMarker(map, endPoint, "End Point")
-//    }
-//
-//    private fun retrievingRoad(roadManager: OSRMRoadManager, waypoints: ArrayList<GeoPoint>) {
-//        // Retrieving road
-//
-//        val road = roadManager.getRoad(waypoints)
-//        val roadOverlay = RoadManager.buildRoadOverlay(road)
-//        map?.overlays?.add(roadOverlay);
-//
-//        val nodeIcon = map?.context?.resources?.getDrawable(R.mipmap.ic_launcher)
-//        for (i in 0 until road.mNodes.size) {
-//            val node = road.mNodes[i]
-//            val nodeMarker = Marker(map)
-//            nodeMarker.position = node.mLocation
-//            nodeMarker.setIcon(nodeIcon)
-//            nodeMarker.title = "Step $i"
-//            map?.overlays?.add(nodeMarker)
-//            nodeMarker.snippet = node.mInstructions;
-//            nodeMarker.subDescription = Road.getLengthDurationText(map?.context, node.mLength, node.mDuration);
-//        }
-//    }
-    
-
-
-//    private inner class MyRoadAsyncTask(val roadManager: OSRMRoadManager,
-//                                        val waypoints: ArrayList<GeoPoint>) : AsyncTask<Void, Void, String>() {
-//
-//        override fun doInBackground(vararg params: Void?): String? {
-//            val road = roadManager.getRoad(waypoints)
-//            val roadOverlay = RoadManager.buildRoadOverlay(road)
-//            map?.overlays?.add(roadOverlay);
-//
-//            val nodeIcon = map?.context?.resources?.getDrawable(R.mipmap.ic_launcher)
-//            for (i in 0 until road.mNodes.size) {
-//                val node = road.mNodes[i]
-//                val nodeMarker = Marker(map)
-//                nodeMarker.position = node.mLocation
-//                nodeMarker.setIcon(nodeIcon)
-//                nodeMarker.title = "Step $i"
-//                map?.overlays?.add(nodeMarker)
-//                nodeMarker.snippet = node.mInstructions;
-//                nodeMarker.subDescription = Road.getLengthDurationText(map?.context, node.mLength, node.mDuration);
-//            }
-//
-//            return null
-//        }
-//
-//        override fun onPostExecute(result: String?) {
-//            map?.invalidate()
-//        }
-//    }
 
 }

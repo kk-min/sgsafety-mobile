@@ -1,7 +1,5 @@
 package com.example.sg_safety_mobile.Presentation.Activity
 
-
-
 import android.app.Service
 import android.content.Intent
 import android.content.SharedPreferences
@@ -12,16 +10,13 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ServiceCompat.stopForeground
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.example.sg_safety_mobile.*
 import com.example.sg_safety_mobile.Logic.*
 import com.example.sg_safety_mobile.Presentation.Fragment.*
-
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.fragment_home.*
 
 //Activity class should only content UI and those func interact with user
 class MainActivity : AppCompatActivity() {
@@ -35,15 +30,13 @@ class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
+        viewEInitializations()
 
         MyFirebaseMessagingService.subscribeTopic(this,"HelpMessage")
 
-        // Call findViewById on the DrawerLayout
-        drawerLayout = findViewById(R.id.drawerLayout)
 
         // Pass the ActionBarToggle action into the drawerListener
         actionBarToggle = ActionBarDrawerToggle(this, drawerLayout, 0, 0)
@@ -63,8 +56,6 @@ class MainActivity : AppCompatActivity() {
         mainManager.startLocationService()
 
 
-        // Call findViewById on the NavigationView
-        navView = findViewById(R.id.navView)
 
         // Call setNavigationItemSelectedListener on the NavigationView to detect when items are clicked
         navView.setNavigationItemSelectedListener { menuItem ->
@@ -72,11 +63,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_home -> {
                     Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show()
                     replaceFragment(HomeFragment(),"SG Safety")
-                    true
-                }
-                R.id.nav_aed -> {
-                    Toast.makeText(this, "AED Location", Toast.LENGTH_SHORT).show()
-                    replaceFragment(AEDFragment(),menuItem.title.toString())
                     true
                 }
                 R.id.nav_guide -> {
@@ -104,6 +90,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+    private fun viewEInitializations() {
+        drawerLayout = findViewById(R.id.drawerLayout)
+        navView = findViewById(R.id.navView)
     }
 
     // override the onSupportNavigateUp() function to launch the Drawer when the hamburger icon is clicked

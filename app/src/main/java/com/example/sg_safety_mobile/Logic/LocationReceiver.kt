@@ -16,9 +16,11 @@ import org.osmdroid.views.overlay.Marker
 import java.util.*
 
 class LocationReceiver(val view: View): BroadcastReceiver() {
-    val geoCoder = ReverseGeocoder(view.context)
-    var currentMarker: Marker? = null
-    lateinit var mapView:MapView
+
+    private val geoCoder = ReverseGeocoder(view.context)
+    private var currentMarker: Marker? = null
+    private lateinit var mapView:MapView
+
     override fun onReceive(context: Context, intent: Intent) {
         mapView=view.findViewById<MapView>(R.id.map)
         if(mapView==null)
@@ -43,7 +45,7 @@ class LocationReceiver(val view: View): BroadcastReceiver() {
             }
         }
     }
-    fun updateMarker(loc: Location?){
+    private fun updateMarker(loc: Location?){
         //Delete marker if applicable, then insert new currentLocation marker
         if (currentMarker != null){
             Log.d("CZ2006:LocationService", "prev Location deleted")

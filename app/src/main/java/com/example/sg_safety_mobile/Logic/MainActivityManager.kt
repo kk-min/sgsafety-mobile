@@ -17,7 +17,7 @@ import com.example.sg_safety_mobile.Presentation.Activity.LoginActivity
 class MainActivityManager(val context: Context) {
     val locationService: LocationService=LocationService()
     var locationServiceIntent: Intent? = null
-    lateinit var locationReceiver: LocationReceiver
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun promptSignOutAlert(){
@@ -41,7 +41,6 @@ class MainActivityManager(val context: Context) {
 
             val intent = Intent(context, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             context.startActivity(intent)
         }
         //cancel the alert button
@@ -55,8 +54,8 @@ class MainActivityManager(val context: Context) {
     }
 
     fun startLocationService(){
-        Log.d("CZ2006:MainActivity", "LocationService Starting...")
-        //locationService =
+        Log.d("CZ2006:MainActivityManager", "LocationService Starting...")
+
         locationServiceIntent = Intent(context, locationService!!.javaClass)
         if (!isMyServiceRunning(locationService!!.javaClass)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -72,7 +71,7 @@ class MainActivityManager(val context: Context) {
         val intent = Intent(context, LocationService::class.java)
         intent.action = "StopService"
 
-        Log.d("CZ2006:MainActivity", "LocationService Starting...")
+        Log.d("CZ2006:MainActivityManager", "LocationService Starting...")
         //locationService =
         if (isMyServiceRunning(locationService!!.javaClass)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -88,11 +87,11 @@ class MainActivityManager(val context: Context) {
         val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         for (service in manager.getRunningServices(Int.MAX_VALUE)) {
             if (serviceClass.name == service.service.className) {
-                Log.i("CZ2006:Service status", "Running")
+                Log.i("CZ2006:MainActivityManager:Service status", "Running")
                 return true
             }
         }
-        Log.i("CZ2006:Service status", "Not running")
+        Log.i("CZ2006MainActivityManager:Service status", "Not running")
         return false
     }
 }
