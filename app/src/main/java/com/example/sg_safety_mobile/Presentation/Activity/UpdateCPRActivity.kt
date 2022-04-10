@@ -17,12 +17,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.sg_safety_mobile.Logic.FileManager
+import com.example.sg_safety_mobile.Logic.FileReader
 import com.example.sg_safety_mobile.Logic.FirebaseManager
+import com.example.sg_safety_mobile.Logic.ImageReader
+import com.example.sg_safety_mobile.Logic.PDFReader
 import com.example.sg_safety_mobile.R
 import com.example.sg_safety_mobile.databinding.ActivityUpdateCprBinding
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import java.util.*
 
@@ -34,7 +34,8 @@ class UpdateCPRActivity : AppCompatActivity() {
     lateinit var binding : ActivityUpdateCprBinding
     lateinit var expiry : String
     private val firebaseManager = FirebaseManager(this)
-    private val fileManager = FileManager(this)
+    private val pdfReader = FileReader(PDFReader(this))
+    private  val imageReader = FileReader(ImageReader(this))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,11 +64,11 @@ class UpdateCPRActivity : AppCompatActivity() {
 
         //selecting "Upload Image version of CPR Certificate" button
         binding.uploadCpr.setOnClickListener {
-            fileManager.getImageFile()
+            imageReader.readFile()
         }
 
         binding.uploadPdfCpr.setOnClickListener {
-            fileManager.getPDFFile()
+            pdfReader.readFile()
         }
 
 
