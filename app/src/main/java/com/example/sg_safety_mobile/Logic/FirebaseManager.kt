@@ -59,6 +59,7 @@ class FirebaseManager(val context: Context){
                                 if(emailInDoc==userName)
                                 {
                                     editor.putString("UserID" , document.id)
+                                    Log.d("CZ2006:FirebaseManager:UserID", "${document.id}")
                                     editor.commit()
                                     break
                                 }
@@ -457,16 +458,22 @@ class FirebaseManager(val context: Context){
     fun updateUserLocationToDatabase(geoPoint: com.google.firebase.firestore.GeoPoint){
         val sharedPreference: SharedPreferences = context.getSharedPreferences("Login", Service.MODE_PRIVATE)
         val current_user_id= sharedPreference.getString("UserID","").toString()
-        val longlat = db.collection("Users").document(current_user_id)
+        Log.d("CZ2006:FirebaseManager", "${current_user_id}")
+        try {
+            val longlat = db.collection("Users").document(current_user_id)
 
-
-        longlat.update("Location", geoPoint)
-            .addOnSuccessListener {
-                Log.d("CZ2006:FirebaseManager", "Location successfully updated to firebase !")
-            }
-            .addOnFailureListener { e ->
-                Log.w("CZ2006:FirebaseManager", "Error updating location to firebase", e)
-            }
+            longlat.update("Location", geoPoint)
+                .addOnSuccessListener {
+                    Log.d("CZ2006:FirebaseManager", "Location successfully updated to firebase !")
+                }
+                .addOnFailureListener { e ->
+                    Log.w("CZ2006:FirebaseManager", "Error updating location to firebase", e)
+                }
+        }
+        catch (e:Exception)
+        {
+            Log.d("CZ2006:FirebaseManager:UPDATE EMAIL", "${e}")
+        }
         Log.d("CZ2006:FirebaseManager", "Location changed: ${geoPoint.latitude},${geoPoint.longitude}")
     }
 //    fun getuserLocationViaID(id:String): GeoPoint {

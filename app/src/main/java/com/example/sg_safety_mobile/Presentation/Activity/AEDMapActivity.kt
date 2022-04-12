@@ -92,7 +92,7 @@ class AEDMapActivity : AppCompatActivity() {
 
         var loc=mapManager.getCurrentLocation()
         //get user postal district
-        val user_district= loc?.let { getUserPostalDistrict(it) }
+        //val user_district= loc?.let { getUserPostalDistrict(it) }
 
         //move to user location point
         val startPoint= GeoPoint(loc!!.latitude, loc!!.longitude)
@@ -165,11 +165,11 @@ class AEDMapActivity : AppCompatActivity() {
                 val array=result.get("records") as JsonArray<*>
 
 
-                if (user_district != null) {
-                    setNearbyAEDLocation(user_district.toString(),array)
-                    setNearbyAEDLocation((user_district-1).toString(),array)
-                    setNearbyAEDLocation((user_district+1).toString(),array)
-                }
+                //if (user_district != null) {
+                  //  setNearbyAEDLocation(user_district.toString(),array)
+                    setNearbyAEDLocation(array)
+                    //setNearbyAEDLocation((user_district+1).toString(),array)
+                //}
 
             }
         }
@@ -199,13 +199,13 @@ class AEDMapActivity : AppCompatActivity() {
         return user_district
     }
 
-    private fun setNearbyAEDLocation(postal_district:String,array:JsonArray<*>){
+    private fun setNearbyAEDLocation(array:JsonArray<*>){
 
-        val db = Firebase.firestore
-
-        //start and end index of aed record array
-        var start:Long=0
-        var end:Long=0
+//        val db = Firebase.firestore
+//
+//        //start and end index of aed record array
+//        var start:Long=0
+//        var end:Long=0
 
 
         val postalCode=array.get("postal_code")
@@ -216,24 +216,24 @@ class AEDMapActivity : AppCompatActivity() {
         val building_name=array.get("building_name")
 
 
-        runBlocking {
-            db.collection("AED_Postal_Code").document(postal_district.toString()).get()
-                .addOnSuccessListener { document ->
-
-                    start = document.get("start_index") as Long
-                    end = document.get("end_index") as Long
-                    Log.d("array", "${start},${end}")
-                }
-                .addOnFailureListener { e ->
-                    Log.e("CZ2006:VicTIM aed not found", "Error getting document", e)
-
-                }.await()
-        }
-        //if(document not found then return)
-        if(end.toInt()==0)
-            return
+//        runBlocking {
+//            db.collection("AED_Postal_Code").document(postal_district.toString()).get()
+//                .addOnSuccessListener { document ->
+//
+//                    start = document.get("start_index") as Long
+//                    end = document.get("end_index") as Long
+//                    Log.d("array", "${start},${end}")
+//                }
+//                .addOnFailureListener { e ->
+//                    Log.e("CZ2006:VicTIM aed not found", "Error getting document", e)
+//
+//                }.await()
+//        }
+//        //if(document not found then return)
+//        if(end.toInt()==0)
+//            return
         //otherwise start adding aed marker
-        for(i in start.toInt()..end.toInt())
+        for(i in 0..(array.size-1))
         {
             val address="${roadname[i]}, ${postalCode[i]} Singapore"
             Log.d("CZ2006:VicTIM geocode aed", "${address}")
