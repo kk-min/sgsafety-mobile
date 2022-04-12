@@ -86,8 +86,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.47"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.397"
+        app:layout_constraintTop_toBottomOf="@+id/constraint1"
+        app:layout_constraintVertical_bias="0.028"
         tools:ignore="MissingConstraints" />
 
     <Button
@@ -112,11 +112,12 @@
         android:id="@+id/image_view"
         android:layout_width="359dp"
         android:layout_height="244dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/submitting"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.837"
+        app:layout_constraintVertical_bias="1.0"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -137,24 +138,24 @@
         android:layout_width="198dp"
         android:layout_height="50dp"
         android:text="@string/uploadPdfCPR"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/pdfText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.037"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.465" />
+        app:layout_constraintTop_toBottomOf="@+id/adding_cpr"
+        app:layout_constraintVertical_bias="0.01" />
 
     <Button
         android:id="@+id/upload_cpr"
         android:layout_width="189dp"
         android:layout_height="51dp"
         android:text="@string/uploadCPR"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/pdfText"
         app:layout_constraintEnd_toEndOf="@+id/constraintLayout"
         app:layout_constraintHorizontal_bias="0.959"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.466" />
+        app:layout_constraintTop_toBottomOf="@+id/adding_cpr"
+        app:layout_constraintVertical_bias="0.008" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
