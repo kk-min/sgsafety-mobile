@@ -157,31 +157,31 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
 
 
         //NOTIFICATION DISPLAY CHECK( (I)NOT CURRENT USER (II)DISTANCE<=400M)
-//        if(victim_id==current_user_id)
-//        {
-//            Log.e("CZ2006:Messaging: Current user is the one who sent out message", "Notification not display")
-//            return
-//        }
-//        else
-//        {
-//            victimLatitude= p0.data.get("victimLatitude")?.toDouble()!!
-//            victimLongitude= p0.data.get("victimLongitude")?.toDouble()!!
-//            if(victimLatitude!=null&& victimLongitude!=null)
-//            {
-//                victimLocation= GeoPoint(victimLatitude,victimLongitude)
-//            }
-//            val userLoc:Location=getCurrentLocation()
-//            val userLocation=GeoPoint(userLoc.latitude.toDouble(),userLoc.longitude)
-//
-//            Log.e("CZ2006:Victim Location","${victimLocation}")
-//            Log.e("CZ2006:User Location","${userLocation}")
-//            Log.e("CZ2006:Distance between 2 user in km","${countDistanceBetweenTwoPoints(victimLocation,userLocation)}")
-//            if(countDistanceBetweenTwoPoints(victimLocation,userLocation)>=0.4)
-//            {
-//                return
-//            }
-//
-//        }
+        if(victim_id==current_user_id)
+        {
+            Log.e("CZ2006:Messaging: Current user is the one who sent out message", "Notification not display")
+            return
+        }
+        else
+        {
+            victimLatitude= p0.data.get("victimLatitude")?.toDouble()!!
+            victimLongitude= p0.data.get("victimLongitude")?.toDouble()!!
+            if(victimLatitude!=null&& victimLongitude!=null)
+            {
+                victimLocation= GeoPoint(victimLatitude,victimLongitude)
+            }
+            val userLoc:Location=getCurrentLocation()
+            val userLocation=GeoPoint(userLoc.latitude.toDouble(),userLoc.longitude)
+
+            Log.e("CZ2006:Victim Location","${victimLocation}")
+            Log.e("CZ2006:User Location","${userLocation}")
+            Log.e("CZ2006:Distance between 2 user in km","${countDistanceBetweenTwoPoints(victimLocation,userLocation)}")
+            if(countDistanceBetweenTwoPoints(victimLocation,userLocation)>=0.4)
+            {
+                return
+            }
+
+        }
 
         val editor: SharedPreferences.Editor = helpPreference.edit()
         editor.putString("UserID",current_user_id)

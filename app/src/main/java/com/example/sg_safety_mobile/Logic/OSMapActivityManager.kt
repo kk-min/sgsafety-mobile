@@ -34,6 +34,7 @@ class OSMapActivityManager(val context: Context,val map:MapView) {
         val startMarker = Marker(map)
         startMarker.position = point
         startMarker.title = title
+        startMarker.id= String.toString()
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
         map?.overlays?.add(startMarker)
         map?.invalidate()
@@ -63,7 +64,7 @@ class OSMapActivityManager(val context: Context,val map:MapView) {
                 map?.invalidate()
             })
 
-        addMarker(map, endPoint, "End Point")
+        //addMarker(map, endPoint, "End Point")
     }
 
     fun retrievingRoad(roadManager: OSRMRoadManager, waypoints: ArrayList<GeoPoint>) {
@@ -78,7 +79,9 @@ class OSMapActivityManager(val context: Context,val map:MapView) {
             val node = road.mNodes[i]
             val nodeMarker = Marker(map)
             nodeMarker.position = node.mLocation
-            nodeMarker.icon = nodeIcon
+            if(i!=0&&i!=road.mNodes.size-1) {
+                nodeMarker.icon = nodeIcon
+            }
             nodeMarker.title = "Step $i"
             map?.overlays?.add(nodeMarker)
             nodeMarker.snippet = node.mInstructions;
@@ -103,7 +106,9 @@ class OSMapActivityManager(val context: Context,val map:MapView) {
                 val node = road.mNodes[i]
                 val nodeMarker = Marker(map)
                 nodeMarker.position = node.mLocation
-                nodeMarker.setIcon(nodeIcon)
+                if(i!=0&&i!=road.mNodes.size-1) {
+                    nodeMarker.icon = nodeIcon
+                }
                 nodeMarker.title = "Step $i"
                 map?.overlays?.add(nodeMarker)
                 nodeMarker.snippet = node.mInstructions;

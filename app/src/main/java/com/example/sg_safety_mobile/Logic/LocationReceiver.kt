@@ -3,8 +3,6 @@ package com.example.sg_safety_mobile.Logic
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.location.Address
-import android.location.Geocoder
 import android.location.Location
 import android.util.Log
 import android.view.View
@@ -13,7 +11,9 @@ import com.example.sg_safety_mobile.R
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
-import java.util.*
+import org.osmdroid.views.overlay.Overlay
+
+
 
 class LocationReceiver(val view: View): BroadcastReceiver() {
 
@@ -29,17 +29,17 @@ class LocationReceiver(val view: View): BroadcastReceiver() {
             return
         }
         if(intent.action.equals("UPDATE_LOCATION+ADDRESS")){
-            var loc: Location? = intent.getParcelableExtra("LOCATION_DATA")
+            val loc: Location? = intent.getParcelableExtra("LOCATION_DATA")
             //Update marker
             if (loc != null) {
                 updateMarker(loc)
-                val text=view?.findViewById<TextView>(R.id.location)
+                val text= view.findViewById<TextView>(R.id.location)
                 text.text=geoCoder.reverseGeocode(loc.latitude,loc.longitude)
             }
         }
         else if(intent.action.equals("UPDATE_LOCATION"))
         {
-            var loc: Location? = intent.getParcelableExtra("LOCATION_DATA")
+            val loc: Location? = intent.getParcelableExtra("LOCATION_DATA")
             if (loc != null) {
                 updateMarker(loc)
             }
@@ -47,11 +47,18 @@ class LocationReceiver(val view: View): BroadcastReceiver() {
     }
     private fun updateMarker(loc: Location?){
         //Delete marker if applicable, then insert new currentLocation marker
-        if (currentMarker != null){
-            Log.d("CZ2006:LocationService", "prev Location deleted")
-            mapView?.overlays?.remove(currentMarker)
+//        if (currentMarker != null){
+//            Log.d("CZ2006:LocationService", "prev Location deleted")
+//            mapView?.overlays?.remove(currentMarker)
+//        }
+        for (i in 0 until mapView.overlays.size) {
+            val overlay: Overlay = mapView.overlays[i]
+            if (overlay is Marker && overlay.id == "Current Location") {
+                mapView.overlays.remove(overlay)
+            }
         }
-        var point: GeoPoint? = loc?.let { GeoPoint(it.latitude, loc.longitude) }
+
+        val point: GeoPoint? = loc?.let { GeoPoint(it.latitude, loc.longitude) }
 
         try{
             currentMarker = Marker(mapView)
@@ -59,8 +66,8 @@ class LocationReceiver(val view: View): BroadcastReceiver() {
             currentMarker?.title = "Current Location"
             currentMarker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             val mapController = mapView.controller
-            mapController.animateTo(point);
-            mapView?.overlays?.add(currentMarker)
+            mapController.animateTo(point)
+            mapView.overlays?.add(currentMarker)
             mapView.invalidate()
             Log.d("CZ2006:LocationService", "New location set and marker added")
         }

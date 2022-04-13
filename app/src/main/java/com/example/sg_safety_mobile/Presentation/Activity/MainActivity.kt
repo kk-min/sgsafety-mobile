@@ -2,6 +2,7 @@ package com.example.sg_safety_mobile.Presentation.Activity
 
 import android.app.Service
 import android.content.Intent
+import android.content.IntentSender
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
@@ -13,9 +14,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import com.example.sg_safety_mobile.*
-import com.example.sg_safety_mobile.Logic.*
-import com.example.sg_safety_mobile.Presentation.Fragment.*
+import com.example.sg_safety_mobile.Logic.LocationServiceRestarter
+import com.example.sg_safety_mobile.Logic.MainActivityManager
+import com.example.sg_safety_mobile.Logic.MyFirebaseMessagingService
+import com.example.sg_safety_mobile.Presentation.Fragment.AboutFragment
+import com.example.sg_safety_mobile.Presentation.Fragment.GuideFragment
+import com.example.sg_safety_mobile.Presentation.Fragment.HomeFragment
+import com.example.sg_safety_mobile.Presentation.Fragment.ManageProfileFragment
+import com.example.sg_safety_mobile.R
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.*
+import com.google.android.gms.tasks.Task
 import com.google.android.material.navigation.NavigationView
 
 //Activity class should only content UI and those func interact with user
@@ -34,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         viewEInitializations()
+
 
         MyFirebaseMessagingService.subscribeTopic(this,"HelpMessage")
 
@@ -145,4 +155,5 @@ class MainActivity : AppCompatActivity() {
         this.sendBroadcast(broadcastIntent)
         super.onDestroy()
     }
+
 }

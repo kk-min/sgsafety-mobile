@@ -6,185 +6,220 @@
     android:layout_height="match_parent"
     tools:context=".Presentation.Activity.AEDMapActivity">
 
+    <TextView
+        android:id="@+id/aed_location"
+        android:layout_width="143dp"
+        android:layout_height="73dp"
+        android:layout_above="@+id/ophrs"
+        android:layout_alignParentEnd="true"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.555"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.511" />
+
     <org.osmdroid.views.MapView
         android:id="@+id/map"
-        android:layout_width="411dp"
-        android:layout_height="366dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView13"
+        android:layout_width="match_parent"
+        android:layout_height="354dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/building_name_title"
+        android:layout_below="@+id/map"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/locate"
+        android:text="Click On the Marker then click the Google Map Link to get the Navigation to that AED"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.128" />
+
     <Button
-        android:id="@+id/aed_retrieve"
-        android:layout_width="151dp"
-        android:layout_height="55dp"
-        android:background="@drawable/rounded_corner_green"
-        android:text="AED Retrieved !"
+        android:id="@+id/locate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/building_name"
+        android:layout_below="@+id/map"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/rounded_corner_red"
+        android:text="Locate Me"
         android:textColor="@color/white"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.834"
+        app:layout_constraintHorizontal_bias="0.947"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.965" />
-
-    <TextView
-        android:id="@+id/ophrs_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Operating Hours"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/googlemaplink"
-        app:layout_constraintEnd_toStartOf="@+id/ophrs"
-        app:layout_constraintHorizontal_bias="0.24"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.895" />
-
-    <TextView
-        android:id="@+id/aed_location_title"
-        android:layout_width="168dp"
-        android:layout_height="26dp"
-        android:layout_marginTop="524dp"
-        android:layout_marginBottom="15dp"
-        android:text="AED Location Description"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/ophrs_title"
-        app:layout_constraintEnd_toStartOf="@+id/aed_location"
-        app:layout_constraintHorizontal_bias="0.567"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/aed_floor_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="12dp"
-        android:text="AED Location Floor No."
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/aed_location_title"
-        app:layout_constraintEnd_toStartOf="@+id/aed_floor"
-        app:layout_constraintHorizontal_bias="0.119"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.995" />
-
-    <TextView
-        android:id="@+id/building_name_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:text="Building Name"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/aed_floor_title"
-        app:layout_constraintEnd_toStartOf="@+id/building_name"
-        app:layout_constraintHorizontal_bias="0.205"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.449" />
 
     <TextView
         android:id="@+id/building_name"
-        android:layout_width="191dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
+        android:layout_above="@+id/aed_floor"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/building_name_title"
         android:text=""
-        app:layout_constraintBottom_toTopOf="@+id/aed_floor"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.927"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintHorizontal_bias="0.152"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.303" />
 
     <TextView
         android:id="@+id/aed_floor"
-        android:layout_width="190dp"
-        android:layout_height="19dp"
-        android:layout_marginBottom="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/aed_location"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/aed_floor_title"
         android:text=""
-        app:layout_constraintBottom_toTopOf="@+id/aed_location"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.927"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.989" />
-
-    <TextView
-        android:id="@+id/aed_location"
-        android:layout_width="192dp"
-        android:layout_height="52dp"
-        android:text=""
-        app:layout_constraintBottom_toTopOf="@+id/ophrs"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.936"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.998" />
+        app:layout_constraintHorizontal_bias="0.152"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.368" />
 
     <TextView
         android:id="@+id/ophrs"
-        android:layout_width="191dp"
-        android:layout_height="56dp"
-        android:layout_marginBottom="20dp"
+        android:layout_width="141dp"
+        android:layout_height="68dp"
+        android:layout_above="@+id/aed_retrieve"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/ophrs_title"
         android:text=""
-        app:layout_constraintBottom_toTopOf="@+id/aed_retrieve"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.931"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintHorizontal_bias="0.535"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.682" />
 
     <TextView
         android:id="@+id/googlemaplink"
-        android:layout_width="150dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
         android:clickable="true"
         android:text="Google Map Link"
         android:textColor="#F30E0E"
         android:textSize="18dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/aed_retrieve"
-        app:layout_constraintHorizontal_bias="0.372"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintHorizontal_bias="0.271"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.976" />
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.844" />
 
     <TextView
-        android:id="@+id/textView13"
-        android:layout_width="249dp"
-        android:layout_height="58dp"
-        android:layout_marginBottom="4dp"
-        android:text="Click On the Marker then click the Google Map Link to get the Navigation to that AED"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="italic"
-        app:layout_constraintBottom_toTopOf="@+id/building_name_title"
-        app:layout_constraintEnd_toStartOf="@+id/locate"
-        app:layout_constraintHorizontal_bias="0.41"
+        android:id="@+id/aed_location_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="AED Location Description"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.103"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.987" />
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.453" />
+
+    <TextView
+        android:id="@+id/aed_floor_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/aed_location_title"
+        android:layout_alignParentStart="true"
+        android:text="AED Location Floor No."
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.097"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.37" />
+
+    <TextView
+        android:id="@+id/building_name_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/aed_floor_title"
+        android:layout_alignParentStart="true"
+        android:text="Building Name"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.08"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.305" />
 
     <Button
-        android:id="@+id/locate"
-        android:layout_width="92dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="4dp"
-        android:background="@drawable/rounded_corner_red"
-        android:text="Locate Me"
+        android:id="@+id/aed_retrieve"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/googlemaplink"
+        android:background="@drawable/rounded_corner_green"
+        android:text="AED Retrieved !"
         android:textColor="@color/white"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/building_name"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.956"
+        app:layout_constraintHorizontal_bias="0.352"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.891" />
+
+    <TextView
+        android:id="@+id/ophrs_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/googlemaplink"
+        android:layout_alignParentStart="true"
+        android:text="Operating Hours"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.083"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/map" />
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.611" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="196dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="371dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

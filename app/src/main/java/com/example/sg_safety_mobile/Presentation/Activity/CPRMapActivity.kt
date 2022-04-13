@@ -91,12 +91,13 @@ class CPRMapActivity : AppCompatActivity() {
         map.minZoomLevel=14.0
         map.invalidate()
 
+        mapManager.startLocationService()
+        registerLocationReceiver()
         //add pathway
         mapManager.addingWaypoints(map, startPoint,endPoint)
 
 
-        mapManager.startLocationService()
-        registerLocationReceiver()
+
 
 
 

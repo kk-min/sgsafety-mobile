@@ -96,16 +96,16 @@ class AEDMapActivity : AppCompatActivity() {
 
         //move to user location point
         val startPoint= GeoPoint(loc!!.latitude, loc!!.longitude)
-        mapController.animateTo(startPoint);
+
         mapController.setZoom(14)
         if (startPoint != null) {
-            mapManager.addMarker(map,startPoint,"Your Location")
+            mapManager.addMarker(map,startPoint,"Current Location")
         }
         //set min max zoom level
         map.maxZoomLevel= 24.0
         map.minZoomLevel=12.0
         map.invalidate()
-
+        mapController.animateTo(startPoint);
 
 
         mapManager.startLocationService()
@@ -167,7 +167,7 @@ class AEDMapActivity : AppCompatActivity() {
 
                 //if (user_district != null) {
                   //  setNearbyAEDLocation(user_district.toString(),array)
-                    setNearbyAEDLocation(array)
+                    setAEDLocation(array)
                     //setNearbyAEDLocation((user_district+1).toString(),array)
                 //}
 
@@ -199,7 +199,7 @@ class AEDMapActivity : AppCompatActivity() {
         return user_district
     }
 
-    private fun setNearbyAEDLocation(array:JsonArray<*>){
+    private fun setAEDLocation(array:JsonArray<*>){
 
 //        val db = Firebase.firestore
 //

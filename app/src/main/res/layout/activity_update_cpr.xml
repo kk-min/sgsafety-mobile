@@ -46,11 +46,12 @@
 
         <DatePicker
             android:id="@+id/date_Picker"
-            android:layout_width="421dp"
-            android:layout_height="186dp"
+            android:layout_width="391dp"
+            android:layout_height="184dp"
             android:layout_marginTop="12dp"
             android:calendarViewShown="false"
             android:datePickerMode="spinner"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/notice_CPR1"
             tools:ignore="MissingConstraints" />
@@ -77,17 +78,17 @@
 
     <TextView
         android:id="@+id/adding_cpr"
-        android:layout_width="394dp"
-        android:layout_height="32dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="@string/noticeCPR2"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.47"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraint1"
-        app:layout_constraintVertical_bias="0.028"
+        app:layout_constraintVertical_bias="0.027"
         tools:ignore="MissingConstraints" />
 
     <Button
@@ -135,27 +136,27 @@
 
     <Button
         android:id="@+id/upload_pdf_cpr"
-        android:layout_width="198dp"
-        android:layout_height="50dp"
+        android:layout_width="181dp"
+        android:layout_height="65dp"
         android:text="@string/uploadPdfCPR"
         app:layout_constraintBottom_toTopOf="@+id/pdfText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.037"
+        app:layout_constraintHorizontal_bias="0.112"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/adding_cpr"
-        app:layout_constraintVertical_bias="0.01" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/upload_cpr"
-        android:layout_width="189dp"
-        android:layout_height="51dp"
+        android:layout_width="161dp"
+        android:layout_height="67dp"
         android:text="@string/uploadCPR"
         app:layout_constraintBottom_toTopOf="@+id/pdfText"
         app:layout_constraintEnd_toEndOf="@+id/constraintLayout"
-        app:layout_constraintHorizontal_bias="0.959"
+        app:layout_constraintHorizontal_bias="0.936"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/adding_cpr"
-        app:layout_constraintVertical_bias="0.008" />
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

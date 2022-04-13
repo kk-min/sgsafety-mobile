@@ -8,36 +8,42 @@
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="350dp"
-        android:layout_height="62dp"
-        android:layout_marginBottom="33dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/gifImageView3"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
         android:text="Helper is on the way"
         android:textSize="38dp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/gifImageView3"
+        app:layout_constraintBottom_toTopOf="@+id/guideline4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.858" />
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/gifImageView3"
         android:layout_width="373dp"
         android:layout_height="329dp"
-        android:layout_marginBottom="60dp"
+        android:layout_above="@+id/i_am_savedButton"
+        android:layout_centerHorizontal="true"
         android:src="@drawable/ontheway"
-        app:layout_constraintBottom_toTopOf="@+id/i_am_savedButton"
+        app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.578"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="@+id/guideline4"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/i_am_savedButton"
         android:layout_width="308dp"
         android:layout_height="83dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="70dp"
         android:background="@drawable/rounded_corner_green"
         android:text="I am Saved"
         android:textColor="@color/white"
@@ -45,9 +51,23 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.407"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.865" />
+        app:layout_constraintTop_toTopOf="@+id/guideline5"
+        app:layout_constraintVertical_bias="0.19" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="143dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="488dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
