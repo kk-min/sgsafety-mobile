@@ -50,8 +50,8 @@
 
         <DatePicker
             android:id="@+id/date_Picker"
-            android:layout_width="match_parent"
-            android:layout_height="186dp"
+            android:layout_width="368dp"
+            android:layout_height="179dp"
             android:layout_marginTop="12dp"
             android:calendarViewShown="false"
             android:datePickerMode="spinner"
@@ -102,7 +102,7 @@
         android:background="@drawable/rounded_login"
         android:text="@string/submitCPR"
         android:textColor="@color/white"
-        android:textSize="18dp"
+        android:textSize="15dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -114,14 +114,15 @@
 
     <ImageView
         android:id="@+id/image_view"
-        android:layout_width="367dp"
-        android:layout_height="216dp"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
         android:layout_marginBottom="4dp"
         app:layout_constraintBottom_toTopOf="@+id/submitting"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_bias="0.978"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -134,13 +135,14 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.599"
+        app:layout_constraintVertical_bias="0.664"
         tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/upload_pdf_cpr"
-        android:layout_width="170dp"
-        android:layout_height="50dp"
+        android:layout_width="173dp"
+        android:layout_height="53dp"
+        android:textSize="15dp"
         android:text="@string/uploadPdfCPR"
         app:layout_constraintBottom_toTopOf="@+id/pdfText"
         app:layout_constraintEnd_toEndOf="parent"
@@ -151,15 +153,15 @@
 
     <Button
         android:id="@+id/upload_cpr"
-        android:layout_width="170dp"
-        android:layout_height="51dp"
+        android:layout_width="166dp"
+        android:layout_height="53dp"
         android:text="@string/uploadCPR"
         app:layout_constraintBottom_toTopOf="@+id/pdfText"
         app:layout_constraintEnd_toEndOf="@+id/constraintLayout"
-        app:layout_constraintHorizontal_bias="0.959"
+        app:layout_constraintHorizontal_bias="0.968"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/adding_cpr"
-        app:layout_constraintVertical_bias="0.008" />
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
