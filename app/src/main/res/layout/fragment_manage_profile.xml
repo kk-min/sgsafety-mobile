@@ -31,7 +31,7 @@
     <Button
         android:id="@+id/btn_email"
         android:layout_width="341dp"
-        android:layout_height="55dp"
+        android:layout_height="40dp"
         android:layout_gravity="left"
         android:background="@drawable/rounded_white"
         android:drawableLeft="@drawable/email"
@@ -50,7 +50,7 @@
     <Button
         android:id="@+id/btn_contact"
         android:layout_width="341dp"
-        android:layout_height="43dp"
+        android:layout_height="40dp"
         android:layout_gravity="left"
         android:background="@drawable/rounded_white"
         android:drawableLeft="@drawable/phone"
@@ -69,7 +69,7 @@
     <Button
         android:id="@+id/btn_password"
         android:layout_width="338dp"
-        android:layout_height="45dp"
+        android:layout_height="40dp"
         android:layout_gravity="left"
         android:background="@drawable/rounded_white"
         android:drawableLeft="@drawable/password"
@@ -83,12 +83,12 @@
         app:layout_constraintHorizontal_bias="0.547"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.973" />
+        app:layout_constraintVertical_bias="0.967" />
 
     <Button
         android:id="@+id/btn_cpr"
         android:layout_width="337dp"
-        android:layout_height="43dp"
+        android:layout_height="40dp"
         android:layout_gravity="left"
         android:background="@drawable/rounded_white"
         android:drawableLeft="@drawable/cert"
