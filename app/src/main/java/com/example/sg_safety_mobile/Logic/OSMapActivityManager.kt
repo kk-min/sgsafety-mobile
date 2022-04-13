@@ -69,7 +69,7 @@ class OSMapActivityManager(val context: Context,val map:MapView) {
 
     fun retrievingRoad(roadManager: OSRMRoadManager, waypoints: ArrayList<GeoPoint>) {
         // Retrieving road
-
+        roadManager.setMean(OSRMRoadManager.MEAN_BY_FOOT)
         val road = roadManager.getRoad(waypoints)
         val roadOverlay = RoadManager.buildRoadOverlay(road)
         map?.overlays?.add(roadOverlay);
@@ -97,6 +97,7 @@ class OSMapActivityManager(val context: Context,val map:MapView) {
     ) : AsyncTask<Void, Void, String>() {
 
         override fun doInBackground(vararg params: Void?): String? {
+            roadManager.setMean(OSRMRoadManager.MEAN_BY_FOOT)
             val road = roadManager.getRoad(waypoints)
             val roadOverlay = RoadManager.buildRoadOverlay(road)
             map?.overlays?.add(roadOverlay);

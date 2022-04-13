@@ -9,6 +9,7 @@ import android.content.IntentFilter
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Geocoder
+import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -35,6 +36,7 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapController
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.Overlay
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -76,8 +78,6 @@ class HomeFragment : Fragment(),View.OnClickListener {
         mapManager= OSMapActivityManager(v.context,map)
 
 
-
-
         registerLocationReceiver(v)
         setLocationDetails(mapController as MapController,map)
         //PROMPT ALERT BOX TO MAKE SURE USER REALLY NEED HELP
@@ -92,6 +92,7 @@ class HomeFragment : Fragment(),View.OnClickListener {
 
         }
         refresh.setOnClickListener{
+
             setLocationDetails(mapController as MapController,map)
         }
         return v
@@ -101,7 +102,7 @@ class HomeFragment : Fragment(),View.OnClickListener {
             val cur_location=mapManager.getCurrentLocation()
             val cur_geopoint=GeoPoint(cur_location.latitude,cur_location.longitude)
             mapController.animateTo(cur_geopoint)
-            mapManager.addMarker(map,cur_geopoint,"Current Location")
+            updateMarker(cur_location)
 
             val gc= context?.let { ReverseGeocoder(it) }
             if (gc != null) {
@@ -114,9 +115,35 @@ class HomeFragment : Fragment(),View.OnClickListener {
             Log.e("cz2006:HomeFragment","${e}")
             map.overlays.clear()
             locationtext.text="Please turn on your device location!!!"
-
         }
     }
+    private fun updateMarker(loc: Location?){
+        for (i in 0 until map.overlays.size) {
+            val overlay: Overlay = map.overlays[i]
+            if (overlay is Marker && overlay.id == "Current Location") {
+                map.overlays.remove(overlay)
+            }
+        }
+        val point: GeoPoint? = loc?.let { GeoPoint(it.latitude, loc.longitude) }
+        try{
+            val currentMarker = Marker(map)
+            currentMarker?.position = point
+            currentMarker?.title = "Current Location"
+            currentMarker?.id="Current Location"
+            currentMarker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            val mapController = map.controller
+            mapController.animateTo(point)
+            map.overlays?.add(currentMarker)
+            map.invalidate()
+            Log.d("CZ2006:LocationService", "New location set and marker added")
+        }
+        catch(e:Exception) {
+            e.printStackTrace()
+            Log.e("CZ2006:LocationService", "Error adding marker")
+        }
+
+    }
+
     private fun viewEInitializations(v:View) {
         button=v.findViewById(R.id.alert_button)
         map = v.findViewById<MapView>(R.id.map)

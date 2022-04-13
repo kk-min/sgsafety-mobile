@@ -22,7 +22,7 @@ class LocationReceiver(val view: View): BroadcastReceiver() {
     private lateinit var mapView:MapView
 
     override fun onReceive(context: Context, intent: Intent) {
-        mapView=view.findViewById<MapView>(R.id.map)
+        mapView=view.findViewById(R.id.map)
         if(mapView==null)
         {
             Log.e("CZ2006:LocationReceiver:","Map is null")
@@ -64,6 +64,7 @@ class LocationReceiver(val view: View): BroadcastReceiver() {
             currentMarker = Marker(mapView)
             currentMarker?.position = point
             currentMarker?.title = "Current Location"
+            currentMarker?.id="Current Location"
             currentMarker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             val mapController = mapView.controller
             mapController.animateTo(point)
