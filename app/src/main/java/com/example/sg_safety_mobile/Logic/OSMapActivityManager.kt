@@ -34,7 +34,7 @@ class OSMapActivityManager(val context: Context,val map:MapView) {
         val startMarker = Marker(map)
         startMarker.position = point
         startMarker.title = title
-        startMarker.id= String.toString()
+        startMarker.id= title
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
         map?.overlays?.add(startMarker)
         map?.invalidate()
