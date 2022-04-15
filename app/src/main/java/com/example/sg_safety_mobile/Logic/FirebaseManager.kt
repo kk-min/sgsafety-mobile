@@ -262,7 +262,7 @@ class FirebaseManager(val context: Context){
     fun performResetPassword(etPassword:EditText,etRepeatPassword: EditText,etCurrentPassword: EditText) {
         //either firestore
         val user = Firebase.auth.currentUser
-        val db = Firebase.firestore
+       
         val sharedPreference: SharedPreferences = context.getSharedPreferences("Login",
             AppCompatActivity.MODE_PRIVATE
         )
@@ -277,7 +277,7 @@ class FirebaseManager(val context: Context){
             if (validateInput(dummy,etPassword,etRepeatPassword,etCurrentPassword)) {
                 val newpassword = etPassword.text.toString()
                 user?.updatePassword(newpassword)
-                db.collection("Users").document(docid).update("password", newpassword)
+             
                 editor.putString("password", newpassword)
                 editor.commit()
                 Toast.makeText(context, "Password Reset Successfully", Toast.LENGTH_SHORT).show()
