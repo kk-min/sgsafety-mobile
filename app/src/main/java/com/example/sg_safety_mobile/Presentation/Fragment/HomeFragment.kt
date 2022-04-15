@@ -6,11 +6,8 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.IntentSender
 import android.content.pm.PackageManager
-import android.location.Geocoder
 import android.location.Location
-import android.location.LocationManager
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
@@ -22,14 +19,13 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.example.sg_safety_mobile.Logic.LocationReceiver
+import com.example.sg_safety_mobile.Logic.LocationViewModel
 import com.example.sg_safety_mobile.Logic.OSMapActivityManager
 import com.example.sg_safety_mobile.Logic.ReverseGeocoder
 import com.example.sg_safety_mobile.Presentation.Activity.AlertPageActivity
 import com.example.sg_safety_mobile.R
-import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.*
-import com.google.android.gms.tasks.Task
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -37,7 +33,6 @@ import org.osmdroid.views.MapController
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Overlay
-import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -59,6 +54,9 @@ class HomeFragment : Fragment(),View.OnClickListener {
         // Inflate the layout for this fragment
         val v= inflater.inflate(R.layout.fragment_home, container, false)
         viewEInitializations(v)
+
+        val locationViewModel = LocationViewModel(this.activity as Context)
+
         if(ActivityCompat.checkSelfPermission(v.context,android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
             &&  ActivityCompat.checkSelfPermission(v.context,android.Manifest.permission.ACCESS_FINE_LOCATION)  != PackageManager.PERMISSION_GRANTED)
         {
@@ -69,7 +67,6 @@ class HomeFragment : Fragment(),View.OnClickListener {
 
         Configuration.getInstance().load(v.context , PreferenceManager.getDefaultSharedPreferences(v.context))
 
-
         map.setTileSource(TileSourceFactory.MAPNIK)
         val mapController = map.controller
         mapController.setZoom(20)
@@ -78,8 +75,20 @@ class HomeFragment : Fragment(),View.OnClickListener {
         mapManager= OSMapActivityManager(v.context,map)
 
 
-        registerLocationReceiver(v)
-        setLocationDetails(mapController as MapController,map)
+        val locationObserver = Observer<Location>{
+                newLocation ->
+            if (newLocation != null) {
+                Log.d("Observer", "Observed Location change. ${newLocation.latitude}, ${newLocation.longitude}")
+                mapManager.updateMarker(map,newLocation,"Current Location")
+                setLocationDetails(mapController as MapController,map)
+//                val locationText = v.findViewById<TextView>(R.id.location)
+//                locationText.text=geoCoder.reverseGeocode(newLocation.latitude,newLocation.longitude)
+            }
+        }
+
+        locationViewModel.currentLocation?.observe(viewLifecycleOwner, locationObserver)
+//        registerLocationReceiver(v)
+//        setLocationDetails(mapController as MapController,map)
         //PROMPT ALERT BOX TO MAKE SURE USER REALLY NEED HELP
         button.setOnClickListener{
             try{
@@ -97,12 +106,13 @@ class HomeFragment : Fragment(),View.OnClickListener {
         }
         return v
     }
+
     private fun setLocationDetails(mapController:MapController,map:MapView){
         try{
             val cur_location=mapManager.getCurrentLocation()
             val cur_geopoint=GeoPoint(cur_location.latitude,cur_location.longitude)
             mapController.animateTo(cur_geopoint)
-            updateMarker(cur_location)
+            mapManager.updateMarker(map,cur_location,"Current Location")
 
             val gc= context?.let { ReverseGeocoder(it) }
             if (gc != null) {
@@ -117,32 +127,6 @@ class HomeFragment : Fragment(),View.OnClickListener {
             locationtext.text="Please turn on your device location!!!"
         }
     }
-    private fun updateMarker(loc: Location?){
-        for (i in 0 until map.overlays.size) {
-            val overlay: Overlay = map.overlays[i]
-            if (overlay is Marker && overlay.id == "Current Location") {
-                map.overlays.remove(overlay)
-            }
-        }
-        val point: GeoPoint? = loc?.let { GeoPoint(it.latitude, loc.longitude) }
-        try{
-            val currentMarker = Marker(map)
-            currentMarker?.position = point
-            currentMarker?.title = "Current Location"
-            currentMarker?.id="Current Location"
-            currentMarker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            val mapController = map.controller
-            mapController.animateTo(point)
-            map.overlays?.add(currentMarker)
-            map.invalidate()
-            Log.d("CZ2006:LocationService", "New location set and marker added")
-        }
-        catch(e:Exception) {
-            e.printStackTrace()
-            Log.e("CZ2006:LocationService", "Error adding marker")
-        }
-
-    }
 
     private fun viewEInitializations(v:View) {
         button=v.findViewById(R.id.alert_button)
@@ -154,12 +138,12 @@ class HomeFragment : Fragment(),View.OnClickListener {
 
 
 
-    private fun registerLocationReceiver(v:View)
-    {
-        locationReceiver = LocationReceiver(v)
-        val filter = IntentFilter("UPDATE_LOCATION+ADDRESS")
-        v.context.registerReceiver(locationReceiver, filter); // Register our receiverontext));
-    }
+//    private fun registerLocationReceiver(v:View)
+//    {
+//        locationReceiver = LocationReceiver(v, this)
+//        val filter = IntentFilter("UPDATE_LOCATION+ADDRESS")
+//        v.context.registerReceiver(locationReceiver, filter); // Register our receiverontext));
+//    }
 
     //ALERT TO MAKE SURE USER DON'T ACCIDENTALLY PRESS THE SEND HELP BUTTON
     private fun showAlertDialog() {

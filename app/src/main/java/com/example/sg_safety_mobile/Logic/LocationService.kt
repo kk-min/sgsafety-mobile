@@ -21,6 +21,7 @@ import androidx.annotation.Nullable
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import com.example.sg_safety_mobile.Data.LocationDataRepository
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -130,8 +131,8 @@ class LocationService : Service() {
                 Log.d("CZ2006:LocationService", "Location Changed! Doing Location Update.....")
                 val geopoint = com.google.firebase.firestore.GeoPoint(p0.latitude, p0.longitude)
                 firebaseManager.updateUserLocationToDatabase(geopoint)
-                sendDataToActivity(p0)
-                sendDataToHomeFragment(p0)
+                sendDataToRepository(p0)
+
 
             }
 
@@ -163,19 +164,12 @@ class LocationService : Service() {
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
-    private fun sendDataToHomeFragment(p0: Location ){
+    private fun sendDataToRepository(p0: Location){
         val sendLocation = Intent()
-        sendLocation.action = "UPDATE_LOCATION+ADDRESS"
+        sendLocation.action = "UPDATE_LOCATION_REPOSITORY"
         sendLocation.putExtra("LOCATION_DATA", p0)
         sendBroadcast(sendLocation)
-        Log.d("CZ2006:LocationService", "data sent to activity")
+        Log.d("CZ2006:LocationService", "Data sent to Repository")
     }
 
-    private fun sendDataToActivity(p0: Location ){
-        val sendLocation = Intent()
-        sendLocation.action = "UPDATE_LOCATION"
-        sendLocation.putExtra("LOCATION_DATA", p0)
-        sendBroadcast(sendLocation)
-        Log.d("CZ2006:LocationService", "data sent to activity")
-    }
 }

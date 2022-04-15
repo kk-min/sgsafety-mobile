@@ -1,18 +1,12 @@
 package com.example.sg_safety_mobile.Presentation.Activity
 
-import android.Manifest
-import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.location.Address
-import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
-import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -20,34 +14,25 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import com.example.sg_safety_mobile.Logic.OSMapActivityManager
 import com.example.sg_safety_mobile.Logic.LocationReceiver
-import com.example.sg_safety_mobile.Logic.LocationService
+import com.example.sg_safety_mobile.Logic.LocationViewModel
 import com.example.sg_safety_mobile.Logic.ReverseGeocoder
 import com.example.sg_safety_mobile.R
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import org.osmdroid.bonuspack.routing.OSRMRoadManager
-import org.osmdroid.bonuspack.routing.Road
-import org.osmdroid.bonuspack.routing.RoadManager
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapController
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import java.io.IOException
 import java.net.URL
 
 class AEDMapActivity : AppCompatActivity() {
@@ -107,9 +92,17 @@ class AEDMapActivity : AppCompatActivity() {
         map.invalidate()
         mapController.animateTo(startPoint);
 
-
+        val locationViewModel = LocationViewModel(this)
         mapManager.startLocationService()
-        registerLocationReceiver()
+        val locationObserver = Observer<Location>{
+                newLocation ->
+            if (newLocation != null) {
+                Log.d("Observer", "Observed Location change. ${newLocation.latitude}, ${newLocation.longitude}")
+                mapManager.updateMarker(map,newLocation,"Current Location")
+            }
+        }
+        locationViewModel.currentLocation?.observe(LifecycleOwner { lifecycle }, locationObserver)
+        //registerLocationReceiver()
 
         //BUTTON-----------------------------------------------------------------------------
         //use to move camera of map to cur location
@@ -186,11 +179,11 @@ class AEDMapActivity : AppCompatActivity() {
         opHrs_textview=findViewById(R.id.ophrs)
 
     }
-    private fun registerLocationReceiver(){
-        locationReceiver = LocationReceiver(map)
-        val filter = IntentFilter("UPDATE_LOCATION")
-        registerReceiver(locationReceiver, filter); // Register our receiver
-    }
+//    private fun registerLocationReceiver(){
+//        locationReceiver = LocationReceiver(map, this)
+//        val filter = IntentFilter("UPDATE_LOCATION")
+//        registerReceiver(locationReceiver, filter); // Register our receiver
+//    }
 
     private fun getUserPostalDistrict(loc:Location):Int {
         val user_postal= gc.reverseGeocodePostalCode(loc.latitude,loc.longitude)

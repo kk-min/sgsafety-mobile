@@ -15,6 +15,8 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import com.example.sg_safety_mobile.Logic.*
 import com.example.sg_safety_mobile.R
 import org.osmdroid.config.Configuration
@@ -77,7 +79,7 @@ class CPRMapActivity : AppCompatActivity() {
         //get user location
         loc=mapManager.getCurrentLocation()
         val startPoint=GeoPoint(loc.latitude,loc.longitude)
-
+        mapManager.addMarker(map,startPoint,"Current Location")
         val endPoint=getVictimLocation()
         //set text view of victim location
 
@@ -91,14 +93,17 @@ class CPRMapActivity : AppCompatActivity() {
         map.minZoomLevel=14.0
         map.invalidate()
 
+        val locationViewModel = LocationViewModel(this)
         mapManager.startLocationService()
-        registerLocationReceiver()
-        //add pathway
+        val locationObserver = Observer<Location>{
+                newLocation ->
+            if (newLocation != null) {
+                Log.d("Observer", "Observed Location change. ${newLocation.latitude}, ${newLocation.longitude}")
+                mapManager.updateMarker(map,newLocation,"Current Location")
+            }
+        }
+        locationViewModel.currentLocation?.observe(LifecycleOwner { lifecycle }, locationObserver)
         mapManager.addingWaypoints(map, startPoint,endPoint)
-
-
-
-
 
 
         googleMapLink.setOnClickListener {
@@ -119,7 +124,6 @@ class CPRMapActivity : AppCompatActivity() {
         val helpPreference: SharedPreferences =getSharedPreferences("VictimDetails", MODE_PRIVATE)
 
         doneButton.setOnClickListener {
-            //clear all saved victim details
             val editor:SharedPreferences.Editor=helpPreference.edit()
             editor.clear()
             editor.commit()
@@ -153,11 +157,11 @@ class CPRMapActivity : AppCompatActivity() {
         return GeoPoint(victimLatitude, victimLongitude)
     }
 
-    private fun registerLocationReceiver(){
-        locationReceiver = LocationReceiver(map)
-        val filter = IntentFilter("UPDATE_LOCATION")
-        registerReceiver(locationReceiver, filter); // Register our receiver
-    }
+//    private fun registerLocationReceiver(){
+//        locationReceiver = LocationReceiver(map, this)
+//        val filter = IntentFilter("UPDATE_LOCATION")
+//        registerReceiver(locationReceiver, filter); // Register our receiver
+//    }
 
     override fun onResume() {
         super.onResume();

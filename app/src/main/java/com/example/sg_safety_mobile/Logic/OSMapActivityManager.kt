@@ -19,6 +19,7 @@ import org.osmdroid.bonuspack.routing.RoadManager
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.Overlay
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -39,8 +40,43 @@ class OSMapActivityManager(val context: Context,val map:MapView) {
         map?.overlays?.add(startMarker)
         map?.invalidate()
     }
+    fun deleteMarker(map:MapView,id:String){
+        for (i in 0 until map.overlays.size) {
+            val overlay: Overlay = map.overlays[i]
+            if (overlay is Marker && overlay.id == id) {
+                map.overlays.remove(overlay)
+            }
+        }
+    }
+    fun updateMarker(map:MapView,loc: Location?,id:String){
+        //Delete marker if applicable, then insert new currentLocation marker
+//        if (currentMarker != null){
+//            Log.d("CZ2006:LocationService", "prev Location deleted")
+//            mapView?.overlays?.remove(currentMarker)
+//        }
+        try{
+            deleteMarker(map,id)
+
+            val point: GeoPoint? = loc?.let { GeoPoint(it.latitude, loc.longitude) }
 
 
+            val currentMarker = Marker(map)
+            currentMarker?.position = point
+            currentMarker?.title = "Current Location"
+            currentMarker?.id="Current Location"
+            currentMarker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            val mapController = map.controller
+            mapController.animateTo(point)
+            map.overlays?.add(currentMarker)
+            map.invalidate()
+            Log.d("CZ2006:LocationService", "New location set and marker added")
+        }
+        catch(e:Exception) {
+            e.printStackTrace()
+            Log.e("CZ2006:LocationService", "Error adding marker")
+        }
+
+    }
     fun addingWaypoints(map: MapView?, startPoint: GeoPoint, endPoint: GeoPoint) {
         val roadManager = OSRMRoadManager(context, "MYUSERAGENT")
         roadManager.setMean(OSRMRoadManager.MEAN_BY_FOOT)
