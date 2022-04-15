@@ -32,7 +32,7 @@ class LocationReceiver(val view: View): BroadcastReceiver() {
             val loc: Location? = intent.getParcelableExtra("LOCATION_DATA")
             //Update marker
             if (loc != null) {
-                updateMarker(loc)
+                updateMarker(loc,"Current Location")
                 val text= view.findViewById<TextView>(R.id.location)
                 text.text=geoCoder.reverseGeocode(loc.latitude,loc.longitude)
             }
@@ -41,26 +41,27 @@ class LocationReceiver(val view: View): BroadcastReceiver() {
         {
             val loc: Location? = intent.getParcelableExtra("LOCATION_DATA")
             if (loc != null) {
-                updateMarker(loc)
+                updateMarker(loc,"Current Location")
             }
         }
     }
-    private fun updateMarker(loc: Location?){
+    private fun updateMarker(loc: Location?,id:String){
         //Delete marker if applicable, then insert new currentLocation marker
 //        if (currentMarker != null){
 //            Log.d("CZ2006:LocationService", "prev Location deleted")
 //            mapView?.overlays?.remove(currentMarker)
 //        }
-        for (i in 0 until mapView.overlays.size) {
-            val overlay: Overlay = mapView.overlays[i]
-            if (overlay is Marker && overlay.id == "Current Location") {
-                mapView.overlays.remove(overlay)
-            }
-        }
-
-        val point: GeoPoint? = loc?.let { GeoPoint(it.latitude, loc.longitude) }
-
         try{
+            for (i in 0 until mapView.overlays.size) {
+                val overlay: Overlay = mapView.overlays[i]
+                if (overlay is Marker && overlay.id == id) {
+                    mapView.overlays.remove(overlay)
+                }
+            }
+
+            val point: GeoPoint? = loc?.let { GeoPoint(it.latitude, loc.longitude) }
+
+
             currentMarker = Marker(mapView)
             currentMarker?.position = point
             currentMarker?.title = "Current Location"
