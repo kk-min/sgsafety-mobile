@@ -1,10 +1,10 @@
 # SGSAFETY_Mobile
-<b>CZ2006: Software Engineering Group Project (2021/2022 SEMESTER 2)</b>
+<b>CZ2006: Software Engineering Group Project (2021/2022 SEMESTER 2) Nanyang Technological University</b>
 
 <i>Link to our source code for website in github:</i>
 https://github.com/Anthony-Zou/cz2006web/tree/min-dev
 
-<img src="https://user-images.githubusercontent.com/92379986/163681256-ebd788f0-4511-4696-9845-01cfdeca822f.png" width="400" height="400" />
+<img src="https://user-images.githubusercontent.com/92379986/163681256-ebd788f0-4511-4696-9845-01cfdeca822f.png" width="500" height="500" />
 
 
 
@@ -31,10 +31,10 @@ SGSAFETY aims to fulfill 3 main purposes:<br>
 <br>
 <br>
 <br>
-Appication Review:<br>
-<img src="https://user-images.githubusercontent.com/92379986/163681656-e1a209c4-d6c2-4f8b-a31c-70c1b78450d3.jpeg" width="425"/> <img src="https://user-images.githubusercontent.com/92379986/163681663-949f6788-1bf0-467e-8718-21e74210522b.jpeg" width="425"/> 
+<b>Appication Review:</b><br>
+<img src="https://user-images.githubusercontent.com/92379986/163681656-e1a209c4-d6c2-4f8b-a31c-70c1b78450d3.jpeg" width="300"/> <img src="https://user-images.githubusercontent.com/92379986/163681663-949f6788-1bf0-467e-8718-21e74210522b.jpeg" width="300"/> 
 <br>
-<img src="https://user-images.githubusercontent.com/92379986/163681671-c5c83fa5-42f5-4593-b223-b8a8c243809d.jpeg" width="425"/> <img src="https://user-images.githubusercontent.com/92379986/163681672-18bf1a6a-dc96-490a-b7b8-aba92766df87.jpeg" width="425"/> 
+<img src="https://user-images.githubusercontent.com/92379986/163681671-c5c83fa5-42f5-4593-b223-b8a8c243809d.jpeg" width="300"/> <img src="https://user-images.githubusercontent.com/92379986/163681672-18bf1a6a-dc96-490a-b7b8-aba92766df87.jpeg" width="300"/> 
 
 
 
