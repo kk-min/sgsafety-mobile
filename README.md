@@ -4,17 +4,17 @@
 <i>Link to our source code for website in github:</i>
 https://github.com/Anthony-Zou/cz2006web/tree/min-dev
 
-![sgsafety_icon_large](https://user-images.githubusercontent.com/92379986/163681126-53d37c3d-2b88-454a-a6fb-3812f220686a.png)
+![sgsafety_logo_1500_](https://user-images.githubusercontent.com/92379986/163681256-ebd788f0-4511-4696-9845-01cfdeca822f.png)
 
 
 Developed by:
  
-[Min](https://github.com/mink0003)
-[Renee](https://github.com/smollestquail)
-[Sumyat](https://github.com/myattt)
-[QiYuan](https://github.com/hhuppii)
-[Zi Jian](https://github.com/zijian99)
-[Zeren](https://github.com/Anthony-Zou)
+[Min](https://github.com/mink0003)<br>
+[Renee](https://github.com/smollestquail)<br>
+[Sumyat](https://github.com/myattt)<br>
+[QiYuan](https://github.com/hhuppii)<br>
+[Zi Jian](https://github.com/zijian99)<br>
+[Zeren](https://github.com/Anthony-Zou)<br>
 
 <br>
 SGSAFETY is a mobile application supplemented by a web application. The mobile app allows users to search for nearby AED devices and also access details of the AED device’s exact location. Users will also be able to navigate to the AED device using their mobile application. The mobile app also allows users to send an auto-generated text message with the user’s current location to SCDF. The web application also allows users to set up an account and declare themselves as CPR certified. 
