@@ -40,8 +40,6 @@ $dokka.location:com.example.sg_safety_mobile.Logic/FirebaseManager/updateUserLoc
 $dokka.location:com.example.sg_safety_mobile.Logic/FirebaseManager/uploadFileToDB/#kotlin.String#kotlin.String/PointingToDeclaration/app/com.example.sg_safety_mobile.Logic/-firebase-manager/upload-file-to-d-b.html
 $dokka.location:com.example.sg_safety_mobile.Logic/FirebaseManager/validateAcc/#kotlin.String#kotlin.String#android.content.SharedPreferences.Editor/PointingToDeclaration/app/com.example.sg_safety_mobile.Logic/-firebase-manager/validate-acc.html
 $dokka.location:com.example.sg_safety_mobile.Logic/FirebaseManager/verifyCode/#android.view.View#android.widget.EditText#android.widget.EditText/PointingToDeclaration/app/com.example.sg_safety_mobile.Logic/-firebase-manager/verify-code.html
-$dokka.location:com.example.sg_safety_mobile.Logic/FirebaseObject///PointingToDeclaration/app/com.example.sg_safety_mobile.Logic/-firebase-object/index.html
-$dokka.location:com.example.sg_safety_mobile.Logic/FirebaseObject/getDb/#/PointingToDeclaration/app/com.example.sg_safety_mobile.Logic/-firebase-object/get-db.html
 $dokka.location:com.example.sg_safety_mobile.Logic/ImageReader///PointingToDeclaration/app/com.example.sg_safety_mobile.Logic/-image-reader/index.html
 $dokka.location:com.example.sg_safety_mobile.Logic/ImageReader/ImageReader/#android.content.Context/PointingToDeclaration/app/com.example.sg_safety_mobile.Logic/-image-reader/-image-reader.html
 $dokka.location:com.example.sg_safety_mobile.Logic/ImageReader/getContext/#/PointingToDeclaration/app/com.example.sg_safety_mobile.Logic/-image-reader/get-context.html
