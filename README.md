@@ -27,10 +27,10 @@ SGSAFETY aims to fulfill 3 main purposes:<br>
 (II)  Enable users to locate the nearest AED based on their current location. This feature enables users to retrieve AED devices and render help efficiently  <br>
 (III) Automatically send a message to SCDF with information on the user’s current location and help required.<br>
 
-
-![photo1650122269](https://user-images.githubusercontent.com/92379986/163681379-10890dfc-27aa-465e-a2a5-188b7569ad7c.jpeg)
-![photo1650121149](https://user-images.githubusercontent.com/92379986/163681411-d0f6cea9-47ae-45df-a854-8c88c52f6af6.jpeg)
-![photo1650121150](https://user-images.githubusercontent.com/92379986/163681415-c116b16f-2f00-4559-ad4f-fd847debb0c4.jpeg)
-![photo1650121150 (1)](https://user-images.githubusercontent.com/92379986/163681423-86a01bcb-6eea-4a53-af46-76035e4b66d4.jpeg)
+<br>
+![photo1650122269](https://user-images.githubusercontent.com/92379986/163681379-10890dfc-27aa-465e-a2a5-188b7569ad7c.jpeg)<br><br>
+![photo1650121149](https://user-images.githubusercontent.com/92379986/163681411-d0f6cea9-47ae-45df-a854-8c88c52f6af6.jpeg)<br><br>
+![photo1650121150](https://user-images.githubusercontent.com/92379986/163681415-c116b16f-2f00-4559-ad4f-fd847debb0c4.jpeg)<br><br>
+![photo1650121150 (1)](https://user-images.githubusercontent.com/92379986/163681423-86a01bcb-6eea-4a53-af46-76035e4b66d4.jpeg)<br>
 
 
