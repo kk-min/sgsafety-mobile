@@ -4,8 +4,8 @@
 <i>Link to our source code for website in github:</i>
 https://github.com/Anthony-Zou/cz2006web/tree/min-dev
 
-<img src="https://user-images.githubusercontent.com/92379986/163681256-ebd788f0-4511-4696-9845-01cfdeca822f.png" width="200" height="200" />
-![sgsafety_logo_1500_](https://user-images.githubusercontent.com/92379986/163681256-ebd788f0-4511-4696-9845-01cfdeca822f.png)
+<img src="https://user-images.githubusercontent.com/92379986/163681256-ebd788f0-4511-4696-9845-01cfdeca822f.png" width="400" height="400" />
+
 
 
 Developed by:
