@@ -23,7 +23,8 @@ SGSAFETY is a mobile application supplemented by a web application. The mobile a
 <br>
 <br>
 <br>
-SGSAFETY aims to fulfill 3 main purposes:<br>
+<b>SGSAFETY aims to fulfill 3 main purposes:</b><br>
+<br>
 (I)   Alert other users of nearby cardiac arrest cases based on their mobile device’s GPS location. By using our app, users will be able to send out an alert to other nearby users.<br>
 (II)  Enable users to locate the nearest AED based on their current location. This feature enables users to retrieve AED devices and render help efficiently  <br>
 (III) Automatically send a message to SCDF with information on the user’s current location and help required.<br>
@@ -31,7 +32,7 @@ SGSAFETY aims to fulfill 3 main purposes:<br>
 <br>
 <br>
 <br>
-<b>Appication Review:</b><br>
+<b>Application Review:</b><br>
 <img src="https://user-images.githubusercontent.com/92379986/163681656-e1a209c4-d6c2-4f8b-a31c-70c1b78450d3.jpeg" width="300"/> <img src="https://user-images.githubusercontent.com/92379986/163681663-949f6788-1bf0-467e-8718-21e74210522b.jpeg" width="300"/> 
 <br>
 <img src="https://user-images.githubusercontent.com/92379986/163681671-c5c83fa5-42f5-4593-b223-b8a8c243809d.jpeg" width="300"/> <img src="https://user-images.githubusercontent.com/92379986/163681672-18bf1a6a-dc96-490a-b7b8-aba92766df87.jpeg" width="300"/> 
