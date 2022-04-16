@@ -9,14 +9,14 @@
 <br>
 This app is developed fully in Kotlin without any frameworks<br>
 <br>
-Government API for getting AED Location Data          : 
-[Click Here](https://data.gov.sg/dataset/aed-locations)
+Government API for getting AED Location Data          : <br>
+(https://data.gov.sg/dataset/aed-locations)
 <br>
-Open Street Map for map in our application            : 
-[Click Here](https://github.com/MKergall/osmbonuspack/wiki)
+Open Street Map for map in our application            : <br>
+(https://github.com/MKergall/osmbonuspack/wiki)
 <br>
-Firebase Messaging for broadcasting of distress signal: 
-[Click Here](https://firebase.google.com/docs/cloud-messaging/android/topic-messaging)
+Firebase Messaging for broadcasting of distress signal: <br>
+(https://firebase.google.com/docs/cloud-messaging/android/topic-messaging)
 <br>
 <br>
 <br>
