@@ -28,6 +28,18 @@ SGSAFETY aims to fulfill 3 main purposes:<br>
 (II)  Enable users to locate the nearest AED based on their current location. This feature enables users to retrieve AED devices and render help efficiently  <br>
 (III) Automatically send a message to SCDF with information on the user’s current location and help required.<br>
 
+<br>
+<br>
+<br>
+Appication Review:<br>
+<img src="https://user-images.githubusercontent.com/92379986/163681656-e1a209c4-d6c2-4f8b-a31c-70c1b78450d3.jpeg" width="425"/> <img src="https://user-images.githubusercontent.com/92379986/163681663-949f6788-1bf0-467e-8718-21e74210522b.jpeg" width="425"/> 
+<br>
+<img src="https://user-images.githubusercontent.com/92379986/163681671-c5c83fa5-42f5-4593-b223-b8a8c243809d.jpeg" width="425"/> <img src="https://user-images.githubusercontent.com/92379986/163681672-18bf1a6a-dc96-490a-b7b8-aba92766df87.jpeg" width="425"/> 
+
+
+
+
+
 
 
 
