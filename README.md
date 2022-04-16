@@ -18,6 +18,7 @@ Developed by:
 [Zeren](https://github.com/Anthony-Zou)<br>
 
 <br>
+<b>Project Scope:</b><br>
 SGSAFETY is a mobile application supplemented by a web application. The mobile app allows users to search for nearby AED devices and also access details of the AED device’s exact location. Users will also be able to navigate to the AED device using their mobile application. The mobile app also allows users to send an auto-generated text message with the user’s current location to SCDF. The web application also allows users to set up an account and declare themselves as CPR certified. 
 
 <br>
