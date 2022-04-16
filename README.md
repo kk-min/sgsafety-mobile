@@ -1,8 +1,8 @@
 # SGSAFETY_Mobile
 <b>CZ2006: Software Engineering Group Project (2021/2022 SEMESTER 2) Nanyang Technological University</b>
 
-<i>Link to our source code for website in github:</i>
-https://github.com/Anthony-Zou/cz2006web/tree/min-dev
+<i>Link to our source code for website in github:</i><br>
+[Click Here](https://github.com/Anthony-Zou/cz2006web/tree/min-dev)<br>
 
 <img src="https://user-images.githubusercontent.com/92379986/163681256-ebd788f0-4511-4696-9845-01cfdeca822f.png" width="500" height="500" />
 
