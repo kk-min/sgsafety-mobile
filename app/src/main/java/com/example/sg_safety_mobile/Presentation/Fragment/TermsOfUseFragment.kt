@@ -7,14 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.sg_safety_mobile.R
 
-
+/**
+ *Fragment that shows content of Terms of Use in the tab layout
+ * of About Fragment[com.example.sg_safety_mobile.Presentation.Fragment.AboutFragment]
+ *
+ * @since 2022-4-15
+ */
 class TermsOfUse : Fragment() {
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
+    /**
+     *Runs when fragment is created
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

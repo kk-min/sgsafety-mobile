@@ -1,6 +1,7 @@
 package com.example.sg_safety_mobile.Logic
 
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Service
 import android.content.Context
@@ -20,17 +21,42 @@ import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.tasks.await
-import org.osmdroid.util.GeoPoint
 import java.util.*
 
+/**
+ * Manager Class that is uses for interaction between application and Firebase that is used in a lot of activities and
+ * fragments in this application
+ *
+ * @since 2022-4-15
+ */
 class FirebaseManager(val context: Context){
 
-    private val db = Firebase.firestore
-    private lateinit var givenOTP: String
-    private val MIN_PASSWORD_LENGTH = 8;
+    /**
+     *(context)
+     * Application Context of the certain fragment or activity
+     */
 
+    /**
+     *Manager of the Firebase Firestore
+     */
+    private val db = Firebase.firestore
+    /**
+     *OTP sent to user phone no.
+     */
+    private lateinit var givenOTP: String
+    /**
+     *Constant length of minimum password length
+     */
+    private val MIN_PASSWORD_LENGTH = 8
+
+    /**
+     *Validate user email and password to login into application
+     *
+     * @param   userName Email of the user to be verified
+     * @param   passWord Password to be verified
+     * @param   editor   SharedPreference editor Used for storing userID and email
+     *
+     */
     fun validateAcc(userName: String, passWord: String, editor: SharedPreferences.Editor) {
         if(userName=="" || passWord == ""){
             Toast.makeText(context, "Enter email/password" , Toast.LENGTH_SHORT).show()
@@ -42,7 +68,7 @@ class FirebaseManager(val context: Context){
                 if (task.isSuccessful) {
 
                     // Sign in success, update UI with the signed-in user's information
-                    val user = Firebase.auth.currentUser
+
                     editor.putString("login_email",userName)
                     editor.putString("password",passWord)
                     editor.putBoolean("log in status",true)
@@ -59,7 +85,7 @@ class FirebaseManager(val context: Context){
                                 if(emailInDoc==userName)
                                 {
                                     editor.putString("UserID" , document.id)
-                                    Log.d("CZ2006:FirebaseManager:UserID", "${document.id}")
+                                    Log.d("CZ2006:FirebaseManager:UserID", document.id)
                                     editor.commit()
                                     break
                                 }
@@ -77,6 +103,11 @@ class FirebaseManager(val context: Context){
             }
     }
 
+    /**
+     *Validate email format of userInput
+     *
+     * @param   etEmail UserInput Email
+     */
     private fun validateEmailInput(etEmail: EditText): Boolean {
 
         if (etEmail.text.toString() == "") {
@@ -84,7 +115,7 @@ class FirebaseManager(val context: Context){
             return false
         }
         // checking the proper email format
-        var email = etEmail.text.toString()
+        val email = etEmail.text.toString()
         if (!EMAIL_ADDRESS.matcher(email).matches()) {
             etEmail.error = "Please Enter Valid Email"
             return false
@@ -92,6 +123,13 @@ class FirebaseManager(val context: Context){
         return true
     }
 
+    /**
+     *Change the email address of the Current User
+     *
+     * @param view View of Current Pages
+     * @param currentEmail  New Email entered by user
+     * @param currentPs Password entered by the current user
+     */
     fun performEmailReset(view: View, currentEmail: EditText, currentPs: EditText) {
         Log.d("CZ2006:FirebaseManager:UPDATE EMAIL", "Inside performEmailReset Function")
         val sharedPreference: SharedPreferences = context.getSharedPreferences("Login",
@@ -141,6 +179,12 @@ class FirebaseManager(val context: Context){
             Toast.makeText(context, "Either Current Password/ Email Has Wrong Format", Toast.LENGTH_LONG).show()
         }
     }
+
+    /**
+     *Modify email after the validation of previous email and password
+     * @param newemail Email to be changed to
+     *
+     */
     private fun modifyEmail(newemail : String){
 
         //getting the current user
@@ -183,6 +227,15 @@ class FirebaseManager(val context: Context){
 
 
     }
+
+    /**
+     *Validate the password format
+     *
+     * @param dummy Dummy string
+     * @param  etPassword New Password
+     * @param etRepeatPassword Repeated New Password
+     * @param etCurrentPassword Old Password
+     */
     // Checking if the input in form is valid
     private fun validateInput(dummy:String,etPassword:EditText,etRepeatPassword: EditText,etCurrentPassword: EditText): Boolean {
 
@@ -254,11 +307,16 @@ class FirebaseManager(val context: Context){
             }
             else -> return true
         }
-
-
-        return true
     }
 
+    /**
+     * Function to perform resetting of password
+     *
+     * @param etPassword New Password
+     * @param etCurrentPassword Old Password
+     * @param etRepeatPassword Repeated New Password
+     *
+     */
     fun performResetPassword(etPassword:EditText,etRepeatPassword: EditText,etCurrentPassword: EditText) {
         //either firestore
         val user = Firebase.auth.currentUser
@@ -267,8 +325,7 @@ class FirebaseManager(val context: Context){
             AppCompatActivity.MODE_PRIVATE
         )
         val editor: SharedPreferences.Editor = sharedPreference.edit()
-        var docid: String = sharedPreference.getString("UserID", null).toString()
-        var dummy = sharedPreference.getString("password", null).toString()
+        val dummy = sharedPreference.getString("password", null).toString()
         val curremail: String = sharedPreference.getString("login_email", null).toString()
 
         val credential = EmailAuthProvider.getCredential(curremail, dummy)
@@ -276,7 +333,7 @@ class FirebaseManager(val context: Context){
         user?.reauthenticate(credential)?.addOnCompleteListener {
             if (validateInput(dummy,etPassword,etRepeatPassword,etCurrentPassword)) {
                 val newpassword = etPassword.text.toString()
-                user?.updatePassword(newpassword)
+                user.updatePassword(newpassword)
              
                 editor.putString("password", newpassword)
                 editor.commit()
@@ -284,6 +341,14 @@ class FirebaseManager(val context: Context){
             }
         }
     }
+
+    /**
+     *Validate the correctness of email and password of Current user
+     *
+     * @param currentEmail User current email
+     * @param currentPs User entered password
+     * @param   currentpassword user password
+     */
     private fun validateEInput(currentpassword:String, currentPs: EditText, currentEmail: EditText): Boolean {
 
         if (currentPs.text.toString() == "") {
@@ -303,7 +368,7 @@ class FirebaseManager(val context: Context){
         }
 
         //Email format check
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(currentEmail.text.toString()).matches()) {
+        if (!EMAIL_ADDRESS.matcher(currentEmail.text.toString()).matches()) {
             currentEmail.error = "Email Format Error"
             return false
         }
@@ -311,7 +376,15 @@ class FirebaseManager(val context: Context){
         return true
     }
 
-
+    /**
+     *Send the OTP to user new phone no.
+     *
+     * @param view  View of the Page
+     * @param   contactNum Contact No. to send OTP
+     * @param   smsPermission Permission of sending SMS
+     *
+     */
+    @SuppressLint("DefaultLocale")
     fun sendCode(view:View, contactNum: EditText, smsPermission: Boolean) {
         var invalid=0
         //check if contact is Empty
@@ -388,11 +461,18 @@ class FirebaseManager(val context: Context){
                 Toast.makeText(context, "Cannot access to Firebase!", Toast.LENGTH_LONG).show() }
     }
 
+    /**
+     *Validate the OTP entered by user
+     *
+     * @param view View of the Page
+     * @param inputOTP user entered OTP
+     * @param contactNum User New Contact No.
+     */
     fun verifyCode(view: View, contactNum: EditText, inputOTP: EditText) {
         val sharedPreference: SharedPreferences = context.getSharedPreferences("Login",
             AppCompatActivity.MODE_PRIVATE
         )
-        var docid: String = sharedPreference.getString("UserID" , null).toString()
+        val docid: String = sharedPreference.getString("UserID" , null).toString()
 
         if(contactNum.text.toString()==""){
             contactNum.error="Please Enter A New Contact Number"
@@ -419,7 +499,12 @@ class FirebaseManager(val context: Context){
         }
     }
 
-
+    /**
+     *Perform the reset of password when user forget password
+     *
+     * @param view View of the Page
+     * @param etEmail Entered email
+     */
     fun performForgetPassword (view: View, etEmail: EditText) {
         Log.d("CZ2006:Firebase Manager:ForgetPassword", "Inside performForgetPassword function")
         if (validateEmailInput(etEmail)) {
@@ -444,6 +529,12 @@ class FirebaseManager(val context: Context){
         }
     }
 
+    /**
+     *Upload File to Firebase Firestore
+     *
+     * @param link link of the file to be uploaded to
+     * @param expiry expiry of the file(CPR certificate)
+     */
     fun uploadFileToDB(link:String, expiry: String) {
         val sharedPreference: SharedPreferences = context.getSharedPreferences("Login",
             AppCompatActivity.MODE_PRIVATE
@@ -455,10 +546,15 @@ class FirebaseManager(val context: Context){
         db.collection("Users").document(docid).update("cprExpiry" , expiry)
     }
 
+    /**
+     *Update User Location to Firebase Firestore
+     *
+     * @param geoPoint Geopoint of user location
+     */
     fun updateUserLocationToDatabase(geoPoint: com.google.firebase.firestore.GeoPoint){
         val sharedPreference: SharedPreferences = context.getSharedPreferences("Login", Service.MODE_PRIVATE)
         val current_user_id= sharedPreference.getString("UserID","").toString()
-        Log.d("CZ2006:FirebaseManager", "${current_user_id}")
+        Log.d("CZ2006:FirebaseManager", current_user_id)
         try {
             val longlat = db.collection("Users").document(current_user_id)
 
@@ -472,29 +568,8 @@ class FirebaseManager(val context: Context){
         }
         catch (e:Exception)
         {
-            Log.d("CZ2006:FirebaseManager:UPDATE EMAIL", "${e}")
+            Log.d("CZ2006:FirebaseManager:UPDATE EMAIL", "$e")
         }
         Log.d("CZ2006:FirebaseManager", "Location changed: ${geoPoint.latitude},${geoPoint.longitude}")
     }
-//    fun getuserLocationViaID(id:String): GeoPoint {
-//        val db = Firebase.firestore
-//        lateinit var geoPoint: GeoPoint
-//        runBlocking {
-//
-//            db.collection("Users").document(id).get()
-//                .addOnSuccessListener { document ->
-//
-//                    val result = document.getGeoPoint("Location")
-//                    geoPoint = result?.let { GeoPoint(result.latitude, it.longitude) }!!
-//                }
-//                .addOnFailureListener { e ->
-//                    Log.e("CZ2006:VicTIM location not found", "Error getting document", e)
-//
-//                }
-//                .await()
-//
-//
-//        }
-//        return geoPoint
-//    }
 }

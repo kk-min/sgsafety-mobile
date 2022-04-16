@@ -123,14 +123,15 @@
         android:clickable="true"
         android:text="Google Map Link"
         android:textColor="#F30E0E"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintHorizontal_bias="0.271"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline3"
-        app:layout_constraintVertical_bias="0.844" />
+        app:layout_constraintVertical_bias="0.844"
+        android:focusable="true" />
 
     <TextView
         android:id="@+id/aed_location_title"

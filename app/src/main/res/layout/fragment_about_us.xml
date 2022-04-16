@@ -15,7 +15,7 @@
         android:gravity="center"
         android:text="Save a life today!"
         android:textColor="@color/colorPrimary"
-        android:textSize="40dp"
+        android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

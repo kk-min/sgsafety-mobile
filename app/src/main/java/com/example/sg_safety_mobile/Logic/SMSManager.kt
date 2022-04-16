@@ -6,11 +6,27 @@ import android.telephony.SmsManager
 import android.text.TextUtils
 
 
-
+/**
+ *Class that is used for sending of SMS to SCDF
+ *
+ * @since 2022-4-15
+ */
 class SMSManager (){
+    /**
+     *Phone No. to be sent to
+     */
     private val helpNo = 111
+    /**
+     *Message to be sent (Vehicle needed)
+     */
     private val helpMessage = "Ambulance"
 
+    /**
+     *Send SMS to a certain phone no.
+     *
+     * @param loc current location
+     * @param location address of current location
+     */
     //SEND SMS TO THE DESIGNATED PHONE NUMBER
     fun sendSMS(location:String,loc:Location) {
         if (TextUtils.isDigitsOnly(helpNo.toString())) {

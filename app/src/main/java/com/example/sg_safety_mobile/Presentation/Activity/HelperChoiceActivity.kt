@@ -15,19 +15,40 @@ import androidx.core.app.ActivityCompat
 import com.example.sg_safety_mobile.R
 import java.lang.Exception
 
-
+/**
+ *Activity for helper to choose whether they want to perform CPR or retrieve AED when they pressed YES to help the victim
+ * from ChoicePage Activity[com.example.sg_safety_mobile.Presentation.Activity.ChoicePageActivity]
+ *
+ * @since 2022-4-15
+ */
 class HelperChoiceActivity : AppCompatActivity() {
 
+    /**
+     *UI button to start Victim Map Acitivty(CPRMapActivity) when pressed
+     */
     private lateinit var cprbutton:Button
+    /**
+     *UI button to start AED Map Acitivty(AEDMapActivity) when pressed
+     */
     private lateinit var aedbutton:Button
+    /**
+     *In-built location manager
+     */
     private lateinit var lm: LocationManager
 
+
+    /**
+     *Runs when activity is created
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
 
+        //initialize current page
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_helper_choice)
         viewEInitializations()
 
+        //Button------------------------------------------------------------------------------------------------------
+        //prompt to victim location page with map
         cprbutton.setOnClickListener {
             try{
                 getCurrentLocation()
@@ -40,8 +61,7 @@ class HelperChoiceActivity : AppCompatActivity() {
             }
 
         }
-
-
+        //prompt to aed location page with map
         aedbutton.setOnClickListener {
             try{
                 val intent = Intent(this, AEDMapActivity::class.java)
@@ -55,11 +75,21 @@ class HelperChoiceActivity : AppCompatActivity() {
         }
 
     }
+
+    /**
+     *Initialize all the UI views
+     */
     private fun viewEInitializations() {
         cprbutton=findViewById(R.id.cpr)
         aedbutton=findViewById(R.id.aed)
     }
-    fun getCurrentLocation(): Location {
+
+    /**
+     *Get user current location
+     *
+     * @return current user location
+     */
+    private fun getCurrentLocation(): Location {
         lateinit var loc: Location
         if (ActivityCompat.checkSelfPermission(
                 this,

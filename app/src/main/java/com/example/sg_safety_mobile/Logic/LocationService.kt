@@ -21,26 +21,47 @@ import androidx.annotation.Nullable
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import com.example.sg_safety_mobile.Data.LocationDataRepository
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 
-
+/**
+ *  Location Service that inherits Service class to run in foreground to get a constant update of user location
+ *  even when the app is killed
+ *
+ *  @since 2022-4-15
+ */
 class LocationService : Service() {
 
+    /**
+     *Firebase Manager of the application[com.example.sg_safety_mobile.Logic.FirebaseManager]
+     */
     private val firebaseManager: FirebaseManager = FirebaseManager(this)
+    /**
+     *In-built location manager
+     */
     private var lm: LocationManager?=null
-    private var loc: Location?=null
+    /**
+     *In-built location listener
+     */
     private var ll: LocationListener?=null
 
+    /**
+     *Runs when service is created
+     */
     override fun onCreate() {
         super.onCreate()
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O)
-            startMyOwnForeground()
+            try{
+            startMyOwnForeground()}
+            catch (e:Exception)
+            {
+                Log.e("CZ2006:LocationService", e.toString())
+            }
 //        else
 //            startForeground(1, Notification())
     }
 
+    /**
+     *Start the foreground service of location updates
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     private fun startMyOwnForeground() {
 
@@ -71,14 +92,23 @@ class LocationService : Service() {
 
     }
 
+    /**
+     *Runs when the start command is being run
+     *
+     * @param intent Intent for starting
+     * @param flags flags of intent
+     * @param startId start id of the intent
+     *
+     * @return constant to return when service is started
+     */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
 
         if (intent != null) {
-            if (intent.getAction().equals("StopService")) {
-                stopForeground(true);
+            if (intent.action.equals("StopService")) {
+                stopForeground(true)
                 stopLocationUpdates()
-                stopSelf();
+                stopSelf()
             }
             else
                 startLocationUpdates()
@@ -87,10 +117,13 @@ class LocationService : Service() {
         return START_STICKY
     }
 
+    /**
+     *Runs when the applications is destroyed
+     */
     override fun onDestroy() {
         super.onDestroy()
-        val sharedPreference: SharedPreferences = getSharedPreferences("Login", Service.MODE_PRIVATE)
-        if(sharedPreference.getBoolean("log in status",true)==false) {
+        val sharedPreference: SharedPreferences = getSharedPreferences("Login", MODE_PRIVATE)
+        if(!sharedPreference.getBoolean("log in status",true)) {
             super.onDestroy()
             return
         }
@@ -102,6 +135,9 @@ class LocationService : Service() {
         this.sendBroadcast(broadcastIntent)
     }
 
+    /**
+     *Start the constantly location updates
+     */
     fun startLocationUpdates() {
 
         lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -153,6 +189,9 @@ class LocationService : Service() {
         )
     }
 
+    /**
+     *Stop the constantly location updates
+     */
     fun stopLocationUpdates(){
         if(lm!=null&&ll!=null)
         {
@@ -160,10 +199,20 @@ class LocationService : Service() {
         }
 
     }
+
+    /**
+     *Runs when the app is on bind
+     */
     @Nullable
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
+
+    /**
+     *Send the updated lcoation data to location data repository
+     *
+     * @param p0 updated location
+     */
     private fun sendDataToRepository(p0: Location){
         val sendLocation = Intent()
         sendLocation.action = "UPDATE_LOCATION_REPOSITORY"

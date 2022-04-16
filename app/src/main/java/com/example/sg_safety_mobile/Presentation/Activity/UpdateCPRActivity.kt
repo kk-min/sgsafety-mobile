@@ -1,7 +1,6 @@
 package com.example.sg_safety_mobile.Presentation.Activity
 
-//import com.example.sg_safety_mobile.databinding.ActivityUpdateCprBinding
-//import com.google.firebase.storage.ktx.storage
+
 
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
@@ -26,25 +25,64 @@ import com.example.sg_safety_mobile.databinding.ActivityUpdateCprBinding
 import com.google.firebase.storage.FirebaseStorage
 import java.util.*
 
-
+/**
+ *Activity for user to update their CPR certificate and is accessed
+ * via Manage Profile Fragment[com.example.sg_safety_mobile.Presentation.Activity.LoginActivity]
+ *
+ *
+ * @since 2022-4-15
+ */
 class UpdateCPRActivity : AppCompatActivity() {
 
+    /**
+     *UI Datepicker for user to choose their CPR certificate expiry date
+     */
     private lateinit var datePicker:DatePicker
+    /**
+     *UI text view that shows PDF
+     */
     private lateinit var pdfTextView:TextView
+    /**
+     *UI text view that show Image
+     */
     private lateinit var iv:ImageView
+    /**
+     *Image URI
+     */
     private lateinit var imageUri : Uri
+    /**
+     *Update CPR binding
+     */
     private lateinit var binding : ActivityUpdateCprBinding
+    /**
+     *Expiry date
+     */
     private lateinit var expiry : String
+    /**
+     *Firebase Manager
+     */
     private val firebaseManager = FirebaseManager(this)
+    /**
+     *PDF reader
+     */
     private val pdfReader = FileReader(PDFReader(this))
+    /**
+     *Image reader
+     */
     private  val imageReader = FileReader(ImageReader(this))
 
+    /**
+     *Runs when activity is created
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        //initialize current page
         super.onCreate(savedInstanceState)
         binding = ActivityUpdateCprBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewEInitializations()
 
+        //setup support bar and back button
         supportActionBar?.title = "Update CPR"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -63,17 +101,16 @@ class UpdateCPRActivity : AppCompatActivity() {
             expiry="$day/$month/$year"
         }
 
-
-        //selecting "Upload Image version of CPR Certificate" button
+        //Button---------------------------------------------------------------------------------------------------
+        //prompt to upload png file
         binding.uploadCpr.setOnClickListener {
             imageReader.readFile()
         }
 
+        //prompt to upload pdf file
         binding.uploadPdfCpr.setOnClickListener {
             pdfReader.readFile()
         }
-
-
 
         //Selecting "Submit" button
         binding.submitting.setOnClickListener {
@@ -85,6 +122,10 @@ class UpdateCPRActivity : AppCompatActivity() {
         }
 
     }
+
+    /**
+     *Initialize all the UI views
+     */
     private fun viewEInitializations() {
        datePicker = findViewById(R.id.date_Picker)
         pdfTextView = findViewById(R.id.pdfText)
@@ -92,6 +133,10 @@ class UpdateCPRActivity : AppCompatActivity() {
 
     }
 
+
+    /**
+     *Check if expiry date selected by user is in the past/current date
+     */
     //check if expiry date selected by user is in the past/current date
     private fun inPast(date: DatePicker) : Boolean{
 
@@ -116,6 +161,9 @@ class UpdateCPRActivity : AppCompatActivity() {
     }
 
 
+    /**
+     *Runs when pdf is uploaded
+     */
     @SuppressLint("Range")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -146,7 +194,7 @@ class UpdateCPRActivity : AppCompatActivity() {
                     iv.setImageURI(null)
 
                     //display pdf name
-                    var displayName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                    val displayName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
 
                     pdfTextView.text = displayName
 
@@ -159,6 +207,9 @@ class UpdateCPRActivity : AppCompatActivity() {
     }
 
 
+    /**
+     *Upload a file
+     */
     private fun uploadingFile(){
 
         //no image has been selected for submission
@@ -172,8 +223,6 @@ class UpdateCPRActivity : AppCompatActivity() {
             Toast.makeText(this , "Please Select An Expiry Date" , Toast.LENGTH_LONG).show()
             return
         }
-
-
         //display progress bar when uploading to database
         val progressDialog = ProgressDialog(this)
         progressDialog.setMessage("Uploading file")
@@ -189,7 +238,7 @@ class UpdateCPRActivity : AppCompatActivity() {
         storeRef.putFile(imageUri)
             .addOnCompleteListener {
 
-                firebaseManager.uploadFileToDB(storeRef.path.toString(), expiry)
+                firebaseManager.uploadFileToDB(storeRef.path, expiry)
                 Toast.makeText(this , "Successful upload" , Toast.LENGTH_LONG).show()
                 if(progressDialog.isShowing) progressDialog.dismiss()
 
@@ -202,6 +251,13 @@ class UpdateCPRActivity : AppCompatActivity() {
             }
     }
 
+    /**
+     *Do something when a certain item is selected
+     *
+     * @param item  menu item to be selected
+     *
+     * @return true when item selected false otherwise
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             finish()

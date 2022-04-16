@@ -24,12 +24,42 @@ import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
+/**
+ *Manager of the OSMap that interacts with maps
+ *
+ * @since 2022-4-15
+ */
 class OSMapActivityManager(val context: Context,val map:MapView) {
+    /**
+     *(context)
+     * Application context
+     */
 
+    /**
+     *(map)
+     * Map view of current activity or fragment
+     */
+
+    /**
+     *Location service class
+     */
     private val locationService: LocationService=LocationService()
+    /**
+     *Intent of location service
+     */
     private var locationServiceIntent: Intent? = null
+    /**
+     *Location Manager
+     */
     private lateinit var lm: LocationManager
 
+    /**
+     *Add new marker into the map
+     *
+     * @param map map to be updated
+     * @param point geopoint to add marker
+     * @param title title and id of the marker
+     */
     fun addMarker(map: MapView?, point: GeoPoint, title: String) {
 
         val startMarker = Marker(map)
@@ -40,7 +70,14 @@ class OSMapActivityManager(val context: Context,val map:MapView) {
         map?.overlays?.add(startMarker)
         map?.invalidate()
     }
-    fun deleteMarker(map:MapView,id:String){
+
+    /**
+     *Delete existing marker on map
+     *
+     * @param map map to be updated
+     * @param id id of marker to be deleted
+     */
+    private fun deleteMarker(map:MapView, id:String){
         for (i in 0 until map.overlays.size) {
             val overlay: Overlay = map.overlays[i]
             if (overlay is Marker && overlay.id == id) {
@@ -48,6 +85,14 @@ class OSMapActivityManager(val context: Context,val map:MapView) {
             }
         }
     }
+
+    /**
+     *Update location of the marker
+     *
+     * @param map map to be updated
+     * @param loc new location
+     * @param id id of marker to be updated
+     */
     fun updateMarker(map:MapView,loc: Location?,id:String){
         //Delete marker if applicable, then insert new currentLocation marker
 //        if (currentMarker != null){
@@ -61,10 +106,10 @@ class OSMapActivityManager(val context: Context,val map:MapView) {
 
 
             val currentMarker = Marker(map)
-            currentMarker?.position = point
-            currentMarker?.title = "Current Location"
-            currentMarker?.id="Current Location"
-            currentMarker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            currentMarker.position = point
+            currentMarker.title = "Current Location"
+            currentMarker.id ="Current Location"
+            currentMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             val mapController = map.controller
             mapController.animateTo(point)
             map.overlays?.add(currentMarker)
@@ -77,6 +122,14 @@ class OSMapActivityManager(val context: Context,val map:MapView) {
         }
 
     }
+
+    /**
+     *Draw routes between two points
+     *
+     * @param map map to be updated
+     * @param startPoint startpoint of the route
+     * @param endPoint endpoint of the route
+     */
     fun addingWaypoints(map: MapView?, startPoint: GeoPoint, endPoint: GeoPoint) {
         val roadManager = OSRMRoadManager(context, "MYUSERAGENT")
         roadManager.setMean(OSRMRoadManager.MEAN_BY_FOOT)
@@ -103,14 +156,20 @@ class OSMapActivityManager(val context: Context,val map:MapView) {
         //addMarker(map, endPoint, "End Point")
     }
 
-    fun retrievingRoad(roadManager: OSRMRoadManager, waypoints: ArrayList<GeoPoint>) {
+    /**
+     *Retrieve the route calculated
+     *
+     * @param roadManager OSMap road manager
+     * @param waypoints waypoint of the route
+     */
+    private fun retrievingRoad(roadManager: OSRMRoadManager, waypoints: ArrayList<GeoPoint>) {
         // Retrieving road
         roadManager.setMean(OSRMRoadManager.MEAN_BY_FOOT)
         val road = roadManager.getRoad(waypoints)
         val roadOverlay = RoadManager.buildRoadOverlay(road)
-        map?.overlays?.add(roadOverlay);
+        map.overlays?.add(roadOverlay)
 
-        val nodeIcon = map?.context?.resources?.getDrawable(R.mipmap.walk)
+        val nodeIcon = map.context?.resources?.getDrawable(R.mipmap.walk)
         for (i in 0 until road.mNodes.size) {
             val node = road.mNodes[i]
             val nodeMarker = Marker(map)
@@ -119,26 +178,31 @@ class OSMapActivityManager(val context: Context,val map:MapView) {
                 nodeMarker.icon = nodeIcon
             }
             nodeMarker.title = "Step $i"
-            map?.overlays?.add(nodeMarker)
-            nodeMarker.snippet = node.mInstructions;
+            map.overlays?.add(nodeMarker)
+            nodeMarker.snippet = node.mInstructions
             nodeMarker.subDescription =
-                Road.getLengthDurationText(map?.context, node.mLength, node.mDuration);
+                Road.getLengthDurationText(map.context, node.mLength, node.mDuration)
         }
     }
 
-
+    /**
+     * Async task of getting route in background
+     */
     private inner class MyRoadAsyncTask(
         val roadManager: OSRMRoadManager,
         val waypoints: ArrayList<GeoPoint>
     ) : AsyncTask<Void, Void, String>() {
 
+        /**
+         *Get the route between two points in background
+         */
         override fun doInBackground(vararg params: Void?): String? {
             roadManager.setMean(OSRMRoadManager.MEAN_BY_FOOT)
             val road = roadManager.getRoad(waypoints)
             val roadOverlay = RoadManager.buildRoadOverlay(road)
-            map?.overlays?.add(roadOverlay);
+            map.overlays?.add(roadOverlay)
 
-            val nodeIcon = map?.context?.resources?.getDrawable(R.mipmap.walk)
+            val nodeIcon = map.context?.resources?.getDrawable(R.mipmap.walk)
             for (i in 0 until road.mNodes.size) {
                 val node = road.mNodes[i]
                 val nodeMarker = Marker(map)
@@ -147,16 +211,21 @@ class OSMapActivityManager(val context: Context,val map:MapView) {
                     nodeMarker.icon = nodeIcon
                 }
                 nodeMarker.title = "Step $i"
-                map?.overlays?.add(nodeMarker)
-                nodeMarker.snippet = node.mInstructions;
+                map.overlays?.add(nodeMarker)
+                nodeMarker.snippet = node.mInstructions
                 nodeMarker.subDescription =
-                    Road.getLengthDurationText(map?.context, node.mLength, node.mDuration);
+                    Road.getLengthDurationText(map.context, node.mLength, node.mDuration)
             }
 
             return null
         }
     }
 
+    /**
+     *Get user current location
+     *
+     * @return user location
+     */
     fun getCurrentLocation(): Location {
         lateinit var loc: Location
         if (ActivityCompat.checkSelfPermission(
@@ -180,11 +249,15 @@ class OSMapActivityManager(val context: Context,val map:MapView) {
         loc= lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)!!
         return loc
     }
+
+    /**
+     *Start the location service updates
+     */
     fun startLocationService(){
         Log.d("CZ2006:MainActivityManager", "LocationService Starting...")
 
-        locationServiceIntent = Intent(context, locationService!!.javaClass)
-        if (!isMyServiceRunning(locationService!!.javaClass)) {
+        locationServiceIntent = Intent(context, locationService.javaClass)
+        if (!isMyServiceRunning(locationService.javaClass)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(locationServiceIntent)
             } else {
@@ -193,6 +266,9 @@ class OSMapActivityManager(val context: Context,val map:MapView) {
         }
     }
 
+    /**
+     *Stop the location service updates
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     fun stopLocationService(){
         val intent = Intent(context, LocationService::class.java)
@@ -200,7 +276,7 @@ class OSMapActivityManager(val context: Context,val map:MapView) {
 
         Log.d("CZ2006:MainActivityManager", "LocationService Starting...")
         //locationService =
-        if (isMyServiceRunning(locationService!!.javaClass)) {
+        if (isMyServiceRunning(locationService.javaClass)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(intent)
 
@@ -210,6 +286,11 @@ class OSMapActivityManager(val context: Context,val map:MapView) {
         }
     }
 
+    /**
+     *Checking of whether service is running
+     *
+     * @param serviceClass service to be checking
+     */
     private fun isMyServiceRunning(serviceClass: Class<*>): Boolean {
         val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         for (service in manager.getRunningServices(Int.MAX_VALUE)) {

@@ -13,12 +13,29 @@ import androidx.appcompat.app.AppCompatActivity
 
 import com.example.sg_safety_mobile.Presentation.Activity.LoginActivity
 
-
+/**
+ *Manager of the Main Activity Class[com.example.sg_safety_mobile.Presentation.Activity.MainActivity]
+ *
+ * @since 2022-4-15
+ */
 class MainActivityManager(val context: Context) {
-    val locationService: LocationService=LocationService()
-    var locationServiceIntent: Intent? = null
+    /**
+     *(context)
+     * Application context
+     */
 
+    /**
+     *Location service class
+     */
+    private val locationService: LocationService=LocationService()
+    /**
+     *Intent of starting location service
+     */
+    private var locationServiceIntent: Intent? = null
 
+    /**
+     *Prompt AlertBox to confirm whether user intend to sign out or not
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     fun promptSignOutAlert(){
         val alertDialog: AlertDialog.Builder = AlertDialog.Builder(context)
@@ -53,11 +70,14 @@ class MainActivityManager(val context: Context) {
 
     }
 
+    /**
+     *Start the Location Update Service of this application
+     */
     fun startLocationService(){
         Log.d("CZ2006:MainActivityManager", "LocationService Starting...")
 
-        locationServiceIntent = Intent(context, locationService!!.javaClass)
-        if (!isMyServiceRunning(locationService!!.javaClass)) {
+        locationServiceIntent = Intent(context, locationService.javaClass)
+        if (!isMyServiceRunning(locationService.javaClass)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(locationServiceIntent)
             } else {
@@ -66,6 +86,9 @@ class MainActivityManager(val context: Context) {
         }
     }
 
+    /**
+     *Stop the Location service updates
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     fun stopLocationService(){
         val intent = Intent(context, LocationService::class.java)
@@ -73,7 +96,7 @@ class MainActivityManager(val context: Context) {
 
         Log.d("CZ2006:MainActivityManager", "LocationService Starting...")
         //locationService =
-        if (isMyServiceRunning(locationService!!.javaClass)) {
+        if (isMyServiceRunning(locationService.javaClass)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(intent)
 
@@ -83,6 +106,13 @@ class MainActivityManager(val context: Context) {
         }
     }
 
+    /**
+     *Checking of whether the service is running
+     *
+     * @param serviceClass service to be checked
+     *
+     * @return validation of service running
+     */
     private fun isMyServiceRunning(serviceClass: Class<*>): Boolean {
         val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         for (service in manager.getRunningServices(Int.MAX_VALUE)) {

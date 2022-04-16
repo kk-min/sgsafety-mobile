@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
-mm
+
     <TextView
         android:id="@+id/victim_location_title"
         android:layout_width="wrap_content"
@@ -27,7 +27,7 @@ mm
         android:layout_below="@+id/map"
         android:layout_alignParentStart="true"
         android:text="Victim Location"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/victimlocation"
         app:layout_constraintEnd_toStartOf="@+id/locate"
@@ -63,14 +63,15 @@ mm
         android:clickable="true"
         android:text="Google Map Link"
         android:textColor="#F30E0E"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.045"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline6"
-        app:layout_constraintVertical_bias="0.784" />
+        app:layout_constraintVertical_bias="0.784"
+        android:focusable="true" />
 
     <Button
         android:id="@+id/Done"

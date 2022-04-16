@@ -13,20 +13,42 @@ import com.example.sg_safety_mobile.Presentation.Activity.EditEmailActivity
 import com.example.sg_safety_mobile.Presentation.Activity.UpdateCPRActivity
 import com.example.sg_safety_mobile.R
 
-
+/**
+ *Fragment that show the page of Manage Profile consist of 4 options:
+ * 1)edit email
+ * 2)change password
+ * 3)change contact no.
+ * 4)update cpr certificate
+ * and can be accessed via Navigation Drawer in
+ * MainActivity[com.example.sg_safety_mobile.Presentation.Activity.MainActivity]
+ *
+ * @since 2022-4-15
+ *
+ */
 class ManageProfileFragment : Fragment() {
 
-
+    /**
+     *UI button that start update email activity when pressed
+     */
     private lateinit var email_button:Button
+    /**
+     *UI button that start update contact no. activity when pressed
+     */
     private lateinit var contact_button:Button
+    /**
+     *UI button that start update password activity when pressed
+     */
     private lateinit var pwd_button:Button
+    /**
+     *UI button that start update cpr certificate activity when pressed
+     */
     private lateinit var cpr_button:Button
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-    }
 
+    /**
+     *Runs when fragment is created
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -58,6 +80,12 @@ class ManageProfileFragment : Fragment() {
 
         return v
     }
+
+    /**
+     *Initialize all the UI views
+     *
+     * @param v view of this fragment
+     */
     private fun viewEInitializations(v:View) {
 
         email_button =v.findViewById(R.id.btn_email)

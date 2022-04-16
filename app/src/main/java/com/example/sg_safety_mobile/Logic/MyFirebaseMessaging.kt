@@ -6,12 +6,10 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
-
 import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
@@ -20,37 +18,52 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.example.sg_safety_mobile.Presentation.Activity.ChoicePageActivity
 import com.example.sg_safety_mobile.R
-
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.GlobalScope
-
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-
 import org.json.JSONObject
 import java.io.*
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
-
-import kotlinx.coroutines.tasks.await
 import org.osmdroid.util.GeoPoint
+import kotlin.math.acos
+import kotlin.math.cos
+import kotlin.math.sin
 
-
+/**
+ *Topic-based messaging class from Firebase Messaging Service that is used for sending and receiving of
+ * messages between user that has subscribed to the same topic
+ *
+ *
+ * @since 2022-4-15
+ *
+ */
 class MyFirebaseMessagingService:FirebaseMessagingService() {
 
-    lateinit var lm: LocationManager
+    /**
+     *In-built Location Manager
+     */
+    private lateinit var lm: LocationManager
     companion object {
+        /**
+         *Token of the Firebase Messaging
+         */
         var token : String? = null
 
+        /**
+         *API key of Firebase Messaging Service
+         */
         //Firebase Cloud Messaging Key
-        val key : String = "AAAA8SS5-jY:APA91bGsabxqNTp0aE71JbAEibWiUiA-HHSv344LTmxpPNa3fLNJyeS_tALDHmeaouIjPpe0jE0gxeBXsS5WP_xcWzfLL2Zwc8ZYnTXtVN-EMcsgtNtwhoMSTBNc801LCW_HtgPlGXZ3"
+        private const val key : String = "AAAA8SS5-jY:APA91bGsabxqNTp0aE71JbAEibWiUiA-HHSv344LTmxpPNa3fLNJyeS_tALDHmeaouIjPpe0jE0gxeBXsS5WP_xcWzfLL2Zwc8ZYnTXtVN-EMcsgtNtwhoMSTBNc801LCW_HtgPlGXZ3"
 
-
+        /**
+         *Subscribe current user to a topic
+         *
+         * @param context application context
+         * @param topic topic to be subscribed
+         */
         fun subscribeTopic(context: Context, topic: String) {
             FirebaseMessaging.getInstance().subscribeToTopic(topic).addOnSuccessListener {
                 //Toast.makeText(context, "Subscribed $topic", Toast.LENGTH_LONG).show()
@@ -62,6 +75,12 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
             }
         }
 
+        /**
+         *Unsubscribe current user to a topic
+         *
+         * @param context application context
+         * @param topic topic to be unsubscribed
+         */
         fun unsubscribeTopic(context: Context, topic: String) {
             FirebaseMessaging.getInstance().unsubscribeFromTopic(topic).addOnSuccessListener {
                 //Toast.makeText(context, "Unsubscribed $topic", Toast.LENGTH_LONG).show()
@@ -72,6 +91,15 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
             }
         }
 
+        /**
+         *Send message to a current topic
+         *
+         * @param title title of the notification
+         * @param content content of the notification
+         * @param topic topic to be sent to
+         * @param id userid
+         * @param location location of current user
+         */
         fun sendMessage(title: String, content: String,topic: String,id:String,location:GeoPoint) {
             GlobalScope.launch {
                 val endpoint = "https://fcm.googleapis.com/fcm/send"
@@ -133,6 +161,13 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
             }
         }
     }
+
+
+    /**
+     *Runs when messages are received
+     *
+     * @param p0 received message
+     */
     override fun onMessageReceived(p0: RemoteMessage) {
         //ADD CONSTRAINT BASED ON USER LOCATION AND VICTIM LOCATION AND CHECK WHETHER CURRENT USER IS THE VICTIM ITSELF
         super.onMessageReceived(p0)
@@ -140,18 +175,18 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
         Log.e("CZ2006:onMessageReceived: ", p0.data.toString())
 
 
-        val title = p0.data.get("title")
-        val content = p0.data.get("content")
+        val title = p0.data["title"]
+        val content = p0.data["content"]
         val defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
-        val victim_id=p0.data.get("victim_id").toString()
+        val victim_id= p0.data["victim_id"].toString()
         val sharedPreference: SharedPreferences =getSharedPreferences("Login", MODE_PRIVATE)
         val current_user_id= sharedPreference.getString("UserID","")
 
         val helpPreference:SharedPreferences=getSharedPreferences("VictimDetails", MODE_PRIVATE)
 
-        var victimLatitude:Double= 0.0
-        var victimLongitude:Double= 0.0
+        var victimLatitude: Double =0.0
+        var victimLongitude: Double = 0.0
         lateinit var victimLocation:GeoPoint
 
 
@@ -164,17 +199,17 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
         }
         else
         {
-            victimLatitude= p0.data.get("victimLatitude")?.toDouble()!!
-            victimLongitude= p0.data.get("victimLongitude")?.toDouble()!!
+            victimLatitude= p0.data["victimLatitude"]?.toDouble()!!
+            victimLongitude= p0.data["victimLongitude"]?.toDouble()!!
             if(victimLatitude!=null&& victimLongitude!=null)
             {
                 victimLocation= GeoPoint(victimLatitude,victimLongitude)
             }
             val userLoc:Location=getCurrentLocation()
-            val userLocation=GeoPoint(userLoc.latitude.toDouble(),userLoc.longitude)
+            val userLocation=GeoPoint(userLoc.latitude,userLoc.longitude)
 
-            Log.e("CZ2006:Victim Location","${victimLocation}")
-            Log.e("CZ2006:User Location","${userLocation}")
+            Log.e("CZ2006:Victim Location","$victimLocation")
+            Log.e("CZ2006:User Location","$userLocation")
             Log.e("CZ2006:Distance between 2 user in km","${countDistanceBetweenTwoPoints(victimLocation,userLocation)}")
             if(countDistanceBetweenTwoPoints(victimLocation,userLocation)>=0.4)
             {
@@ -197,21 +232,15 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
         val pendingIntent = PendingIntent.getActivity(applicationContext,0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             checkNotificationChannel("1")
         }
 
-//        val person = Person.Builder().setName("test").build()
+
         val notification = NotificationCompat.Builder(applicationContext,"1")
             .setSmallIcon(R.drawable.sgsafety_icon)
-
             .setContentTitle(title)
             .setContentText(content)
-//                .setStyle(NotificationCompat.MessagingStyle(person)
-//                        .setGroupConversation(false)
-//                        .addMessage(title,
-//                                currentTimeMillis(), person)
-//                )
             .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setSound(defaultSound)
@@ -222,27 +251,51 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
 
     }
 
-    fun countDistanceBetweenTwoPoints(p0:GeoPoint,p1:GeoPoint):Double{
+    /**
+     *Calculate the distance between two geopoint
+     *
+     * @param p0 Geopoint 1
+     * @param p1 Geopoint 2
+     *
+     * @return  distance in KM
+     */
+    private fun countDistanceBetweenTwoPoints(p0:GeoPoint, p1:GeoPoint):Double{
         val lat1=p0.latitude
         val lon1=p0.longitude
         val lat2=p1.latitude
         val lon2=p1.longitude
         val theta = lon1 - lon2
-        var dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta))
-        dist = Math.acos(dist)
+        var dist = sin(deg2rad(lat1)) * sin(deg2rad(lat2)) + cos(deg2rad(lat1)) * cos(deg2rad(lat2)) * cos(deg2rad(theta))
+        dist = acos(dist)
         dist = rad2deg(dist)
-        dist = dist * 60 * 1.1515
-        dist = dist * 1.609344
+        dist *= 60 * 1.1515
+        dist *= 1.609344
         return dist
     }
 
+    /**
+     *Change degree to radians
+     *
+     * @return radians converted
+     */
     private fun deg2rad(deg: Double): Double {
         return deg * Math.PI / 180.0
     }
 
+    /**
+     *Change radians to degree
+     *
+     * @return degree converted
+     */
     private fun rad2deg(rad: Double): Double {
         return rad * 180.0 / Math.PI
     }
+
+    /**
+     *Get user current location
+     *
+     * @return return current location
+     */
     private fun getCurrentLocation(): Location {
         lateinit var loc: Location
         if (ActivityCompat.checkSelfPermission(
@@ -266,28 +319,12 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
         loc= lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)!!
         return loc
     }
-//    fun getuserLocationViaID(id:String): GeoPoint {
-//        val db = Firebase.firestore
-//        lateinit var geoPoint: GeoPoint
-//        runBlocking {
-//
-//            db.collection("Users").document(id).get()
-//                .addOnSuccessListener { document ->
-//
-//                    val result = document.getGeoPoint("Location")
-//                    geoPoint = result?.let { GeoPoint(result.latitude, it.longitude) }!!
-//                }
-//                .addOnFailureListener { e ->
-//                    Log.e("CZ2006:VicTIM location not found", "Error getting document", e)
-//
-//                }
-//                .await()
-//
-//
-//        }
-//        return geoPoint
-//    }
 
+    /**
+     *Checking of certain notification channel
+     *
+     * @param CHANNEL_ID id of the channel to be checked
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     private fun checkNotificationChannel(CHANNEL_ID:String) {
         val notificationChannel = NotificationChannel(CHANNEL_ID,
@@ -300,6 +337,11 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
         notificationManager.createNotificationChannel(notificationChannel)
     }
 
+    /**
+     *Update when there is a new token
+     *
+     * @param p0 token to be updated
+     */
     override fun onNewToken(p0: String) {
         token = p0
         super.onNewToken(p0)

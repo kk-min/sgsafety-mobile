@@ -5,11 +5,21 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 
-
+/**
+ *Class that runs in order to restart the constantly location updates when the app is killed and this class inherits
+ * Broadcast Receiver class
+ *
+ * @since 2022-4-15
+ */
 class LocationServiceRestarter : BroadcastReceiver() {
 
+    /**
+     * Runs when intent is received
+     *
+     * @param context   application context
+     * @param   intent  intent to be started
+     */
     override fun onReceive(context: Context, intent: Intent?) {
 
         Log.i("CZ2006:LocationServiceRestarter:Broadcast Listened", "Service tried to stop")

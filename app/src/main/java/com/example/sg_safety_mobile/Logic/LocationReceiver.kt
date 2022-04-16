@@ -4,21 +4,32 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.location.Location
-import android.util.Log
-import android.view.View
-import android.widget.TextView
 import com.example.sg_safety_mobile.Data.LocationDataRepository
-import com.example.sg_safety_mobile.R
-import org.osmdroid.util.GeoPoint
-import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.Marker
-import org.osmdroid.views.overlay.Overlay
 
-
+/**
+ * Location Receiver class that inherits BroadcastReceiver class and runs when location is updated
+ *
+ * @since 2022-4-15
+ */
 
 class LocationReceiver(context: Context, locationRepo: LocationDataRepository): BroadcastReceiver() {
 
+    /**
+     *(context)
+     * Application context of the activity or fragment
+     */
+
+    /**
+     *Location Data Repository
+     */
     val repo = locationRepo
+
+    /**
+     *Runs when location is received
+     *
+     * @param context application context
+     * @param intent intent to be done when data is received
+     */
     override fun onReceive(context: Context, intent: Intent) {
         if(intent.action.equals("UPDATE_LOCATION_REPOSITORY"))
         {
@@ -28,5 +39,5 @@ class LocationReceiver(context: Context, locationRepo: LocationDataRepository): 
             }
         }
     }
-    }
+}
 

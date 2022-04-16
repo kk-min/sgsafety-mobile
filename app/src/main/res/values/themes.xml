@@ -2,16 +2,6 @@
     <!-- Base application theme. -->
     <style name="Theme.SG_Safety_Mobile" parent="Theme.Design.Light">
         <!-- Primary brand color. -->
-        <!--<item name="colorPrimary">@color/colorPrimaryDark</item>-->
-        <!--<item name="colorPrimaryVariant">@color/black</item>-->
-        <!--<item name="colorOnPrimary">@color/white</item>-->
-        <!-- Secondary brand color. -->
-        <!-- <item name="colorSecondary">@color/colorPrimaryDark</item>-->
-         <!--<item name="colorSecondaryVariant">@color/colorPrimaryDark</item>-->
-         <!--<item name="colorOnSecondary">@color/black</item>-->
-         <!-- Status bar color. -->
-        <!--<item name="android:statusBarColor" tools:targetApi="l">@color/colorAccent</item>-->
-        <!-- Primary brand color. -->
         <item name="colorPrimary">#00BCD4</item>
         <item name="colorPrimaryVariant">#00BCD4</item>
         <item name="colorOnPrimary">@color/white</item>

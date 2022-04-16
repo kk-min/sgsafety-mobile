@@ -2,19 +2,28 @@ package com.example.sg_safety_mobile.Logic
 
 import android.content.Context
 import android.location.Location
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.sg_safety_mobile.Data.LocationDataRepository
-import org.osmdroid.util.GeoPoint
-import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.Marker
 
+/**
+ *View model of the location service
+ *
+ * @since 2022-4-15
+ */
 class LocationViewModel(val context: Context): ViewModel() {
-    private val locationDataRepository = LocationDataRepository(context.applicationContext) // Intialize the Repository to get our data from
+    /**
+     *Location Data Repository class
+     */
+    private val locationDataRepository = LocationDataRepository(context.applicationContext) // Initialize the Repository to get our data from
+    /**
+     *Liva data of the constantly updated location
+     */
     var currentLocation: MutableLiveData<Location>? = locationDataRepository.currentLocation
 
-
+    /**
+     *Runs to clear the location
+     */
     override fun onCleared() {
         super.onCleared()
         currentLocation = null

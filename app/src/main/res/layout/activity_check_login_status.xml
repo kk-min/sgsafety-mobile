@@ -13,7 +13,6 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
@@ -31,7 +30,7 @@
         android:lineSpacingExtra="10dp"
         android:text="DEVELOPED BY 2022 SEM 2 \n     CZ2006 SS6 GROUP 2"
         android:textColor="#F82727"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:textStyle="normal|bold|italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

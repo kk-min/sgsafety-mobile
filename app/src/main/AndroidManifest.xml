@@ -84,7 +84,8 @@
             android:name=".Logic.LocationService"
             android:foregroundServiceType="location" />
 
-        <receiver android:name=".Logic.LocationReceiver" />
+        <receiver android:name=".Logic.LocationReceiver"
+            tools:ignore="Instantiatable" />
         <receiver
             android:name=".Logic.LocationServiceRestarter"
             android:enabled="true"
