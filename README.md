@@ -9,11 +9,11 @@
 <br>
 This app is developed fully in Kotlin without any frameworks<br>
 <br>
-Government API for getting AED Location Data          : <br>
+Singapore Government's API for getting AED Location Data          : <br>
 (https://data.gov.sg/dataset/aed-locations)
 <br>
 <br>
-Open Street Map for map in our application            : <br>
+Open Street Map used in our application            : <br>
 (https://github.com/MKergall/osmbonuspack/wiki)
 <br>
 <br>
@@ -50,6 +50,10 @@ SGSAFETY is a mobile application supplemented by a web application. The mobile a
 <br>
 <br>
 <br>
+<b>How it works</b><br>
+Users can use the "HELP" button to send a distress signal to other users of the app within a 400m radius. Upon activation, the app will also send an SMS to the Singapore Civil Defense Force with the user's current location coordinates. Other users nearby who are in range will receive a notification asking for help, and the app will guide them to the victim's location and/or the location of the nearest AED.<br>
+<b>Other Features</b><br>
+Users can register for an account using the [website](http://sg-safety.web.app), and they can upload their CPR certificates as well as edit their profile information inside the app.<br>
 <b>Application Preview:</b><br>
 <img src="https://user-images.githubusercontent.com/92379986/163681656-e1a209c4-d6c2-4f8b-a31c-70c1b78450d3.jpeg" width="300"/> <img src="https://user-images.githubusercontent.com/92379986/163681663-949f6788-1bf0-467e-8718-21e74210522b.jpeg" width="300"/> 
 <br>
