@@ -16,6 +16,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import com.example.sg_safety_mobile.BuildConfig
 import com.example.sg_safety_mobile.Presentation.Activity.ChoicePageActivity
 import com.example.sg_safety_mobile.R
 import com.google.firebase.messaging.FirebaseMessaging
@@ -56,8 +57,7 @@ class MyFirebaseMessagingService:FirebaseMessagingService() {
          *API key of Firebase Messaging Service
          */
         //Firebase Cloud Messaging Key
-        private const val key : String = "AAAA8SS5-jY:APA91bGsabxqNTp0aE71JbAEibWiUiA-HHSv344LTmxpPNa3fLNJyeS_tALDHmeaouIjPpe0jE0gxeBXsS5WP_xcWzfLL2Zwc8ZYnTXtVN-EMcsgtNtwhoMSTBNc801LCW_HtgPlGXZ3"
-
+        private val key : String = BuildConfig.FIREBASE_KEY
         /**
          *Subscribe current user to a topic
          *
