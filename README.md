@@ -8,8 +8,8 @@ Copyright © 2022 SGSAFETY (Group 1)</b><br>
 <img src="https://user-images.githubusercontent.com/92379986/163681256-ebd788f0-4511-4696-9845-01cfdeca822f.png" width="500" height="500" />
 
 <br>
-/*Note*/ The app will not works as we deleted the API key for Firebase Messaging inside this file:<br>
-[MyFirebaseMessaging.kt](https://github.com/mink0003/SGSAFETY_Mobile/blob/master/app/src/main/java/com/example/sg_safety_mobile/Logic/MyFirebaseMessaging.kt)<br>
+/*Note*/ ~ The app will not works as we deleted the API key for Firebase Messaging inside this file:<br>
+https://github.com/mink0003/SGSAFETY_Mobile/blob/master/app/src/main/java/com/example/sg_safety_mobile/Logic/MyFirebaseMessaging.kt<br>
 <br>
 Please add your own Firebase Messaging API key if you wish to test the application<br>
 <br>
