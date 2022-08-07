@@ -1,4 +1,4 @@
-# SGSAFETY_Mobile
+# SGSAFETY Mobile
 <b>2022 CZ2006: Software Engineering Group Project (2021/2022 SEMESTER 2) Nanyang Technological University<br><br>
 Copyright © 2022 SGSAFETY (Group 1)</b><br>
 
