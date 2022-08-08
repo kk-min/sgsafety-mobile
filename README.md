@@ -5,10 +5,10 @@ Copyright © 2022 SGSAFETY (Group 1)</b><br>
 <i>Link to source code for supplementary website in Github:</i><br>
 [Click Here](https://github.com/Anthony-Zou/cz2006web/tree/min-dev)<br>
 
-<img src="https://user-images.githubusercontent.com/92379986/163681256-ebd788f0-4511-4696-9845-01cfdeca822f.png" width="500" height="500" />
+<p align="center"><img src="https://user-images.githubusercontent.com/92379986/163681256-ebd788f0-4511-4696-9845-01cfdeca822f.png" width="500" height="500" /></p>
 
 <br>
-<b>Note that the application will not work without a valid API key for Firebase Messaging inside the following file:<b><br>
+<b>Note that the application will not work without a valid API key for Firebase Messaging inside the following file:</b><br>
 https://github.com/mink0003/SGSAFETY_Mobile/blob/master/app/src/main/java/com/example/sg_safety_mobile/Logic/MyFirebaseMessaging.kt<br>
 <br>
 Please add your own Firebase Messaging API key if you wish to test the application.<br>
