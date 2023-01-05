@@ -1,6 +1,6 @@
 # SGSAFETY Mobile
 <b>2022 CZ2006: Software Engineering Group Project (2021/2022 SEMESTER 2) Nanyang Technological University<br><br>
-Copyright © 2022 SGSAFETY (Group 1)</b><br>
+Copyright © 2023 SGSAFETY (Group 1)</b><br>
 
 <i>Link to source code for supplementary website in Github:</i><br>
 [Click Here](https://github.com/Anthony-Zou/cz2006web/tree/min-dev)<br>
